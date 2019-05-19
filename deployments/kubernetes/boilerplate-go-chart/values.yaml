@@ -1,0 +1,75 @@
+replicaCount: 1
+image:
+  repository: and07/boilerplate-go
+  tag: latest
+  pullPolicy: IfNotPresent
+
+nameOverride: ""
+fullnameOverride: ""
+
+service:
+  name: boilerplate-go
+  namePrivate: boilerplate-go-private
+  type: ClusterIP
+  externalPort: 8080
+  internalPort: 8080
+  externalPortPrivate: 8888
+  internalPortPrivate: 8888
+  ports:
+    - name: http
+      port: 8080
+    - name: debug
+      port: 8888
+
+
+readinessProbe:
+  initialDelaySeconds: 5
+  httpGet:
+    path: /ready
+    port: debug
+
+livenessProbe:
+  httpGet:
+    path: /live
+    port: debug
+
+ingress:
+  enabled: true
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+
+  hosts:
+    - host: boi.minikube
+      paths:
+       - path: /
+         backend:
+           servicePort: 8080
+    - host: private-boi.minikube
+      paths:
+       - path: /
+         backend:
+           servicePort: 8888
+
+  #tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

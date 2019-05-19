@@ -1,0 +1,6 @@
+network.host: 0.0.0.0
+
+# bootstrap.memory_lock: true
+
+### Cluster settings
+#discovery.zen.minimum_master_nodes: 2
