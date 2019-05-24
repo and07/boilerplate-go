@@ -2,8 +2,12 @@
 SERVICE_NAME=boilerplate-go
 USER=and07
 VERSION=latest
-QUAYVERSION = "$(USER)/$(SERVICE_NAME):$(VERSION)"
+REPOSITORY="$(USER)/$(SERVICE_NAME)"
+QUAYVERSION = "${REPOSITORY}:$(VERSION)"
 
+TAG=${CI_BUILD_REF_NAME}_${CI_BUILD_REF}
+CONTAINER_IMAGE=docker.io/${REPOSITORY}:${TAG}
+CONTAINER_IMAGE_LATEST=${QUAYVERSION}
 RELEASE?=0.0.1
 
 LOCAL_BIN:=$(CURDIR)/bin
@@ -190,6 +194,15 @@ docker-container: docker-build
 docker-push: docker-container
     #docker push $(CONTAINER_IMAGE):$(RELEASE)
 	docker push $(QUAYVERSION)
+
+.PHONY: docker-push-ci
+docker-push-ci:
+	env GOBUILD=env GOOS=linux GOARCH=amd64 $(BUILD_ENVPARMS) go build -ldflags "$(LDFLAGS)" -o $(BIN) ./cmd/${APP}
+	docker build --no-cache -t ${CONTAINER_IMAGE} -f build/package/project.dockerfile .
+	echo $(VERSION)
+	docker tag ${CONTAINER_IMAGE} ${CONTAINER_IMAGE_LATEST}
+	docker push ${CONTAINER_IMAGE}
+	docker push $(CONTAINER_IMAGE_LATEST)
 
 minikube:
 	minikube delete

@@ -1,16 +1,18 @@
-image: docker:latest
+image: golang:1.12.5
 
 services:
   - docker:dind
 
 stages:
 - build
+- test
+- lint
 - deploy
 
 variables:
   KUBECONFIG: /etc/deploy/config
   REPOSITORY: and07/boilerplate-go
-  NAMESPACE: default
+  NAMESPACE: boilerplate-go
   TAG: ${CI_BUILD_REF_NAME}_${CI_BUILD_REF}
   CONTAINER_IMAGE: docker.io/${REPOSITORY}:${CI_BUILD_REF_NAME}_${CI_BUILD_REF}
   CONTAINER_IMAGE_LATEST: docker.io/${REPOSITORY}:latest
@@ -19,10 +21,17 @@ build:
   stage: build
   script:
     - docker login -u $DOCKER_USER -p $DOCKER_PASS docker.io
-    - docker build -t ${CONTAINER_IMAGE} .
-    - docker tag ${CONTAINER_IMAGE} ${CONTAINER_IMAGE_LATEST}
-    - docker push ${CONTAINER_IMAGE}
-    - docker push ${CONTAINER_IMAGE_LATEST}
+    - make docker-push-ci
+
+test:
+  stage: test
+  script:
+    - make test
+
+lint:
+  stage: lint
+  script:
+    - make lint-full
 
 deploy:
   stage: deploy
