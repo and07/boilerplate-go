@@ -20,8 +20,8 @@ variables:
 build:
   stage: build
   script:
-    - docker login -u $DOCKER_USER -p $DOCKER_PASS docker.io
-    - make docker-push-ci
+    #- docker login -u $DOCKER_USER -p $DOCKER_PASS docker.io
+    - make build
 
 test:
   stage: test
