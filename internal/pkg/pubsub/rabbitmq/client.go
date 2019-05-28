@@ -2,7 +2,6 @@ package rabbitmq
 
 import (
 	"context"
-	"fmt"
 	"log"
 
 	"github.com/opentracing/opentracing-go"
@@ -27,103 +26,90 @@ func New(ctx context.Context, connectionString string) (pubsub.PubSuber, error) 
 	if err != nil {
 		return nil, err
 	}
-	return &clientRabbit{conn}, err
+	chSub, errChannel := conn.Channel() // Get a channel from the connection
+	if errChannel != nil {
+		return nil, errChannel
+	}
+	chPub, errChannel := conn.Channel() // Get a channel from the connection
+	if errChannel != nil {
+		return nil, errChannel
+	}
+	return &clientRabbit{conn: conn, chSub: chSub, chPub: chPub}, err
 }
 
 type clientRabbit struct {
-	conn *amqp.Connection
+	conn  *amqp.Connection
+	chSub *amqp.Channel
+	chPub *amqp.Channel
 }
 
 // Publish ...
-func (m *clientRabbit) Publish(ctx context.Context, body []byte, exchangeName string, exchangeType string) error {
+func (m *clientRabbit) Publish(ctx context.Context, body []byte, queueName string) error {
 	if m.conn == nil {
 		panic("Tried to send message before connection was initialized. Don't do that.")
 	}
-	ch, err := m.conn.Channel() // Get a channel from the connection
-	defer ch.Close()
-	err = ch.ExchangeDeclare(
-		exchangeName, // name of the exchange
-		exchangeType, // type
-		true,         // durable
-		false,        // delete when complete
-		false,        // internal
-		false,        // noWait
-		nil,          // arguments
-	)
-	failOnError(err, "Failed to register an Exchange")
 
-	queue, err := ch.QueueDeclare( // Declare a queue that will be created if not exists with some args
-		"",    // our queue name
-		false, // durable
-		false, // delete when unused
-		false, // exclusive
-		false, // no-wait
-		nil,   // arguments
+	queue, errQueueDeclare := m.chPub.QueueDeclare( // Declare a queue that will be created if not exists with some args
+		queueName, // our queue name
+		true,      // durable
+		false,     // delete when unused
+		false,     // exclusive
+		false,     // no-wait
+		amqp.Table{
+			"x-dead-letter-exchange":    "",
+			"x-dead-letter-routing-key": queueName + ".XQ",
+		}, // arguments
 	)
+	if errQueueDeclare != nil {
+		return errQueueDeclare
+	}
 
-	err = ch.QueueBind(
-		queue.Name,   // name of the queue
-		exchangeName, // bindingKey
-		exchangeName, // sourceExchange
-		false,        // noWait
-		nil,          // arguments
-	)
+	errQos := m.chPub.Qos(20, 0, false)
+	if errQos != nil {
+		return errQos
+	}
 
-	err = ch.Publish( // Publishes a message onto the queue.
-		exchangeName, // exchange
-		exchangeName, // routing key      q.Name
-		false,        // mandatory
-		false,        // immediate
+	// Publishes a message onto the queue.
+	errPublish := m.chPub.Publish(
+		"",         // exchange
+		queue.Name, // routing key
+		false,      // mandatory
+		false,      // immediate
 		amqp.Publishing{
-			Body: body, // Our JSON body as []byte
+			Headers: amqp.Table{},
+			//ContentType:  "application/json",
+			Body:         body, // Our JSON body as []byte
+			DeliveryMode: amqp.Persistent,
+			Priority:     0,
 		})
-	fmt.Printf("A message was sent: %v", body)
-	return err
+	//fmt.Printf("A message was sent to queue %v: %s", queueName, body)
+	return errPublish
 }
 
 // Subscribe ...
-func (m *clientRabbit) Subscribe(ctx context.Context, exchangeName string, exchangeType string, consumerName string, handlerFunc func(amqp.Delivery)) error {
-	ch, err := m.conn.Channel()
-	failOnError(err, "Failed to open a channel")
-	// defer ch.Close()
-
-	err = ch.ExchangeDeclare(
-		exchangeName, // name of the exchange
-		exchangeType, // type
-		true,         // durable
-		false,        // delete when complete
-		false,        // internal
-		false,        // noWait
-		nil,          // arguments
+func (m *clientRabbit) Subscribe(ctx context.Context, queueName string, consumerName string, handlerFunc func(amqp.Delivery)) error {
+	log.Printf("Declaring Queue (%s)", queueName)
+	queue, errQueueDeclare := m.chSub.QueueDeclare(
+		queueName, // name of the queue
+		true,      // durable
+		false,     // delete when usused
+		false,     // exclusive
+		false,     // noWait
+		amqp.Table{
+			"x-dead-letter-exchange":    "",
+			"x-dead-letter-routing-key": queueName + ".XQ",
+		}, // arguments
 	)
-	failOnError(err, "Failed to register an Exchange")
-
-	log.Printf("declared Exchange, declaring Queue (%s)", "")
-	queue, err := ch.QueueDeclare(
-		"",    // name of the queue
-		false, // durable
-		false, // delete when usused
-		false, // exclusive
-		false, // noWait
-		nil,   // arguments
-	)
-	failOnError(err, "Failed to register an Queue")
-
-	log.Printf("declared Queue (%d messages, %d consumers), binding to Exchange (key '%s')",
-		queue.Messages, queue.Consumers, exchangeName)
-
-	err = ch.QueueBind(
-		queue.Name,   // name of the queue
-		exchangeName, // bindingKey
-		exchangeName, // sourceExchange
-		false,        // noWait
-		nil,          // arguments
-	)
-	if err != nil {
-		return fmt.Errorf("queue bind: %s", err)
+	if errQueueDeclare != nil {
+		return errQueueDeclare
 	}
 
-	msgs, err := ch.Consume(
+	errQos := m.chSub.Qos(20, 0, false)
+	if errQos != nil {
+		return errQos
+	}
+
+	msgs, errConsume := m.chSub.Consume(
 		queue.Name,   // queue
 		consumerName, // consumer
 		false,        // auto-ack
@@ -132,13 +118,21 @@ func (m *clientRabbit) Subscribe(ctx context.Context, exchangeName string, excha
 		false,        // no-wait
 		nil,          // args
 	)
-	failOnError(err, "Failed to register a consumer")
+	if errConsume != nil {
+		return errConsume
+	}
 
 	go consumeLoop(msgs, handlerFunc)
 	return nil
 }
 
 func (m *clientRabbit) Close() {
+	if m.chSub != nil {
+		m.chSub.Close()
+	}
+	if m.chPub != nil {
+		m.chPub.Close()
+	}
 	if m.conn != nil {
 		m.conn.Close()
 	}
@@ -148,12 +142,5 @@ func consumeLoop(deliveries <-chan amqp.Delivery, handlerFunc func(d amqp.Delive
 	for d := range deliveries {
 		// Invoke the handlerFunc func we passed as parameter.
 		handlerFunc(d)
-	}
-}
-
-func failOnError(err error, msg string) {
-	if err != nil {
-		fmt.Printf("%s: %s", msg, err)
-		panic(fmt.Sprintf("%s: %s", msg, err))
 	}
 }
