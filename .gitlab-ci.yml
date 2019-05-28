@@ -7,7 +7,7 @@ stages:
 - build
 - test
 - lint
-- deploy
+#- deploy
 
 variables:
   KUBECONFIG: /etc/deploy/config
@@ -33,22 +33,22 @@ lint:
   script:
     - make lint-full
 
-deploy:
-  stage: deploy
-  image: lwolf/helm-kubectl-docker:v193_281
-  before_script:
-    - mkdir -p /etc/deploy
-    - echo ${kube_config} | base64 -d > ${KUBECONFIG}
-    - helm init --client-only
-  script:
-    - cd deployments/kubernetes/boilerplate-go-chart
-    - export DEPLOYS=$(helm ls | grep $NAMESPACE | wc -l)
-    - >
-      if [ ${DEPLOYS} -eq 0 ]; then
-        helm install --name=${NAMESPACE} . --namespace=${NAMESPACE} \
-          --set replicaCount=${REPLICA_COUNT};
-      else
-        helm upgrade ${NAMESPACE} . --namespace=${NAMESPACE} \
-          --set image.tag=${TAG} \
-          --set replicaCount=${REPLICA_COUNT};
-      fi
+# deploy:
+#   stage: deploy
+#   image: lwolf/helm-kubectl-docker:v193_281
+#   before_script:
+#     - mkdir -p /etc/deploy
+#     - echo ${kube_config} | base64 -d > ${KUBECONFIG}
+#     - helm init --client-only
+#   script:
+#     - cd deployments/kubernetes/boilerplate-go-chart
+#     - export DEPLOYS=$(helm ls | grep $NAMESPACE | wc -l)
+#     - >
+#       if [ ${DEPLOYS} -eq 0 ]; then
+#         helm install --name=${NAMESPACE} . --namespace=${NAMESPACE} \
+#           --set replicaCount=${REPLICA_COUNT};
+#       else
+#         helm upgrade ${NAMESPACE} . --namespace=${NAMESPACE} \
+#           --set image.tag=${TAG} \
+#           --set replicaCount=${REPLICA_COUNT};
+#       fi
