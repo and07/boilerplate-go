@@ -1,5 +1,21 @@
 package redis
 
+import "context"
+
+// DummyClient ...
+type DummyClient struct {
+}
+
+// NewRedisDummy ...
+func NewRedisDummy() *DummyClient {
+	return &DummyClient{}
+}
+
+// Get ...
+func (d *DummyClient) Get(ctx context.Context, key string) (string, error) {
+	return data, nil
+}
+
 var data = `{
     "general":{
        "bids_volume":500,

@@ -2,11 +2,12 @@ package scratch
 
 import (
 	"context"
-	"log"
 	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
+
+	log "gitlab.com/and07/boilerplate-go/internal/pkg/logger"
 )
 
 func graceful(srvs ...*http.Server) chan struct{} {
@@ -25,12 +26,12 @@ func graceful(srvs ...*http.Server) chan struct{} {
 		for i := range srvs {
 			if err := srvs[i].Shutdown(context.Background()); err != nil {
 				// Error from closing listeners, or context timeout:
-				log.Printf("HTTP server Shutdown %s: %v", srvs[i].Addr, err)
+				log.Errorf("HTTP server Shutdown %s: %v", srvs[i].Addr, err)
 			}
 		}
 
 		close(idleConnsClosed)
-		log.Println("HTTP server Shutdow")
+		log.Info("HTTP server Shutdow")
 	}()
 	return idleConnsClosed
 }

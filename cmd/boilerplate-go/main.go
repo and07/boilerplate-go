@@ -3,11 +3,11 @@ package main
 import (
 	//"flag"
 	"context"
-	"log"
 
 	"github.com/opentracing/opentracing-go"
 	"github.com/prometheus/client_golang/prometheus"
 	"gitlab.com/and07/boilerplate-go/internal/app/scratch"
+	log "gitlab.com/and07/boilerplate-go/internal/pkg/logger"
 	"gitlab.com/and07/boilerplate-go/internal/pkg/tracing"
 )
 
@@ -27,8 +27,7 @@ func init() {
 }
 
 func main() {
-	log.SetFlags(log.LstdFlags | log.Lshortfile)
-
+	log.Info("Start APP")
 	//exchange := flag.String("exchange", "test-exchange", "Durable, non-auto-deleted AMQP exchange name")
 	//exchangeType := flag.String("exchange-type", "direct", "Exchange type - direct|fanout|topic|x-custom")
 	//queue := flag.String("queue", "send-push", "Ephemeral AMQP queue name")

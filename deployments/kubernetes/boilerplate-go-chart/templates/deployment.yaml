@@ -23,6 +23,16 @@ spec:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- if .Values.env.data }}
+          env:
+          {{- range $key := .Values.env.data }}
+          - name: {{ $key }}
+            valueFrom:
+              secretKeyRef:
+                name: {{ $.Values.env.secretsName }}
+                key: {{ $key }}
+          {{- end }}
+          {{- end }}
           ports:
             - name: http
               containerPort: {{ .Values.service.internalPort }}

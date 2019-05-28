@@ -5,7 +5,7 @@ import (
 	"net/http/pprof"
 	"strconv"
 
-	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 // healthz is a liveness probe.
@@ -19,7 +19,7 @@ func readyz(w http.ResponseWriter, _ *http.Request) {
 }
 
 func prometheusHandler() http.Handler {
-	return prometheus.Handler()
+	return promhttp.Handler()
 }
 
 func privateHandle() *http.ServeMux {

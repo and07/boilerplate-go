@@ -2,10 +2,10 @@ package scratch
 
 import (
 	"context"
-	"log"
 	"net/http"
 
 	"github.com/opentracing/opentracing-go"
+	log "gitlab.com/and07/boilerplate-go/internal/pkg/logger"
 )
 
 // Scratch ...
@@ -41,15 +41,15 @@ func (s *Scratch) Run(ctx context.Context, handles *http.ServeMux) {
 
 	idleSrvConnsClosed := graceful(srvPrivate, srvPublic)
 	go func() {
-		log.Println("http.Private start")
+		log.Info("http.Private start")
 		if errSrvPrivateListenAndServe := srvPrivate.ListenAndServe(); errSrvPrivateListenAndServe != http.ErrServerClosed {
-			log.Printf("HTTP server ListenAndServe: %v", errSrvPrivateListenAndServe)
+			log.Errorf("HTTP server ListenAndServe: %v", errSrvPrivateListenAndServe)
 		}
 	}()
 	go func() {
-		log.Println("http.Public start")
+		log.Info("http.Public start")
 		if errSrvPublicListenAndServe := srvPublic.ListenAndServe(); errSrvPublicListenAndServe != http.ErrServerClosed {
-			log.Printf("HTTP server ListenAndServe: %v", errSrvPublicListenAndServe)
+			log.Errorf("HTTP server ListenAndServe: %v", errSrvPublicListenAndServe)
 		}
 	}()
 	<-idleSrvConnsClosed
