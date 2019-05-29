@@ -8,8 +8,24 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+type logStdout struct {
+}
+
+// Error ...
+func (l *logStdout) Error(msg string) {
+	log.Error(msg)
+}
+
+// Infof ...
+func (l *logStdout) Infof(msg string, args ...interface{}) {
+	log.Infof(msg, args...)
+}
+
 // Logger ...
 var log = logrus.New()
+
+// StdLogger ...
+var StdLogger = &logStdout{}
 
 func init() {
 	// log as JSON instead of the default ASCII formatter.
