@@ -18,11 +18,18 @@ spec:
       labels:
         app.kubernetes.io/name: {{ include "boilerplate-go-chart.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
+        app: {{ .Values.app }}
+        componentType: app
+        component: {{ .Values.app }}_boilerplate_go
+      annotations:
+        prometheus.io/scrape: 'true'
+        prometheus.io/port: '8888'
     spec:
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- if .Values.env }}
           {{- if .Values.env.data }}
           env:
           {{- range $key := .Values.env.data }}
@@ -31,6 +38,7 @@ spec:
               secretKeyRef:
                 name: {{ $.Values.env.secretsName }}
                 key: {{ $key }}
+          {{- end }}
           {{- end }}
           {{- end }}
           ports:

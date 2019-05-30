@@ -152,7 +152,7 @@ docker-logs:
 	mkdir -p ./logs || true
 	#docker logs postgres-$${CI_JOB_ID:-local} >& logs/postgres.log
 	#docker logs pg-migrations-$${CI_JOB_ID:-local} >& logs/pg-migrations.log
-	docker logs boilerplate-go-$${CI_JOB_ID:-local} >& logs/boilerplate-go.log
+	docker logs $${SERVICE_NAME}-$${CI_JOB_ID:-local} >& logs/$${SERVICE_NAME}.log
 	docker logs redis-$${CI_JOB_ID:-local} >& logs/redis.log
 	docker logs rabbitmq-$${CI_JOB_ID:-local} >& logs/rabbitmq.log
 	docker logs elasticsearch-$${CI_JOB_ID:-local} >& logs/elasticsearch.log
@@ -170,8 +170,8 @@ docker-clean:
 	docker rm -f $$(docker ps -a -f status=exited -q) || true
 	@echo Очистка dangling образов
 	docker rmi -f $$(docker images -f "dangling=true" -q) || true
-	@echo Очистка boilerplate-go образов
-	docker rmi -f $$(docker images --filter=reference='boilerplate-go*' -q) || true
+	@echo Очистка $${SERVICE_NAME} образов
+	docker rmi -f $$(docker images --filter=reference='$${SERVICE_NAME}*' -q) || true
 	#@echo Очистка itest образов
 	#docker rmi -f $$(docker images --filter=reference='itest*' -q) || true
 	#@echo Очистка pg-migrations образов

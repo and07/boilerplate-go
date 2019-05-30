@@ -35,6 +35,8 @@ func main() {
 	//consumerTag := flag.String("consumer-tag", "simple-consumer", "AMQP consumer tag (should not be blank)")
 	//flag.Parse()
 
+	ctx := context.Background()
+
 	tracer, closer := tracing.Init("boilerplate-go")
 	defer closer.Close()
 	opentracing.SetGlobalTracer(tracer)
@@ -43,7 +45,7 @@ func main() {
 	//span.SetTag("hello-to", helloTo)
 	defer span.Finish()
 
-	ctx := opentracing.ContextWithSpan(context.Background(), span)
+	ctx = opentracing.ContextWithSpan(ctx, span)
 	/*
 		redisHost := os.Getenv("REDIS_HOST")
 		if redisHost == "" {

@@ -1,3 +1,4 @@
+app: boilerplate-go
 replicaCount: 1
 image:
   repository: and07/boilerplate-go
