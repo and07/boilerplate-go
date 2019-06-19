@@ -20,7 +20,7 @@ spec:
         app.kubernetes.io/instance: {{ .Release.Name }}
         app: {{ .Values.app }}
         componentType: app
-        component: {{ .Values.app }}_boilerplate_go
+        component: {{ .Values.app }}
       annotations:
         prometheus.io/scrape: 'true'
         prometheus.io/port: '8888'
