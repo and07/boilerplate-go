@@ -1,7 +1,6 @@
 package main
 
 import (
-	//"flag"
 	"context"
 
 	"github.com/opentracing/opentracing-go"
@@ -28,12 +27,6 @@ func init() {
 
 func main() {
 	log.Info("Start APP")
-	//exchange := flag.String("exchange", "test-exchange", "Durable, non-auto-deleted AMQP exchange name")
-	//exchangeType := flag.String("exchange-type", "direct", "Exchange type - direct|fanout|topic|x-custom")
-	//queue := flag.String("queue", "send-push", "Ephemeral AMQP queue name")
-	//bindingKey := flag.String("key", "test-key", "AMQP binding key")
-	//consumerTag := flag.String("consumer-tag", "simple-consumer", "AMQP consumer tag (should not be blank)")
-	//flag.Parse()
 
 	ctx := context.Background()
 
