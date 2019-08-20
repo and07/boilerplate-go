@@ -1,4 +1,4 @@
-package scratch
+package serv
 
 import (
 	"context"

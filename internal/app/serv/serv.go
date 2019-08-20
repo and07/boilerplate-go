@@ -1,4 +1,4 @@
-package scratch
+package serv
 
 import (
 	"context"
@@ -8,23 +8,23 @@ import (
 	log "gitlab.com/and07/boilerplate-go/internal/pkg/logger"
 )
 
-// Scratch ...
-type Scratch struct {
-	portPublicHTTP  int
-	portPrivateHTTP int
+// Serv ...
+type Serv struct {
+	portPublicHTTP  string
+	portPrivateHTTP string
 }
 
 // Option ...
 type Option struct {
-	PortPublicHTTP  int
-	PortPrivateHTTP int
+	PortPublicHTTP  string
+	PortPrivateHTTP string
 }
 
 // New ...
-func New(ctx context.Context, opt Option) *Scratch {
-	span, _ := opentracing.StartSpanFromContext(ctx, "NewScratch")
+func New(ctx context.Context, opt Option) *Serv {
+	span, _ := opentracing.StartSpanFromContext(ctx, "NewServ")
 	defer span.Finish()
-	s := &Scratch{
+	s := &Serv{
 		portPublicHTTP:  opt.PortPublicHTTP,
 		portPrivateHTTP: opt.PortPrivateHTTP,
 	}
@@ -32,8 +32,8 @@ func New(ctx context.Context, opt Option) *Scratch {
 }
 
 // Run ...
-func (s *Scratch) Run(ctx context.Context, handles *http.ServeMux) {
-	span, _ := opentracing.StartSpanFromContext(ctx, "Scratch.Run")
+func (s *Serv) Run(ctx context.Context, handles *http.ServeMux) {
+	span, _ := opentracing.StartSpanFromContext(ctx, "Serv.Run")
 	defer span.Finish()
 
 	srvPublic := s.runPublicHTTP(handles)

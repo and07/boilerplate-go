@@ -1,9 +1,8 @@
-package scratch
+package serv
 
 import (
 	"net/http"
 	"net/http/pprof"
-	"strconv"
 
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
@@ -38,12 +37,12 @@ func privateHandle() *http.ServeMux {
 	return rPrivate
 }
 
-func (s *Scratch) runPrivateHTTP() *http.Server {
-	srvPrivate := &http.Server{Addr: ":" + strconv.Itoa(s.portPrivateHTTP), Handler: privateHandle()}
+func (s *Serv) runPrivateHTTP() *http.Server {
+	srvPrivate := &http.Server{Addr: ":" + s.portPrivateHTTP, Handler: privateHandle()}
 	return srvPrivate
 }
 
-func (s *Scratch) runPublicHTTP(h *http.ServeMux) *http.Server {
-	srvPublic := &http.Server{Addr: ":" + strconv.Itoa(s.portPublicHTTP), Handler: h}
+func (s *Serv) runPublicHTTP(h *http.ServeMux) *http.Server {
+	srvPublic := &http.Server{Addr: ":" + s.portPublicHTTP, Handler: h}
 	return srvPublic
 }

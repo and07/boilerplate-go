@@ -2,17 +2,19 @@ package main
 
 import (
 	"context"
+	"os"
 
 	"github.com/opentracing/opentracing-go"
 	"github.com/prometheus/client_golang/prometheus"
-	"gitlab.com/and07/boilerplate-go/internal/app/scratch"
+	"gitlab.com/and07/boilerplate-go/internal/app/serv"
 	log "gitlab.com/and07/boilerplate-go/internal/pkg/logger"
+	"gitlab.com/and07/boilerplate-go/internal/pkg/template"
 	"gitlab.com/and07/boilerplate-go/internal/pkg/tracing"
 )
 
 const (
-	publicPort  = 8080
-	privatePort = 8888
+	pPublicPort  = "8080"
+	pPrivatePort = "8888"
 )
 
 var counter prometheus.Counter
@@ -81,7 +83,22 @@ func main() {
 		}
 		elastic.NewElasticClient(ctx, elasticURL)
 	*/
-	srv := scratch.New(ctx, scratch.Option{PortPublicHTTP: publicPort, PortPrivateHTTP: privatePort})
-	srv.Run(ctx, publicHandle(ctx))
+
+	publicPort := os.Getenv("PORT")
+
+	if publicPort == "" {
+		publicPort = pPublicPort
+	}
+
+	privatePort := os.Getenv("PPORT")
+	if privatePort == "" {
+		privatePort = pPrivatePort
+	}
+
+	tpl := template.NewTemplate("tpl/layouts/", "tpl/", `{{define "main" }} {{ template "base" . }} {{ end }}`)
+	tpl.Init()
+
+	srv := serv.New(ctx, serv.Option{PortPublicHTTP: publicPort, PortPrivateHTTP: privatePort})
+	srv.Run(ctx, publicHandle(ctx, tpl))
 
 }

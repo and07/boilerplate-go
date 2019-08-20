@@ -2,24 +2,24 @@ package main
 
 import (
 	"context"
-	"log"
 	"net/http"
+
+	"gitlab.com/and07/boilerplate-go/internal/pkg/template"
 )
 
-func hiHandler(ctx context.Context) func(w http.ResponseWriter, r *http.Request) {
+func hiHandler(ctx context.Context, tpl *template.Template) func(w http.ResponseWriter, r *http.Request) {
 
 	return func(w http.ResponseWriter, r *http.Request) {
 		//span, _ := opentracing.StartSpanFromContext(ctx, "Scratch.hiHandler")
 		//defer span.Finish()
 		counter.Inc()
-		if _, err := w.Write([]byte("hi")); err != nil {
-			log.Println(err)
-		}
+
+		tpl.RenderTemplate(w, "main.html", "Hi")
 	}
 }
 
-func publicHandle(ctx context.Context) *http.ServeMux {
+func publicHandle(ctx context.Context, tpl *template.Template) *http.ServeMux {
 	rPublic := http.NewServeMux()
-	rPublic.HandleFunc("/", hiHandler(ctx))
+	rPublic.HandleFunc("/", hiHandler(ctx, tpl))
 	return rPublic
 }
