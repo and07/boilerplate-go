@@ -17,7 +17,7 @@ func Init(serviceName string) (opentracing.Tracer, io.Closer) {
 		log.Fatalf("cannot parse Jaeger env vars %s", err)
 	}
 	cfg.ServiceName = serviceName
-	cfg.Sampler.Type = "const"
+	cfg.Sampler.Type = "ratelimiting"
 	cfg.Sampler.Param = 1
 
 	// TODO(ys) a quick hack to ensure random generators get different seeds, which are based on current time.

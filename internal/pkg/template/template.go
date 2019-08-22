@@ -11,11 +11,13 @@ import (
 	log "gitlab.com/and07/boilerplate-go/internal/pkg/logger"
 )
 
+// TemplateConfig ...
 type TemplateConfig struct {
 	TemplateLayoutPath  string
 	TemplateIncludePath string
 }
 
+// Template ...
 type Template struct {
 	templates map[string]*template.Template
 	bufpool   *bpool.BufferPool
@@ -30,10 +32,13 @@ func formatAsDate(t int64) string {
 	year, month, day := tm.Date()
 	return fmt.Sprintf("%d.%d.%d", day, month, year)
 }
+
+// nolint
 func safe(s string) template.HTML {
 	return template.HTML(s)
 }
 
+// NewTemplate ...
 func NewTemplate(templateLayoutPath, templateIncludePath, mainTmpl string) *Template {
 	tc := TemplateConfig{
 		TemplateLayoutPath:  templateLayoutPath,
@@ -47,10 +52,12 @@ func NewTemplate(templateLayoutPath, templateIncludePath, mainTmpl string) *Temp
 
 }
 
+// Init ...
 func (t *Template) Init() {
 	t.loadTemplates()
 }
 
+// Fmap ...
 func (t *Template) Fmap() template.FuncMap {
 	fmap := template.FuncMap{
 		"formatAsDate": formatAsDate,
@@ -97,6 +104,7 @@ func (t *Template) loadTemplates() {
 	log.Println("buffer allocation successful")
 }
 
+// RenderTemplate ...
 func (t *Template) RenderTemplate(w http.ResponseWriter, name string, data interface{}) {
 	tmpl, ok := t.templates[name]
 	if !ok {
@@ -113,9 +121,12 @@ func (t *Template) RenderTemplate(w http.ResponseWriter, name string, data inter
 	}
 
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	buf.WriteTo(w)
+	if err := buf.WriteTo(w); err != nil {
+		log.Errorln(err)
+	}
 }
 
+// RenderJs ...
 func (t *Template) RenderJs(w http.ResponseWriter, name string, data interface{}) {
 	tmpl, ok := t.templates[name]
 	if !ok {
@@ -134,5 +145,7 @@ func (t *Template) RenderJs(w http.ResponseWriter, name string, data interface{}
 	w.Header().Set("Content-Type", "application/javascript")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type,access-control-allow-origin, access-control-allow-headers")
-	buf.WriteTo(w)
+	if err := buf.WriteTo(w); err != nil {
+		log.Errorln(err)
+	}
 }
