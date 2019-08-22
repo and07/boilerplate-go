@@ -11,8 +11,8 @@ import (
 	log "gitlab.com/and07/boilerplate-go/internal/pkg/logger"
 )
 
-// TemplateConfig ...
-type TemplateConfig struct {
+// Config ...
+type Config struct {
 	TemplateLayoutPath  string
 	TemplateIncludePath string
 }
@@ -24,7 +24,7 @@ type Template struct {
 
 	mainTmpl string
 
-	templateConfig TemplateConfig
+	templateConfig Config
 }
 
 func formatAsDate(t int64) string {
@@ -40,7 +40,7 @@ func safe(s string) template.HTML {
 
 // NewTemplate ...
 func NewTemplate(templateLayoutPath, templateIncludePath, mainTmpl string) *Template {
-	tc := TemplateConfig{
+	tc := Config{
 		TemplateLayoutPath:  templateLayoutPath,
 		TemplateIncludePath: templateIncludePath,
 	}
