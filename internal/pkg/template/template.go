@@ -121,7 +121,7 @@ func (t *Template) RenderTemplate(w http.ResponseWriter, name string, data inter
 	}
 
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	if err := buf.WriteTo(w); err != nil {
+	if _, err := buf.WriteTo(w); err != nil {
 		log.Errorln(err)
 	}
 }
@@ -145,7 +145,7 @@ func (t *Template) RenderJs(w http.ResponseWriter, name string, data interface{}
 	w.Header().Set("Content-Type", "application/javascript")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type,access-control-allow-origin, access-control-allow-headers")
-	if err := buf.WriteTo(w); err != nil {
+	if _, err := buf.WriteTo(w); err != nil {
 		log.Errorln(err)
 	}
 }
