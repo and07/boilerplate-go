@@ -40,6 +40,10 @@ spec:
                 key: {{ $key }}
           {{- end }}
           {{- end }}
+          - name: JAEGER_AGENT_HOST
+            valueFrom:
+              fieldRef:
+                fieldPath: status.hostIP
           {{- end }}
           ports:
             - name: http

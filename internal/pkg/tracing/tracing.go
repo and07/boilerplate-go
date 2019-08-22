@@ -3,6 +3,7 @@ package tracing
 import (
 	"fmt"
 	"io"
+	"time"
 
 	opentracing "github.com/opentracing/opentracing-go"
 	config "github.com/uber/jaeger-client-go/config"
@@ -10,17 +11,18 @@ import (
 )
 
 // Init returns an instance of Jaeger Tracer that samples 100% of traces and logs all spans to stdout.
-func Init(service string) (opentracing.Tracer, io.Closer) {
-	cfg := &config.Configuration{
-		ServiceName: service,
-		Sampler: &config.SamplerConfig{
-			Type:  "const",
-			Param: 1,
-		},
-		Reporter: &config.ReporterConfig{
-			LogSpans: true,
-		},
+func Init(serviceName string) (opentracing.Tracer, io.Closer) {
+	cfg, err := config.FromEnv()
+	if err != nil {
+		log.Fatalf("cannot parse Jaeger env vars %s", err)
 	}
+	cfg.ServiceName = serviceName
+	cfg.Sampler.Type = "const"
+	cfg.Sampler.Param = 1
+
+	// TODO(ys) a quick hack to ensure random generators get different seeds, which are based on current time.
+	time.Sleep(100 * time.Millisecond)
+
 	tracer, closer, err := cfg.NewTracer(config.Logger(log.StdLogger))
 	if err != nil {
 		panic(fmt.Sprintf("ERROR: cannot init Jaeger: %v\n", err))
