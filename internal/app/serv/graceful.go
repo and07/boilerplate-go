@@ -10,7 +10,7 @@ import (
 	log "gitlab.com/and07/boilerplate-go/internal/pkg/logger"
 )
 
-func graceful(srvs ...*http.Server) chan struct{} {
+func graceful(ctx context.Context, srvs ...*http.Server) chan struct{} {
 	idleConnsClosed := make(chan struct{})
 	go func() {
 		sigint := make(chan os.Signal, 1)
@@ -24,7 +24,7 @@ func graceful(srvs ...*http.Server) chan struct{} {
 
 		// We received an interrupt signal, shut down.
 		for i := range srvs {
-			if err := srvs[i].Shutdown(context.Background()); err != nil {
+			if err := srvs[i].Shutdown(ctx); err != nil {
 				// Error from closing listeners, or context timeout:
 				log.Errorf("HTTP server Shutdown %s: %v", srvs[i].Addr, err)
 			}

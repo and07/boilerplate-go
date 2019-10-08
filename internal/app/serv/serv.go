@@ -39,7 +39,7 @@ func (s *Serv) Run(ctx context.Context, handles *http.ServeMux) {
 	srvPublic := s.runPublicHTTP(handles)
 	srvPrivate := s.runPrivateHTTP()
 
-	idleSrvConnsClosed := graceful(srvPrivate, srvPublic)
+	idleSrvConnsClosed := graceful(ctx, srvPrivate, srvPublic)
 	go func() {
 		log.Info("http.Private start")
 		if errSrvPrivateListenAndServe := srvPrivate.ListenAndServe(); errSrvPrivateListenAndServe != http.ErrServerClosed {
