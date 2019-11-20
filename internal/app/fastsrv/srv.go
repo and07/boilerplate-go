@@ -6,7 +6,7 @@ import (
 
 	"github.com/opentracing/opentracing-go"
 	"github.com/valyala/fasthttp"
-	log "gitlab.com/seobutik-dsp/dsp-proxy-new/internal/pkg/logger"
+	log "gitlab.com/and07/boilerplate-go/internal/pkg/logger"
 )
 
 // Fastsrv ...

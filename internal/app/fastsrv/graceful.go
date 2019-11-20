@@ -7,8 +7,8 @@ import (
 	"os/signal"
 	"syscall"
 
-	log "gitlab.com/seobutik-dsp/dsp-proxy-new/internal/pkg/logger"
 	"github.com/valyala/fasthttp"
+	log "gitlab.com/and07/boilerplate-go/internal/pkg/logger"
 )
 
 func graceful(srv *http.Server, fsrv *fasthttp.Server) chan struct{} {
@@ -28,7 +28,7 @@ func graceful(srv *http.Server, fsrv *fasthttp.Server) chan struct{} {
 			// Error from closing listeners, or context timeout:
 			log.Errorf("HTTP server Shutdown : %v", err)
 		}
-	
+
 		if err := fsrv.Shutdown(); err != nil {
 			// Error from closing listeners, or context timeout:
 			log.Errorf("FastHTTP server Shutdown : %v", err)
