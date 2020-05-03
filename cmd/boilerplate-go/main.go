@@ -2,14 +2,18 @@ package main
 
 import (
 	"context"
-	"os"
+	"time"
 
+	"github.com/caarlos0/env"
 	"github.com/opentracing/opentracing-go"
 	"github.com/prometheus/client_golang/prometheus"
+	"gitlab.com/and07/boilerplate-go/api/boilerplate-go/api"
+	"gitlab.com/and07/boilerplate-go/internal/app/boilerplate"
 	"gitlab.com/and07/boilerplate-go/internal/app/serv"
 	log "gitlab.com/and07/boilerplate-go/internal/pkg/logger"
 	"gitlab.com/and07/boilerplate-go/internal/pkg/template"
 	"gitlab.com/and07/boilerplate-go/internal/pkg/tracing"
+	"google.golang.org/grpc"
 )
 
 const (
@@ -84,21 +88,60 @@ func main() {
 		elastic.NewElasticClient(ctx, elasticURL)
 	*/
 
-	publicPort := os.Getenv("PORT")
-
-	if publicPort == "" {
-		publicPort = pPublicPort
+	cfg := &Config{}
+	if err := env.Parse(cfg); err != nil {
+		log.Error(err)
 	}
 
-	privatePort := os.Getenv("PPORT")
-	if privatePort == "" {
-		privatePort = pPrivatePort
+	if cfg.Port == "" {
+		cfg.Port = pPublicPort
+	}
+
+	if cfg.PortDebug == "" {
+		cfg.PortDebug = pPrivatePort
+	}
+
+	if cfg.PortGRPC == "" {
+		cfg.PortGRPC = "8842"
 	}
 
 	tpl := template.NewTemplate("tpl/layouts/", "tpl/", `{{define "main" }} {{ template "base" . }} {{ end }}`)
 	tpl.Init()
 
-	srv := serv.New(ctx, serv.Option{PortPublicHTTP: publicPort, PortPrivateHTTP: privatePort})
-	srv.Run(ctx, publicHandle(ctx, tpl))
+	srv := serv.New(ctx, serv.WithPublicPort(cfg.Port), serv.WithDebugPort(cfg.PortDebug), serv.WithGRPCPort(cfg.PortGRPC))
+
+	hw := func(grpcSrv *grpc.Server) {
+		impl := boilerplate.New(ctx)
+		api.RegisterHttpBodyExampleServiceServer(grpcSrv, impl)
+	}
+
+	eventBus := make(chan interface{})
+
+	bc := func(grpcSrv *grpc.Server) {
+		api.RegisterBlockchainServiceServer(grpcSrv, boilerplate.NewBlockchainServer(eventBus))
+	}
+
+	//test
+	go func() {
+		time.Sleep(5 * time.Second)
+
+		for i := 0; 1 < 100; i++ {
+			eventBus <- struct {
+				Type             byte
+				Coin             string
+				Value            int
+				TransactionCount int
+				Timestamp        time.Time
+			}{
+				Type:             1,
+				Coin:             "BIP",
+				TransactionCount: i,
+				Timestamp:        time.Now(),
+			}
+			time.Sleep(1 * time.Second)
+		}
+	}()
+
+	srv.Run(ctx, publicHandle(ctx, tpl), hw, bc)
 
 }

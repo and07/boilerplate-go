@@ -6,32 +6,35 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
 
 	log "gitlab.com/and07/boilerplate-go/internal/pkg/logger"
 )
 
-func graceful(ctx context.Context, srvs ...*http.Server) chan struct{} {
-	idleConnsClosed := make(chan struct{})
+func graceful(ctx context.Context, fn context.CancelFunc, srvs ...*http.Server) {
+
 	go func() {
 		sigint := make(chan os.Signal, 1)
 
 		// interrupt signal sent from terminal
-		signal.Notify(sigint, os.Interrupt)
 		// sigterm signal sent from kubernetes
-		signal.Notify(sigint, syscall.SIGTERM)
+		signal.Notify(sigint, os.Interrupt, syscall.SIGTERM)
 
 		<-sigint
 
 		// We received an interrupt signal, shut down.
+		timeoutCtx, cancel := context.WithTimeout(ctx, 5*time.Second)
+		defer cancel()
 		for i := range srvs {
-			if err := srvs[i].Shutdown(ctx); err != nil {
+			if err := srvs[i].Shutdown(timeoutCtx); err != nil {
 				// Error from closing listeners, or context timeout:
 				log.Errorf("HTTP server Shutdown %s: %v", srvs[i].Addr, err)
 			}
+			log.Infof("HTTP server Shutdow %s", srvs[i].Addr)
 		}
 
-		close(idleConnsClosed)
-		log.Info("HTTP server Shutdow")
+		fn()
+
 	}()
-	return idleConnsClosed
+	return
 }

@@ -47,3 +47,18 @@ helm del --purge boi
 helm del --purge grafana
 helm del --purge prometheus
 ```
+
+
+##GRPC
+
+```
+grpc_cli ls localhost:8842 -l 
+
+grpc_cli call localhost:8842 HttpBodyExampleService.HelloWorld ''
+
+
+grpc_cli call localhost:8842 BlockchainService.Address 'address:"Mxb9a117e772a965a3fddddf83398fd8d71bf57ff6", height:11'
+
+grpc_cli call localhost:8842 BlockchainService.Subscribe 'query:"testete"'
+
+```

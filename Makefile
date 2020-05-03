@@ -62,7 +62,27 @@ LDFLAGS:=-X '${PROJECT}/version.Name=$(SERVICE_NAME)'\
          -X '${PROJECT}/version.adminPortDefault='\
          -X '${PROJECT}/version.grpcPortDefault='
 
-BUILD_ENVPARMS:=CGO_ENABLED=0
+
+PKGMAP:=Mgoogle/protobuf/any.proto=github.com/gogo/protobuf/types,$\
+        Mgoogle/protobuf/api.proto=github.com/gogo/protobuf/types,$\
+        Mgoogle/protobuf/descriptor.proto=github.com/gogo/protobuf/protoc-gen-gogo/descriptor,$\
+        Mgoogle/protobuf/duration.proto=github.com/gogo/protobuf/types,$\
+        Mgoogle/protobuf/empty.proto=github.com/gogo/protobuf/types,$\
+        Mgoogle/protobuf/field_mask.proto=github.com/gogo/protobuf/types,$\
+        Mgoogle/protobuf/source_context.proto=github.com/gogo/protobuf/types,$\
+        Mgoogle/protobuf/struct.proto=github.com/gogo/protobuf/types,$\
+        Mgoogle/protobuf/timestamp.proto=github.com/gogo/protobuf/types,$\
+        Mgoogle/protobuf/type.proto=github.com/gogo/protobuf/types,$\
+        Mgoogle/protobuf/wrappers.proto=github.com/gogo/protobuf/types
+
+
+
+-include .env
+
+test-env:
+	@echo ${MY_ENV}
+
+BUILD_ENVPARMS:=CGO_ENABLED=0 PORT=${PORT} PORT_DEBUG=${PORT_DEBUG} PORT_GRPC=${PORT_GRPC}
 BIN?=./bin/${APP}
 
 CONTAINER_IMAGE?=docker.io/webdeva/${APP}
@@ -84,6 +104,24 @@ deps: .deps
 # run unit tests
 .PHONY: test
 test: .test
+
+.PHONY: install-protoc
+install-protoc:
+	go mod tidy
+	GOBIN=$(LOCAL_BIN)  go install \
+    github.com/grpc-ecosystem/grpc-gateway/protoc-gen-grpc-gateway \
+    github.com/grpc-ecosystem/grpc-gateway/protoc-gen-swagger \
+    github.com/golang/protobuf/protoc-gen-go
+
+gen-protoc:
+	mkdir -p "./api/${SERVICE_NAME}"
+	protoc -I/usr/local/include -I. \
+		-I${GOPATH}/src \
+		-I${GOPATH}/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis \
+		-I${GOPATH}/src/github.com/grpc-ecosystem/grpc-gateway \
+		--grpc-gateway_out=logtostderr=true:./api/$(SERVICE_NAME) \
+		--swagger_out=allow_merge=true,merge_file_name=api:./api/$(SERVICE_NAME) \
+		--go_out=plugins=grpc:./api/$(SERVICE_NAME) ./api/*.proto
 
 # install golangci-lint binary
 .PHONY: install-lint
