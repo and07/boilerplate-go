@@ -7,7 +7,7 @@ import (
 	"github.com/caarlos0/env"
 	"github.com/opentracing/opentracing-go"
 	"github.com/prometheus/client_golang/prometheus"
-	"gitlab.com/and07/boilerplate-go/api/boilerplate-go/api"
+	"gitlab.com/and07/boilerplate-go/api/gen-boilerplate-go/api"
 	"gitlab.com/and07/boilerplate-go/internal/app/boilerplate"
 	"gitlab.com/and07/boilerplate-go/internal/app/serv"
 	log "gitlab.com/and07/boilerplate-go/internal/pkg/logger"
@@ -108,7 +108,12 @@ func main() {
 	tpl := template.NewTemplate("tpl/layouts/", "tpl/", `{{define "main" }} {{ template "base" . }} {{ end }}`)
 	tpl.Init()
 
-	srv := serv.New(ctx, serv.WithPublicPort(cfg.Port), serv.WithDebugPort(cfg.PortDebug), serv.WithGRPCPort(cfg.PortGRPC))
+	srv := serv.New(ctx,
+		serv.WithPublicPort(cfg.Port),
+		serv.WithDebugPort(cfg.PortDebug),
+		serv.WithGRPCPort(cfg.PortGRPC),
+		serv.WithSwaggerUI(true),
+	)
 
 	hw := func(grpcSrv *grpc.Server) {
 		impl := boilerplate.New(ctx)

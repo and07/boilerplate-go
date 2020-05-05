@@ -23,8 +23,11 @@ require (
 	github.com/oxtoacart/bpool v0.0.0-20190530202638-03653db5a59c
 	github.com/prometheus/client_golang v1.5.1
 	github.com/proxeter/errors-channel v0.1.0
+	github.com/rakyll/statik v0.1.7
+	github.com/ribice/golang-swaggerui-example v0.0.0-20180611180427-1e7622a30e50
 	github.com/sirupsen/logrus v1.4.2
 	github.com/streadway/amqp v0.0.0-20190404075320-75d898a42a94
+	github.com/tmc/grpc-websocket-proxy v0.0.0-20200122045848-3419fae592fc
 	github.com/uber/jaeger-client-go v2.16.0+incompatible
 	github.com/uber/jaeger-lib v2.0.0+incompatible // indirect
 	go.elastic.co/apm/module/apmgrpc v1.7.2

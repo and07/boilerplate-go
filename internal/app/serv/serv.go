@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/opentracing/opentracing-go"
+	"gitlab.com/and07/boilerplate-go/api/gen-boilerplate-go/api"
 	g "gitlab.com/and07/boilerplate-go/internal/app/grpc"
 	"google.golang.org/grpc"
 )
@@ -14,11 +15,17 @@ type Serv struct {
 	portPublicHTTP  string
 	portPrivateHTTP string
 	portGRPC        string
+	swaggerui       bool
 }
 
 // ServOption ...
 type ServOption func(*Serv)
 
+func WithSwaggerUI(on bool) ServOption {
+	return func(s *Serv) {
+		s.swaggerui = on
+	}
+}
 func WithDebugPort(portPrivateHTTP string) ServOption {
 	return func(s *Serv) {
 		s.portPrivateHTTP = portPrivateHTTP
@@ -68,7 +75,9 @@ func (s *Serv) Run(ctx context.Context, handles *http.ServeMux, fns ...func(*grp
 	}
 
 	if s.portGRPC != "" {
-		go g.NewServer(ctx, s.portGRPC).RunGRPC(ctx, fns...)
+		grpcSrv := g.NewServer(ctx, s.portGRPC)
+		go grpcSrv.RunGRPC(ctx, fns...)
+		go grpcSrv.RegisterEndpoints(ctx, api.RegisterBlockchainServiceHandlerFromEndpoint, api.RegisterHttpBodyExampleServiceHandlerFromEndpoint)
 	}
 
 	graceful(ctx, cancel, servs...)

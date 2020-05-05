@@ -3,10 +3,13 @@ package grpc
 import (
 	"context"
 	"net"
+	"net/http"
 	"strconv"
 
 	"github.com/grpc-ecosystem/go-grpc-middleware"
 	grpc_prometheus "github.com/grpc-ecosystem/go-grpc-prometheus"
+	"github.com/grpc-ecosystem/grpc-gateway/runtime"
+	"github.com/tmc/grpc-websocket-proxy/wsproxy"
 
 	//"github.com/and07/boilerplate-go/service"
 	_ "github.com/jnewmano/grpc-json-proxy/codec" // GRPC Proxy
@@ -51,6 +54,36 @@ func NewServer(ctx context.Context, GRPCPort string) *GRPC {
 	}
 }
 
+func (g *GRPC) RegisterEndpoints(ctx context.Context, RegisterEndpointFns ...func(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) error) error {
+	mux := runtime.NewServeMux(runtime.WithMarshalerOption(runtime.MIMEWildcard, &runtime.JSONPb{OrigName: true, EmitDefaults: true}))
+	opts := []grpc.DialOption{
+		grpc.WithInsecure(),
+		grpc.WithDefaultCallOptions(grpc.MaxCallRecvMsgSize(50000000)),
+	}
+
+	headers := func(h http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+
+			w.Header().Set("Access-Control-Allow-Origin", "*")
+			w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+			w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
+
+			h.ServeHTTP(w, r)
+		})
+	}
+
+	for _, fn := range RegisterEndpointFns {
+		fn(ctx, mux, ":8842", opts)
+	}
+
+	select {
+	case err := <-errch.Register(func() error { return http.ListenAndServe(":8843", wsproxy.WebsocketProxy(headers(mux))) }):
+		return err
+	case <-ctx.Done():
+		return ctx.Err()
+	}
+}
+
 func (g *GRPC) RunGRPC(ctx context.Context, fns ...func(*grpc.Server)) error {
 
 	for _, fn := range fns {
@@ -82,65 +115,3 @@ func (g *GRPC) RunGRPC(ctx context.Context, fns ...func(*grpc.Server)) error {
 		return ctx.Err()
 	}
 }
-
-/*
-func run() error {
-	ctx := context.Background()
-	ctx, cancel := context.WithCancel(ctx)
-	defer cancel()
-
-	lis, err := net.Listen("tcp", ":8842")
-	if err != nil {
-		return err
-	}
-
-	grpcServer := grpc.NewServer(
-		grpc.StreamInterceptor(grpc_prometheus.StreamServerInterceptor),
-		grpc.UnaryInterceptor(grpc_prometheus.UnaryServerInterceptor),
-	)
-	eventBus := make(chan interface{})
-	gw.RegisterBlockchainServiceServer(grpcServer, service.NewBlockchainServer(eventBus))
-	grpc_prometheus.Register(grpcServer)
-
-	var group errgroup.Group
-
-	group.Go(func() error {
-		return grpcServer.Serve(lis)
-	})
-
-	mux := runtime.NewServeMux(runtime.WithMarshalerOption(runtime.MIMEWildcard, &runtime.JSONPb{OrigName: true, EmitDefaults: true}))
-	opts := []grpc.DialOption{
-		grpc.WithInsecure(),
-		grpc.WithDefaultCallOptions(grpc.MaxCallRecvMsgSize(50000000)),
-	}
-
-	group.Go(func() error {
-		return gw.RegisterBlockchainServiceHandlerFromEndpoint(ctx, mux, ":8842", opts)
-	})
-	group.Go(func() error {
-		return http.ListenAndServe(":8843", wsproxy.WebsocketProxy(mux))
-	})
-	group.Go(func() error {
-		return http.ListenAndServe(":2662", promhttp.Handler())
-	})
-	group.Go(func() error {
-		for i := 0; i < 100; i++ {
-			eventBus <- struct {
-				Type             byte
-				Coin             string
-				Value            int
-				TransactionCount int
-				Timestamp        time.Time
-			}{
-				Type:             1,
-				Coin:             "BIP",
-				TransactionCount: i,
-				Timestamp:        time.Now(),
-			}
-		}
-		return nil
-	})
-
-	return group.Wait()
-}
-*/

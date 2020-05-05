@@ -114,14 +114,14 @@ install-protoc:
     github.com/golang/protobuf/protoc-gen-go
 
 gen-protoc:
-	mkdir -p "./api/${SERVICE_NAME}"
+	mkdir -p "./api/gen-${SERVICE_NAME}"
 	protoc -I/usr/local/include -I. \
 		-I${GOPATH}/src \
 		-I${GOPATH}/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis \
 		-I${GOPATH}/src/github.com/grpc-ecosystem/grpc-gateway \
-		--grpc-gateway_out=logtostderr=true:./api/$(SERVICE_NAME) \
-		--swagger_out=allow_merge=true,merge_file_name=api:./api/$(SERVICE_NAME) \
-		--go_out=plugins=grpc:./api/$(SERVICE_NAME) ./api/*.proto
+		--grpc-gateway_out=logtostderr=true:./api/gen-$(SERVICE_NAME) \
+		--swagger_out=allow_merge=true,merge_file_name=api:./assets/swaggerui \
+		--go_out=plugins=grpc:./api/gen-$(SERVICE_NAME) ./api/*.proto
 
 # install golangci-lint binary
 .PHONY: install-lint

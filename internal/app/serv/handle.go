@@ -23,7 +23,7 @@ func prometheusHandler() http.Handler {
 	return promhttp.Handler()
 }
 
-func privateHandle() *http.ServeMux {
+func (s *Serv) privateHandle() *http.ServeMux {
 	rPrivate := http.NewServeMux()
 	rPrivate.Handle("/metrics", prometheusHandler())
 
@@ -34,13 +34,20 @@ func privateHandle() *http.ServeMux {
 	rPrivate.HandleFunc("/debug/pprof/symbol", pprof.Symbol)
 	rPrivate.HandleFunc("/debug/pprof/trace", pprof.Trace)
 
+	// swagger
+	if s.swaggerui {
+		staticServer := http.FileServer(http.Dir("./assets/swaggerui"))
+		sh := http.StripPrefix("/swaggerui/", staticServer)
+		rPrivate.Handle("/swaggerui/", sh)
+	}
+
 	rPrivate.HandleFunc("/healthz", healthz)
 	rPrivate.HandleFunc("/readyz", readyz)
 	return rPrivate
 }
 
 func (s *Serv) runPrivateHTTP(ctx context.Context) *http.Server {
-	srvPrivate := &http.Server{Addr: ":" + s.portPrivateHTTP, Handler: privateHandle()}
+	srvPrivate := &http.Server{Addr: ":" + s.portPrivateHTTP, Handler: s.privateHandle()}
 	go func() error {
 		log.Infof("http.Private start : %s", s.portPrivateHTTP)
 		if errSrvPrivateListenAndServe := srvPrivate.ListenAndServe(); errSrvPrivateListenAndServe != nil && errSrvPrivateListenAndServe != http.ErrServerClosed {

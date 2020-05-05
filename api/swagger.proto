@@ -6,14 +6,15 @@ package api;
 
 option (grpc.gateway.protoc_gen_swagger.options.openapiv2_swagger) = {
     info: {
-        title: "My Habr Example Service"
+        title: "My boilerplate-go"
         version: "1.0"
         contact: {
-            name: "Klimov Sergey"
-            url: "https://github.com/klim0v"
-            email: "klim0v-sergey@yandex.ru"
+            name: "and07"
+            url: "https://github.com/and07"
+            email: ""
         };
     };
+    host: "localhost:8843"
     schemes: [HTTP,HTTPS]
     consumes: "application/json"
     produces: "application/json"
