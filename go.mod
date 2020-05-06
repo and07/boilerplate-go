@@ -9,10 +9,6 @@ require (
 	github.com/caarlos0/env v3.5.0+incompatible
 	github.com/go-redis/redis v6.15.2+incompatible
 	github.com/golang/protobuf v1.3.5
-	github.com/golangci/go-tools v0.0.0-20180109140146-35a9f45a5db0 // indirect
-	github.com/golangci/golangci-lint v1.26.0 // indirect
-	github.com/golangci/gosec v0.0.0-20180901114220-8afd9cbb6cfb // indirect
-	github.com/golangci/govet v0.0.0-20180818181408-44ddbe260190 // indirect
 	github.com/grpc-ecosystem/go-grpc-middleware v1.2.0
 	github.com/grpc-ecosystem/go-grpc-prometheus v1.2.0
 	github.com/grpc-ecosystem/grpc-gateway v1.14.4
