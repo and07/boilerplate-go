@@ -9,6 +9,10 @@ require (
 	github.com/caarlos0/env v3.5.0+incompatible
 	github.com/go-redis/redis v6.15.2+incompatible
 	github.com/golang/protobuf v1.3.5
+	github.com/golangci/go-tools v0.0.0-20180109140146-35a9f45a5db0 // indirect
+	github.com/golangci/golangci-lint v1.26.0 // indirect
+	github.com/golangci/gosec v0.0.0-20180901114220-8afd9cbb6cfb // indirect
+	github.com/golangci/govet v0.0.0-20180818181408-44ddbe260190 // indirect
 	github.com/grpc-ecosystem/go-grpc-middleware v1.2.0
 	github.com/grpc-ecosystem/go-grpc-prometheus v1.2.0
 	github.com/grpc-ecosystem/grpc-gateway v1.14.4
@@ -18,6 +22,7 @@ require (
 	github.com/mailru/easyjson v0.0.0-20190403194419-1ea4449da983 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.1 // indirect
+	github.com/mssola/user_agent v0.5.2
 	github.com/olivere/elastic v6.2.17+incompatible
 	github.com/opentracing/opentracing-go v1.1.0
 	github.com/oxtoacart/bpool v0.0.0-20190530202638-03653db5a59c
@@ -28,10 +33,15 @@ require (
 	github.com/sirupsen/logrus v1.4.2
 	github.com/streadway/amqp v0.0.0-20190404075320-75d898a42a94
 	github.com/tmc/grpc-websocket-proxy v0.0.0-20200122045848-3419fae592fc
+	github.com/ua-parser/uap-go v0.0.0-20200325213135-e1c09f13e2fe
 	github.com/uber/jaeger-client-go v2.16.0+incompatible
 	github.com/uber/jaeger-lib v2.0.0+incompatible // indirect
+	github.com/valyala/fasthttp v1.12.0
 	go.elastic.co/apm/module/apmgrpc v1.7.2
 	go.uber.org/zap v1.14.1
 	google.golang.org/genproto v0.0.0-20190927181202-20e1ac93f88c
 	google.golang.org/grpc v1.29.0
+	gopkg.in/airbrake/gobrake.v2 v2.0.9 // indirect
+	gopkg.in/gemnasium/logrus-airbrake-hook.v2 v2.1.2 // indirect
+	sourcegraph.com/sourcegraph/go-diff v0.0.0-20171119081133-3f415a150aec // indirect
 )

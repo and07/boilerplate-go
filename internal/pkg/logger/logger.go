@@ -1,10 +1,11 @@
 package logger
 
 import (
-	"go.uber.org/zap"
-	"go.uber.org/zap/zapcore"
 	"os"
 	"strconv"
+
+	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
 )
 
 type logStdout struct {
@@ -32,7 +33,8 @@ var log *zap.SugaredLogger
 // StdLogger ...
 var StdLogger = &logStdout{}
 
-func init() {
+// New ...
+func New() *zap.SugaredLogger {
 	logLevel := os.Getenv("LOG_LEVEL")
 	level, _ := strconv.ParseInt(logLevel, 10, 8)
 	var zapLevel zapcore.Level
@@ -70,9 +72,15 @@ func init() {
 		},
 	}
 	logTemp, _ := cfg.Build()
-	log = logTemp.Sugar()
-	log.Sync() // flushes buffer, if any
+	logger := logTemp.Sugar()
+	if err := logger.Sync(); err != nil {
+		logger.Error(err)
+	} // flushes buffer, if any
+	return logger
+}
 
+func init() {
+	log = New()
 }
 
 // Debug logs a message at level Debug on the standard logger.

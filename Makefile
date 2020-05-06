@@ -14,7 +14,7 @@ LOCAL_BIN:=$(CURDIR)/bin
 
 # Check global GOLANGCI-LINT
 GOLANGCI_BIN:=$(LOCAL_BIN)/golangci-lint
-GOLANGCI_TAG:=1.13.1
+GOLANGCI_TAG:=1.26.0
 
 # Check local bin version
 ifneq ($(wildcard $(GOLANGCI_BIN)),)
@@ -82,7 +82,7 @@ PKGMAP:=Mgoogle/protobuf/any.proto=github.com/gogo/protobuf/types,$\
 test-env:
 	@echo ${MY_ENV}
 
-BUILD_ENVPARMS:=CGO_ENABLED=0 PORT=${PORT} PORT_DEBUG=${PORT_DEBUG} PORT_GRPC=${PORT_GRPC}
+BUILD_ENVPARMS:=CGO_ENABLED=0 PORT=${PORT} PORT_DEBUG=${PORT_DEBUG} PORT_GRPC=${PORT_GRPC} LOG_LEVEL=${LOG_LEVEL}
 BIN?=./bin/${APP}
 
 CONTAINER_IMAGE?=docker.io/webdeva/${APP}

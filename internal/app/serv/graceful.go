@@ -7,11 +7,9 @@ import (
 	"os/signal"
 	"syscall"
 	"time"
-
-	log "gitlab.com/and07/boilerplate-go/internal/pkg/logger"
 )
 
-func graceful(ctx context.Context, fn context.CancelFunc, srvs ...*http.Server) {
+func (s *Serv) graceful(ctx context.Context, fn context.CancelFunc, srvs ...*http.Server) {
 
 	go func() {
 		sigint := make(chan os.Signal, 1)
@@ -28,9 +26,9 @@ func graceful(ctx context.Context, fn context.CancelFunc, srvs ...*http.Server) 
 		for i := range srvs {
 			if err := srvs[i].Shutdown(timeoutCtx); err != nil {
 				// Error from closing listeners, or context timeout:
-				log.Errorf("HTTP server Shutdown %s: %v", srvs[i].Addr, err)
+				s.Logger.Errorf("HTTP server Shutdown %s: %v", srvs[i].Addr, err)
 			}
-			log.Infof("HTTP server Shutdow %s", srvs[i].Addr)
+			s.Logger.Infof("HTTP server Shutdow %s", srvs[i].Addr)
 		}
 
 		fn()

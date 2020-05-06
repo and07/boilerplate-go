@@ -6,7 +6,6 @@ import (
 	"net/http/pprof"
 
 	"github.com/prometheus/client_golang/prometheus/promhttp"
-	log "gitlab.com/and07/boilerplate-go/internal/pkg/logger"
 )
 
 // healthz is a liveness probe.
@@ -49,9 +48,9 @@ func (s *Serv) privateHandle() *http.ServeMux {
 func (s *Serv) runPrivateHTTP(ctx context.Context) *http.Server {
 	srvPrivate := &http.Server{Addr: ":" + s.portPrivateHTTP, Handler: s.privateHandle()}
 	go func() error {
-		log.Infof("http.Private start : %s", s.portPrivateHTTP)
+		s.Logger.Infof("http.Private start : %s", s.portPrivateHTTP)
 		if errSrvPrivateListenAndServe := srvPrivate.ListenAndServe(); errSrvPrivateListenAndServe != nil && errSrvPrivateListenAndServe != http.ErrServerClosed {
-			log.Errorf("HTTP server ListenAndServe: %v", errSrvPrivateListenAndServe)
+			s.Logger.Errorf("HTTP server ListenAndServe: %v", errSrvPrivateListenAndServe)
 		}
 		select {
 		case <-ctx.Done():
@@ -64,9 +63,9 @@ func (s *Serv) runPrivateHTTP(ctx context.Context) *http.Server {
 func (s *Serv) runPublicHTTP(ctx context.Context, h *http.ServeMux) *http.Server {
 	srvPublic := &http.Server{Addr: ":" + s.portPublicHTTP, Handler: h}
 	go func() error {
-		log.Infof("http.Public start : %s", s.portPublicHTTP)
+		s.Logger.Infof("http.Public start : %s", s.portPublicHTTP)
 		if errSrvPublicListenAndServe := srvPublic.ListenAndServe(); errSrvPublicListenAndServe != nil && errSrvPublicListenAndServe != http.ErrServerClosed {
-			log.Errorf("HTTP server ListenAndServe: %v", errSrvPublicListenAndServe)
+			s.Logger.Errorf("HTTP server ListenAndServe: %v", errSrvPublicListenAndServe)
 		}
 		select {
 		case <-ctx.Done():

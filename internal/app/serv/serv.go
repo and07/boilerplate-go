@@ -7,8 +7,21 @@ import (
 	"github.com/opentracing/opentracing-go"
 	"gitlab.com/and07/boilerplate-go/api/gen-boilerplate-go/api"
 	g "gitlab.com/and07/boilerplate-go/internal/app/grpc"
+	log "gitlab.com/and07/boilerplate-go/internal/pkg/logger"
 	"google.golang.org/grpc"
 )
+
+// Logger ...
+type Logger interface {
+	Debug(args ...interface{})
+	Info(args ...interface{})
+	Error(args ...interface{})
+	Fatal(args ...interface{})
+	Debugf(format string, args ...interface{})
+	Infof(format string, args ...interface{})
+	Errorf(format string, args ...interface{})
+	Fatalf(format string, args ...interface{})
+}
 
 // Serv ...
 type Serv struct {
@@ -16,31 +29,44 @@ type Serv struct {
 	portPrivateHTTP string
 	portGRPC        string
 	swaggerui       bool
+	Logger          Logger
 }
 
 // ServOption ...
 type ServOption func(*Serv)
 
+// WithSwaggerUI ...
 func WithSwaggerUI(on bool) ServOption {
 	return func(s *Serv) {
 		s.swaggerui = on
 	}
 }
+
+// WithDebugPort ...
 func WithDebugPort(portPrivateHTTP string) ServOption {
 	return func(s *Serv) {
 		s.portPrivateHTTP = portPrivateHTTP
 	}
 }
 
+// WithPublicPort ...
 func WithPublicPort(portPublicHTTP string) ServOption {
 	return func(s *Serv) {
 		s.portPublicHTTP = portPublicHTTP
 	}
 }
 
+// WithGRPCPort ...
 func WithGRPCPort(portGRPC string) ServOption {
 	return func(s *Serv) {
 		s.portGRPC = portGRPC
+	}
+}
+
+// WithLogger ...
+func WithLogger(l Logger) ServOption {
+	return func(s *Serv) {
+		s.Logger = l
 	}
 }
 
@@ -48,7 +74,9 @@ func WithGRPCPort(portGRPC string) ServOption {
 func New(ctx context.Context, opts ...ServOption) *Serv {
 	span, _ := opentracing.StartSpanFromContext(ctx, "NewServ")
 	defer span.Finish()
-	s := &Serv{}
+	s := &Serv{
+		Logger: log.New(),
+	}
 
 	for _, opt := range opts {
 		// Call the option giving the instantiated
@@ -80,7 +108,7 @@ func (s *Serv) Run(ctx context.Context, handles *http.ServeMux, fns ...func(*grp
 		go grpcSrv.RegisterEndpoints(ctx, api.RegisterBlockchainServiceHandlerFromEndpoint, api.RegisterHttpBodyExampleServiceHandlerFromEndpoint)
 	}
 
-	graceful(ctx, cancel, servs...)
+	s.graceful(ctx, cancel, servs...)
 
 	<-ctx.Done()
 }
