@@ -1,9 +1,9 @@
-// +heroku goVersion go1.12
+// +heroku goVersion go1.14
 // +heroku install ./cmd/...
 
 module gitlab.com/and07/boilerplate-go
 
-go 1.12
+go 1.14
 
 require (
 	github.com/caarlos0/env v3.5.0+incompatible
@@ -35,6 +35,8 @@ require (
 	github.com/valyala/fasthttp v1.12.0
 	go.elastic.co/apm/module/apmgrpc v1.7.2
 	go.uber.org/zap v1.14.1
+	golang.org/x/sync v0.0.0-20190911185100-cd5d95a43a6e
+	google.golang.org/appengine v1.4.0
 	google.golang.org/genproto v0.0.0-20190927181202-20e1ac93f88c
 	google.golang.org/grpc v1.29.0
 	gopkg.in/airbrake/gobrake.v2 v2.0.9 // indirect

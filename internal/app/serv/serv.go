@@ -8,6 +8,7 @@ import (
 	"gitlab.com/and07/boilerplate-go/api/gen-boilerplate-go/api"
 	g "gitlab.com/and07/boilerplate-go/internal/app/grpc"
 	log "gitlab.com/and07/boilerplate-go/internal/pkg/logger"
+	"golang.org/x/sync/errgroup"
 	"google.golang.org/grpc"
 )
 
@@ -32,46 +33,46 @@ type Serv struct {
 	Logger          Logger
 }
 
-// ServOption ...
-type ServOption func(*Serv)
+// Option ...
+type Option func(*Serv)
 
 // WithSwaggerUI ...
-func WithSwaggerUI(on bool) ServOption {
+func WithSwaggerUI(on bool) Option {
 	return func(s *Serv) {
 		s.swaggerui = on
 	}
 }
 
 // WithDebugPort ...
-func WithDebugPort(portPrivateHTTP string) ServOption {
+func WithDebugPort(portPrivateHTTP string) Option {
 	return func(s *Serv) {
 		s.portPrivateHTTP = portPrivateHTTP
 	}
 }
 
 // WithPublicPort ...
-func WithPublicPort(portPublicHTTP string) ServOption {
+func WithPublicPort(portPublicHTTP string) Option {
 	return func(s *Serv) {
 		s.portPublicHTTP = portPublicHTTP
 	}
 }
 
 // WithGRPCPort ...
-func WithGRPCPort(portGRPC string) ServOption {
+func WithGRPCPort(portGRPC string) Option {
 	return func(s *Serv) {
 		s.portGRPC = portGRPC
 	}
 }
 
 // WithLogger ...
-func WithLogger(l Logger) ServOption {
+func WithLogger(l Logger) Option {
 	return func(s *Serv) {
 		s.Logger = l
 	}
 }
 
 // New ...
-func New(ctx context.Context, opts ...ServOption) *Serv {
+func New(ctx context.Context, opts ...Option) *Serv {
 	span, _ := opentracing.StartSpanFromContext(ctx, "NewServ")
 	defer span.Finish()
 	s := &Serv{
@@ -103,9 +104,18 @@ func (s *Serv) Run(ctx context.Context, handles *http.ServeMux, fns ...func(*grp
 	}
 
 	if s.portGRPC != "" {
+		var group errgroup.Group
 		grpcSrv := g.NewServer(ctx, s.portGRPC)
-		go grpcSrv.RunGRPC(ctx, fns...)
-		go grpcSrv.RegisterEndpoints(ctx, api.RegisterBlockchainServiceHandlerFromEndpoint, api.RegisterHttpBodyExampleServiceHandlerFromEndpoint)
+		group.Go(func() error {
+			return grpcSrv.RunGRPC(ctx, fns...)
+		})
+		group.Go(func() error {
+			return grpcSrv.RegisterEndpoints(ctx, api.RegisterBlockchainServiceHandlerFromEndpoint, api.RegisterHttpBodyExampleServiceHandlerFromEndpoint)
+		})
+
+		if err := group.Wait(); err != nil {
+			log.Error(err)
+		}
 	}
 
 	s.graceful(ctx, cancel, servs...)

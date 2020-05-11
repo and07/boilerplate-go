@@ -15,14 +15,17 @@ type Agent struct {
 	Platform string
 }
 
+// GetOS ...
 func (agent *Agent) GetOS() string {
 	return agent.OS
 }
 
+// GetBrowser ...
 func (agent *Agent) GetBrowser() string {
 	return agent.Browser
 }
 
+// GetPlatform ...
 func (agent *Agent) GetPlatform() string {
 	return agent.Platform
 }
@@ -36,6 +39,7 @@ func (agent *Agent) Parse(ua string) {
 	agent.Platform = uaParsed.Platform()
 }
 
+// ParseUA ...
 func (agent *Agent) ParseUA(uaObject *uaparser.Parser, ua string) {
 	uaParsed := uaObject.Parse(ua)
 	agent.Browser = uaParsed.UserAgent.Family

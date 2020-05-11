@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/grpc-ecosystem/go-grpc-middleware"
+	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	grpc_prometheus "github.com/grpc-ecosystem/go-grpc-prometheus"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"github.com/tmc/grpc-websocket-proxy/wsproxy"
@@ -25,11 +25,13 @@ import (
 
 const defaultGRPCPort = 8842
 
+// GRPC ...
 type GRPC struct {
 	grpcSrv *grpc.Server
 	address string
 }
 
+// NewServer ...
 func NewServer(ctx context.Context, GRPCPort string) *GRPC {
 	var address string
 	if GRPCPort != "" {
@@ -54,6 +56,7 @@ func NewServer(ctx context.Context, GRPCPort string) *GRPC {
 	}
 }
 
+// RegisterEndpoints ...
 func (g *GRPC) RegisterEndpoints(ctx context.Context, RegisterEndpointFns ...func(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) error) error {
 	mux := runtime.NewServeMux(runtime.WithMarshalerOption(runtime.MIMEWildcard, &runtime.JSONPb{OrigName: true, EmitDefaults: true}))
 	opts := []grpc.DialOption{
@@ -73,7 +76,9 @@ func (g *GRPC) RegisterEndpoints(ctx context.Context, RegisterEndpointFns ...fun
 	}
 
 	for _, fn := range RegisterEndpointFns {
-		fn(ctx, mux, ":8842", opts)
+		if err := fn(ctx, mux, ":8842", opts); err != nil {
+			log.Error(err)
+		}
 	}
 
 	select {
@@ -84,6 +89,7 @@ func (g *GRPC) RegisterEndpoints(ctx context.Context, RegisterEndpointFns ...fun
 	}
 }
 
+// RunGRPC ...
 func (g *GRPC) RunGRPC(ctx context.Context, fns ...func(*grpc.Server)) error {
 
 	for _, fn := range fns {

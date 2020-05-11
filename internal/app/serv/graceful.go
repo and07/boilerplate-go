@@ -34,5 +34,4 @@ func (s *Serv) graceful(ctx context.Context, fn context.CancelFunc, srvs ...*htt
 		fn()
 
 	}()
-	return
 }

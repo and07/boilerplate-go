@@ -47,14 +47,15 @@ func (s *Serv) privateHandle() *http.ServeMux {
 
 func (s *Serv) runPrivateHTTP(ctx context.Context) *http.Server {
 	srvPrivate := &http.Server{Addr: ":" + s.portPrivateHTTP, Handler: s.privateHandle()}
-	go func() error {
+	go func() {
 		s.Logger.Infof("http.Private start : %s", s.portPrivateHTTP)
 		if errSrvPrivateListenAndServe := srvPrivate.ListenAndServe(); errSrvPrivateListenAndServe != nil && errSrvPrivateListenAndServe != http.ErrServerClosed {
 			s.Logger.Errorf("HTTP server ListenAndServe: %v", errSrvPrivateListenAndServe)
 		}
 		select {
 		case <-ctx.Done():
-			return ctx.Err()
+			return
+		default:
 		}
 	}()
 	return srvPrivate
@@ -62,14 +63,15 @@ func (s *Serv) runPrivateHTTP(ctx context.Context) *http.Server {
 
 func (s *Serv) runPublicHTTP(ctx context.Context, h *http.ServeMux) *http.Server {
 	srvPublic := &http.Server{Addr: ":" + s.portPublicHTTP, Handler: h}
-	go func() error {
+	go func() {
 		s.Logger.Infof("http.Public start : %s", s.portPublicHTTP)
 		if errSrvPublicListenAndServe := srvPublic.ListenAndServe(); errSrvPublicListenAndServe != nil && errSrvPublicListenAndServe != http.ErrServerClosed {
 			s.Logger.Errorf("HTTP server ListenAndServe: %v", errSrvPublicListenAndServe)
 		}
 		select {
 		case <-ctx.Done():
-			return ctx.Err()
+			return
+		default:
 		}
 	}()
 	return srvPublic
