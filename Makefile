@@ -114,7 +114,7 @@ help: ## Display this help screen
 
 # run unit tests
 .PHONY: test
-test: .test
+test: .test ## Run tests
 
 .PHONY: install-protoc
 install-protoc:
@@ -141,7 +141,7 @@ ifeq ($(wildcard $(GOLANGCI_BIN)),)
 	$(info #Downloading golangci-lint v$(GOLANGCI_TAG))
 	go get -d github.com/golangci/golangci-lint@v$(GOLANGCI_TAG)
 	go build -ldflags "-X 'main.version=$(GOLANGCI_TAG)' -X 'main.commit=test' -X 'main.date=test'" -o $(LOCAL_BIN)/golangci-lint github.com/golangci/golangci-lint/cmd/golangci-lint
-	go mod tidy
+	#go mod tidy
 GOLANGCI_BIN:=$(LOCAL_BIN)/golangci-lint
 endif
 
@@ -152,7 +152,7 @@ endif
 
 # golangci-lint diff master
 .PHONY: lint
-lint: .lint
+lint: .lint ## Lint Golang files 
 
 # run full lint like in pipeline
 .PHONY: lint-full
@@ -167,7 +167,7 @@ lint-full: install-lint
 
 # build app
 .PHONY: build
-build: .build
+build: .build ## Build the binary file
 
 .PHONY: .run
 .run:
@@ -175,7 +175,7 @@ build: .build
 	$(BUILD_ENVPARMS) go run -ldflags "$(LDFLAGS)" ./cmd/${APP}
 # run app
 .PHONY: run
-run: .run
+run: .run ## Run appication
 
 
 .PHONY: docker-kill
