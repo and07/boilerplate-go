@@ -141,7 +141,7 @@ ifeq ($(wildcard $(GOLANGCI_BIN)),)
 	$(info #Downloading golangci-lint v$(GOLANGCI_TAG))
 	go get -d github.com/golangci/golangci-lint@v$(GOLANGCI_TAG)
 	go build -ldflags "-X 'main.version=$(GOLANGCI_TAG)' -X 'main.commit=test' -X 'main.date=test'" -o $(LOCAL_BIN)/golangci-lint github.com/golangci/golangci-lint/cmd/golangci-lint
-	#go mod tidy
+
 GOLANGCI_BIN:=$(LOCAL_BIN)/golangci-lint
 endif
 
