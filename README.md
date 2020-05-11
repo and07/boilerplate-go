@@ -48,8 +48,7 @@ helm del --purge grafana
 helm del --purge prometheus
 ```
 
-
-##GRPC
+## GRPC
 
 ```
 grpc_cli ls localhost:8842 -l 
@@ -61,4 +60,18 @@ grpc_cli call localhost:8842 BlockchainService.Address 'address:"Mxb9a117e772a96
 
 grpc_cli call localhost:8842 BlockchainService.Subscribe 'query:"testete"'
 
+```
+
+## GRPC http proxy
+```
+curl -X GET "http://localhost:8843/helloworld" -H "accept: application/json"
+
+curl -X GET "http://localhost:8843/address/Mxb9a117e772a965a3fddddf83398fd8d71bf57ff6?height=1" -H "accept: application/json"
+```
+
+
+## swagger
+
+```
+http://localhost:8888/swaggerui/
 ```
