@@ -1,3 +1,7 @@
+[![codecov](https://codecov.io/gh/and07/boilerplate-go/branch/master/graph/badge.svg)](https://codecov.io/gh/and07/boilerplate-go)
+[![Actions Status](https://github.com/and07/boilerplate-go/workflows/Build%20and%20Test/badge.svg)](https://github.com/and07/boilerplate-go/actions)
+[![MIT License](http://img.shields.io/:license-mit-blue.svg)](LICENSE)
+
 # Standard Go Project Layout (Boilerplate-GO)
 
 This is a basic layout for Go application projects. 
