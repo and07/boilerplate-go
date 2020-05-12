@@ -117,14 +117,14 @@ help: ## Display this help screen
 test: .test ## Run tests
 
 .PHONY: install-protoc
-install-protoc:
+install-protoc: ## Install protoc
 	go mod tidy
 	GOBIN=$(LOCAL_BIN)  go install \
     github.com/grpc-ecosystem/grpc-gateway/protoc-gen-grpc-gateway \
     github.com/grpc-ecosystem/grpc-gateway/protoc-gen-swagger \
     github.com/golang/protobuf/protoc-gen-go
 
-gen-protoc:
+gen-protoc: ## protoc generation
 	mkdir -p "./api/gen-${SERVICE_NAME}"
 	protoc -I/usr/local/include -I. \
 		-I${GOPATH}/src \
@@ -134,9 +134,9 @@ gen-protoc:
 		--swagger_out=allow_merge=true,merge_file_name=api:./assets/swaggerui \
 		--go_out=plugins=grpc:./api/gen-$(SERVICE_NAME) ./api/*.proto
 
-# install golangci-lint binary
+
 .PHONY: install-lint
-install-lint:
+install-lint: ## install golangci-lint binary
 ifeq ($(wildcard $(GOLANGCI_BIN)),)
 	$(info #Downloading golangci-lint v$(GOLANGCI_TAG))
 	go get -d github.com/golangci/golangci-lint@v$(GOLANGCI_TAG)
@@ -156,7 +156,7 @@ lint: .lint ## Lint Golang files
 
 # run full lint like in pipeline
 .PHONY: lint-full
-lint-full: install-lint
+lint-full: install-lint ## run full lint 
 	$(GOLANGCI_BIN) run --config=.golangci.pipeline.yaml ./...
 
 
@@ -179,13 +179,13 @@ run: .run ## Run appication
 
 
 .PHONY: docker-kill
-docker-kill:
+docker-kill: ## Docker compose kill
 	docker-compose -f $${DC_FILE:-deployments/docker-compose.yml} kill
 	docker-compose -f $${DC_FILE:-deployments/docker-compose.yml} rm -f
 	docker network rm network-$${CI_JOB_ID:-local} || true
 
 .PHONY: docker-build
-docker-build: docker-kill
+docker-build: docker-kill  ## Docker build
 	env GOBUILD=env GOOS=linux GOARCH=amd64 $(BUILD_ENVPARMS) go build -ldflags "$(LDFLAGS)" -o $(BIN) ./cmd/${APP}
 	#docker build -f docker/pg-migrations.dockerfile -t pg-migrations-$${CI_JOB_ID:-local} .
 	docker build --no-cache -t $(QUAYVERSION) -f build/package/project.dockerfile .
@@ -197,7 +197,7 @@ docker-up: docker-build
 	docker-compose -f $${DC_FILE:-deployments/docker-compose.yml} up --force-recreate --renew-anon-volumes -d
 
 .PHONY: docker-logs
-docker-logs:
+docker-logs: ## Docker logs
 	mkdir -p ./logs || true
 	#docker logs postgres-$${CI_JOB_ID:-local} >& logs/postgres.log
 	#docker logs pg-migrations-$${CI_JOB_ID:-local} >& logs/pg-migrations.log
@@ -234,18 +234,11 @@ docker-clean:
 	@echo "Занятость диска после очистки:"
 	@echo "$$(df -h /)"
 
-docker-container: docker-build
-    #docker build -t $(CONTAINER_IMAGE):$(RELEASE) .
-	echo $(VERSION)
-	#docker build --no-cache -t $(SERVICE_NAME) -f build/package/project.dockerfile .
-	#docker tag $(QUAYVERSION)
-
-docker-push: docker-container
-    #docker push $(CONTAINER_IMAGE):$(RELEASE)
+docker-push: docker-build
 	docker push $(QUAYVERSION)
 
 .PHONY: docker-push-ci
-docker-push-ci:
+docker-push-ci: ## Build go app for docker push
 	env GOBUILD=env GOOS=linux GOARCH=amd64 $(BUILD_ENVPARMS) go build -ldflags "$(LDFLAGS)" -o $(BIN) ./cmd/${APP}
 	docker build --no-cache -t ${CONTAINER_IMAGE} -f build/package/project.dockerfile .
 	echo $(VERSION)
@@ -253,7 +246,7 @@ docker-push-ci:
 	docker push ${CONTAINER_IMAGE}
 	docker push $(CONTAINER_IMAGE_LATEST)
 
-minikube:
+minikube: ## Run minikube
 	minikube delete
 	minikube start --vm-driver=hyperkit
 	minikube addons enable ingress
