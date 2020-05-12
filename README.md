@@ -1,3 +1,9 @@
+[![codecov](https://codecov.io/gh/and07/boilerplate-go/branch/master/graph/badge.svg)](https://codecov.io/gh/and07/boilerplate-go)
+
+
+![](https://github.com/and07/boilerplate-go/.github/workflows/main.yml/badge.svg)
+
+
 # Standard Go Project Layout (Boilerplate-GO)
 
 This is a basic layout for Go application projects. 
