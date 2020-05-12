@@ -1,8 +1,6 @@
 [![codecov](https://codecov.io/gh/and07/boilerplate-go/branch/master/graph/badge.svg)](https://codecov.io/gh/and07/boilerplate-go)
 
-
-![](https://github.com/and07/boilerplate-go/.github/workflows/main.yml/badge.svg)
-
+[![Actions Status](https://github.com/and07/boilerplate-go/workflows/Build%20and%20Test/badge.svg)](https://github.com/and07/boilerplate-go/actions)
 
 # Standard Go Project Layout (Boilerplate-GO)
 
