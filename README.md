@@ -1,7 +1,7 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/and07/boilerplate-go)](https://goreportcard.com/report/github.com/and07/boilerplate-go)
 [![codecov](https://codecov.io/gh/and07/boilerplate-go/branch/master/graph/badge.svg)](https://codecov.io/gh/and07/boilerplate-go)
 [![Actions Status](https://github.com/and07/boilerplate-go/workflows/Build%20and%20Test/badge.svg)](https://github.com/and07/boilerplate-go/actions)
-[![GPL License](http://img.shields.io/:license-gpl-blue.svg)](LICENSE)
+[![MIT License](http://img.shields.io/:license-mit-blue.svg)](LICENSE)
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fand07%2Fboilerplate-go.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fand07%2Fboilerplate-go?ref=badge_shield)
 
 # Standard Go Project Layout (Boilerplate-GO)
