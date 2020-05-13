@@ -94,7 +94,7 @@ CONTAINER_IMAGE?=docker.io/webdeva/${APP}
 
 # install project dependencies
 .PHONY: deps
-deps: .deps
+deps: .deps ## deps: Download modules
 
 .PHONY: .test
 .test:
