@@ -23,7 +23,6 @@ require (
 	github.com/opentracing/opentracing-go v1.1.0
 	github.com/oxtoacart/bpool v0.0.0-20190530202638-03653db5a59c
 	github.com/prometheus/client_golang v1.5.1
-	github.com/proxeter/errors-channel v0.1.0
 	github.com/rakyll/statik v0.1.7
 	github.com/ribice/golang-swaggerui-example v0.0.0-20180611180427-1e7622a30e50
 	github.com/sirupsen/logrus v1.4.2

@@ -56,7 +56,7 @@ helm del --purge prometheus
 
 ## GRPC
 
-```
+```sh
 grpc_cli ls localhost:8842 -l 
 
 grpc_cli call localhost:8842 HttpBodyExampleService.HelloWorld ''
@@ -69,7 +69,7 @@ grpc_cli call localhost:8842 BlockchainService.Subscribe 'query:"testete"'
 ```
 
 ## GRPC http proxy
-```
+```sh
 curl -X GET "http://localhost:8843/helloworld" -H "accept: application/json"
 
 curl -X GET "http://localhost:8843/address/Mxb9a117e772a965a3fddddf83398fd8d71bf57ff6?height=1" -H "accept: application/json"
@@ -78,6 +78,6 @@ curl -X GET "http://localhost:8843/address/Mxb9a117e772a965a3fddddf83398fd8d71bf
 
 ## swagger
 
-```
+```sh
 http://localhost:8888/swaggerui/
 ```

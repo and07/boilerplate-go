@@ -10,10 +10,10 @@ import (
 	grpc_prometheus "github.com/grpc-ecosystem/go-grpc-prometheus"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"github.com/tmc/grpc-websocket-proxy/wsproxy"
+	"golang.org/x/sync/errgroup"
 
 	//"github.com/and07/boilerplate-go/service"
 	_ "github.com/jnewmano/grpc-json-proxy/codec" // GRPC Proxy
-	errch "github.com/proxeter/errors-channel"
 	log "gitlab.com/and07/boilerplate-go/internal/pkg/logger"
 	"go.elastic.co/apm/module/apmgrpc"
 	"go.uber.org/zap"
@@ -81,12 +81,21 @@ func (g *GRPC) RegisterEndpoints(ctx context.Context, RegisterEndpointFns ...fun
 		}
 	}
 
-	select {
-	case err := <-errch.Register(func() error { return http.ListenAndServe(":8843", wsproxy.WebsocketProxy(headers(mux))) }):
+	var group errgroup.Group
+	group.Go(func() error {
+		return http.ListenAndServe(":8843", wsproxy.WebsocketProxy(headers(mux)))
+	})
+	if err := group.Wait(); err != nil {
+		log.Error(err)
 		return err
+	}
+
+	select {
 	case <-ctx.Done():
 		return ctx.Err()
+	default:
 	}
+	return nil
 }
 
 // RunGRPC ...
@@ -111,13 +120,22 @@ func (g *GRPC) RunGRPC(ctx context.Context, fns ...func(*grpc.Server)) error {
 	reflection.Register(g.grpcSrv)
 
 	log.Info("Start grpc server", zap.String("address", g.address))
-	select {
-	case err := <-errch.Register(func() error { return g.grpcSrv.Serve(conn) }):
+
+	var group errgroup.Group
+	group.Go(func() error {
+		return g.grpcSrv.Serve(conn)
+	})
+	if err := group.Wait(); err != nil {
+		log.Error(err)
 		return err
+	}
+	select {
 	case <-ctx.Done():
 		log.Infof("Shutdown grpc server %s", g.address)
 		g.grpcSrv.GracefulStop()
 
 		return ctx.Err()
+	default:
 	}
+	return nil
 }

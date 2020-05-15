@@ -122,8 +122,6 @@ github.com/prometheus/procfs v0.0.2/go.mod h1:TjEm7ze935MbeOT/UhFTIMYKhuLP4wbCsT
 github.com/prometheus/procfs v0.0.3/go.mod h1:4A/X28fw3Fc593LaREMrKMqOKvUAntwMDaekg4FpcdQ=
 github.com/prometheus/procfs v0.0.8 h1:+fpWZdT24pJBiqJdAwYBjPSk+5YmQzYNPYzQsdzLkt8=
 github.com/prometheus/procfs v0.0.8/go.mod h1:7Qr8sr6344vo1JqZ6HhLceV9o3AJ1Ff+GxbHq6oeK9A=
-github.com/proxeter/errors-channel v0.1.0 h1:vZgbiuF+yIDKopcmQUbyXigZ8HFjQJLVyJnLN9vhfOM=
-github.com/proxeter/errors-channel v0.1.0/go.mod h1:X8Gzh0SeShwc+8n4aryqOdx1OQ+K8X2aqdCVj8D1ego=
 github.com/rakyll/statik v0.1.7/go.mod h1:AlZONWzMtEnMs7W4e/1LURLiI49pIMmp6V9Unghqrcc=
 github.com/ribice/golang-swaggerui-example v0.0.0-20180611180427-1e7622a30e50/go.mod h1:ICEf6ruyBem9OzcmmycGIX5NgaVY0ZeSiT5GLsVtf04=
 github.com/rogpeppe/fastuuid v1.2.0/go.mod h1:jVj6XXZzXRy/MSR5jhDC/2q6DgLz+nrA6LYCDYWNEvQ=
