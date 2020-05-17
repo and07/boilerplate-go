@@ -1,7 +1,7 @@
 // +heroku goVersion go1.14
 // +heroku install ./cmd/...
 
-module gitlab.com/and07/boilerplate-go
+module github.com/and07/boilerplate-go
 
 go 1.14
 

@@ -4,15 +4,15 @@ import (
 	"context"
 	"time"
 
+	"github.com/and07/boilerplate-go/api/gen-boilerplate-go/api"
+	"github.com/and07/boilerplate-go/internal/app/boilerplate"
+	"github.com/and07/boilerplate-go/internal/app/serv"
+	log "github.com/and07/boilerplate-go/internal/pkg/logger"
+	"github.com/and07/boilerplate-go/internal/pkg/template"
+	"github.com/and07/boilerplate-go/internal/pkg/tracing"
 	"github.com/caarlos0/env"
 	"github.com/opentracing/opentracing-go"
 	"github.com/prometheus/client_golang/prometheus"
-	"gitlab.com/and07/boilerplate-go/api/gen-boilerplate-go/api"
-	"gitlab.com/and07/boilerplate-go/internal/app/boilerplate"
-	"gitlab.com/and07/boilerplate-go/internal/app/serv"
-	log "gitlab.com/and07/boilerplate-go/internal/pkg/logger"
-	"gitlab.com/and07/boilerplate-go/internal/pkg/template"
-	"gitlab.com/and07/boilerplate-go/internal/pkg/tracing"
 	"google.golang.org/grpc"
 )
 

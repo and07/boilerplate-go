@@ -13,8 +13,8 @@ import (
 	"golang.org/x/sync/errgroup"
 
 	//"github.com/and07/boilerplate-go/service"
+	log "github.com/and07/boilerplate-go/internal/pkg/logger"
 	_ "github.com/jnewmano/grpc-json-proxy/codec" // GRPC Proxy
-	log "gitlab.com/and07/boilerplate-go/internal/pkg/logger"
 	"go.elastic.co/apm/module/apmgrpc"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"

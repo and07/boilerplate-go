@@ -4,9 +4,9 @@ import (
 	"context"
 	"net/http"
 
+	log "github.com/and07/boilerplate-go/internal/pkg/logger"
 	"github.com/opentracing/opentracing-go"
 	"github.com/valyala/fasthttp"
-	log "gitlab.com/and07/boilerplate-go/internal/pkg/logger"
 )
 
 // Fastsrv ...

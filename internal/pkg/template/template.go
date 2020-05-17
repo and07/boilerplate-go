@@ -7,8 +7,8 @@ import (
 	"path/filepath"
 	"time"
 
+	log "github.com/and07/boilerplate-go/internal/pkg/logger"
 	"github.com/oxtoacart/bpool"
-	log "gitlab.com/and07/boilerplate-go/internal/pkg/logger"
 )
 
 // Config ...

@@ -4,7 +4,7 @@ import (
 	"context"
 	"net/http"
 
-	"gitlab.com/and07/boilerplate-go/internal/pkg/template"
+	"github.com/and07/boilerplate-go/internal/pkg/template"
 )
 
 func hiHandler(ctx context.Context, tpl *template.Template) func(w http.ResponseWriter, r *http.Request) {

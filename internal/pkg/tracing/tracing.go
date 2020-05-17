@@ -5,9 +5,9 @@ import (
 	"io"
 	"time"
 
+	log "github.com/and07/boilerplate-go/internal/pkg/logger"
 	opentracing "github.com/opentracing/opentracing-go"
 	config "github.com/uber/jaeger-client-go/config"
-	log "gitlab.com/and07/boilerplate-go/internal/pkg/logger"
 )
 
 // Init returns an instance of Jaeger Tracer that samples 100% of traces and logs all spans to stdout.

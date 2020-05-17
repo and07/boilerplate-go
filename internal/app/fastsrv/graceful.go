@@ -7,8 +7,8 @@ import (
 	"os/signal"
 	"syscall"
 
+	log "github.com/and07/boilerplate-go/internal/pkg/logger"
 	"github.com/valyala/fasthttp"
-	log "gitlab.com/and07/boilerplate-go/internal/pkg/logger"
 )
 
 func graceful(srv *http.Server, fsrv *fasthttp.Server) chan struct{} {

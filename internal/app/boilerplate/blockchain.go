@@ -6,9 +6,9 @@ import (
 	"encoding/json"
 	"time"
 
+	"github.com/and07/boilerplate-go/api/gen-boilerplate-go/api"
 	"github.com/golang/protobuf/jsonpb"
 	_struct "github.com/golang/protobuf/ptypes/struct"
-	"gitlab.com/and07/boilerplate-go/api/gen-boilerplate-go/api"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )

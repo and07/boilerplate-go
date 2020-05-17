@@ -4,10 +4,10 @@ import (
 	"context"
 	"net/http"
 
+	"github.com/and07/boilerplate-go/api/gen-boilerplate-go/api"
+	g "github.com/and07/boilerplate-go/internal/app/grpc"
+	log "github.com/and07/boilerplate-go/internal/pkg/logger"
 	"github.com/opentracing/opentracing-go"
-	"gitlab.com/and07/boilerplate-go/api/gen-boilerplate-go/api"
-	g "gitlab.com/and07/boilerplate-go/internal/app/grpc"
-	log "gitlab.com/and07/boilerplate-go/internal/pkg/logger"
 	"golang.org/x/sync/errgroup"
 	"google.golang.org/grpc"
 )

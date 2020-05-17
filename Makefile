@@ -48,7 +48,7 @@ SHELL=/bin/bash -o pipefail
 
 
 APP?=$(SERVICE_NAME)
-PROJECT?=gitlab.com/$(USER)/$(SERVICE_NAME)
+PROJECT?=github.com/$(USER)/$(SERVICE_NAME)
 
 LDFLAGS:=-X '${PROJECT}/version.Name=$(SERVICE_NAME)'\
          -X '${PROJECT}/version.ProjectID=$(CI_PROJECT_ID)'\

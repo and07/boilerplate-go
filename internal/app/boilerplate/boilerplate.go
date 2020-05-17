@@ -3,8 +3,8 @@ package boilerplate
 import (
 	"context"
 
+	log "github.com/and07/boilerplate-go/internal/pkg/logger"
 	empty "github.com/golang/protobuf/ptypes/empty"
-	log "gitlab.com/and07/boilerplate-go/internal/pkg/logger"
 	httpbody "google.golang.org/genproto/googleapis/api/httpbody"
 )
 
