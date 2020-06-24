@@ -108,13 +108,6 @@ func main() {
 	tpl := template.NewTemplate("tpl/layouts/", "tpl/", `{{define "main" }} {{ template "base" . }} {{ end }}`)
 	tpl.Init()
 
-	srv := serv.New(ctx,
-		serv.WithPublicPort(cfg.Port),
-		serv.WithDebugPort(cfg.PortDebug),
-		serv.WithGRPCPort(cfg.PortGRPC),
-		serv.WithSwaggerUI(true),
-	)
-
 	hw := func(grpcSrv *grpc.Server) {
 		impl := boilerplate.New(ctx)
 		api.RegisterHttpBodyExampleServiceServer(grpcSrv, impl)
@@ -125,6 +118,13 @@ func main() {
 	bc := func(grpcSrv *grpc.Server) {
 		api.RegisterBlockchainServiceServer(grpcSrv, boilerplate.NewBlockchainServer(eventBus))
 	}
+
+	srv := serv.New(ctx,
+		serv.WithPublicPort(cfg.Port),
+		serv.WithDebugPort(cfg.PortDebug),
+		serv.WithGRPC(ctx, cfg.PortGRPC, hw, bc),
+		serv.WithSwaggerUI(true),
+	)
 
 	//test
 	go func() {
@@ -147,6 +147,6 @@ func main() {
 		}
 	}()
 
-	srv.Run(ctx, publicHandle(ctx, tpl), hw, bc)
+	srv.Run(ctx, publicHandle(ctx, tpl), api.RegisterBlockchainServiceHandlerFromEndpoint, api.RegisterHttpBodyExampleServiceHandlerFromEndpoint)
 
 }

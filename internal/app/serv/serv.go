@@ -4,9 +4,9 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/and07/boilerplate-go/api/gen-boilerplate-go/api"
 	g "github.com/and07/boilerplate-go/internal/app/grpc"
 	log "github.com/and07/boilerplate-go/internal/pkg/logger"
+	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"github.com/opentracing/opentracing-go"
 	"golang.org/x/sync/errgroup"
 	"google.golang.org/grpc"
@@ -28,9 +28,9 @@ type Logger interface {
 type Serv struct {
 	portPublicHTTP  string
 	portPrivateHTTP string
-	portGRPC        string
 	swaggerui       bool
 	Logger          Logger
+	grpcSrv         *g.GRPC
 }
 
 // Option ...
@@ -57,10 +57,11 @@ func WithPublicPort(portPublicHTTP string) Option {
 	}
 }
 
-// WithGRPCPort ...
-func WithGRPCPort(portGRPC string) Option {
+// WithGRPC ...
+func WithGRPC(ctx context.Context, portGRPC string, fns ...func(*grpc.Server)) Option {
 	return func(s *Serv) {
-		s.portGRPC = portGRPC
+		s.grpcSrv = g.NewServer(ctx, portGRPC)
+		go s.grpcSrv.RunGRPC(ctx, fns...)
 	}
 }
 
@@ -88,7 +89,7 @@ func New(ctx context.Context, opts ...Option) *Serv {
 }
 
 // Run ...
-func (s *Serv) Run(ctx context.Context, handles *http.ServeMux, fns ...func(*grpc.Server)) {
+func (s *Serv) Run(ctx context.Context, handles *http.ServeMux, RegisterEndpointFns ...func(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) error) {
 
 	ctx, cancel := context.WithCancel(ctx)
 
@@ -103,14 +104,11 @@ func (s *Serv) Run(ctx context.Context, handles *http.ServeMux, fns ...func(*grp
 		servs[1] = s.runPrivateHTTP(ctx)
 	}
 
-	if s.portGRPC != "" {
+	if s.grpcSrv != nil {
 		var group errgroup.Group
-		grpcSrv := g.NewServer(ctx, s.portGRPC)
+
 		group.Go(func() error {
-			return grpcSrv.RunGRPC(ctx, fns...)
-		})
-		group.Go(func() error {
-			return grpcSrv.RegisterEndpoints(ctx, api.RegisterBlockchainServiceHandlerFromEndpoint, api.RegisterHttpBodyExampleServiceHandlerFromEndpoint)
+			return s.grpcSrv.RegisterEndpoints(ctx, RegisterEndpointFns...)
 		})
 
 		if err := group.Wait(); err != nil {
