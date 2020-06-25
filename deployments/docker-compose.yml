@@ -1,3 +1,4 @@
+---
 version: '3'
 
 services:
@@ -100,8 +101,6 @@ services:
     depends_on:
       - jaeger-agent
 
-
-
 #https://medium.com/southbridge/prometheus-monitoring-ba8fbda6e83
   prometheus:
     image: prom/prometheus:latest
@@ -125,7 +124,6 @@ services:
      - "3000:3000"
     depends_on:
       - prometheus
-
 
 #clickhouse
 #https://github.com/rongfengliang/clickhouse-docker-compose
@@ -158,8 +156,6 @@ services:
   #     #PG_DB_DSN: postgres://test:test@postgres-${CI_JOB_ID:-local}:5432/ops?sslmode=disable
   #   restart: always
 
-
-
 networks:
   - default    
 
@@ -182,7 +178,6 @@ networks:
 #    volumes:
 #      - ./clickhouse-config.xml:/etc/clickhouse-server/config.xml
 #      - ./clickhouse-data:/opt/clickhouse/data
-
 
 networks:
   default:

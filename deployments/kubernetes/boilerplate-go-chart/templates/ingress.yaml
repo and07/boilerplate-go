@@ -1,5 +1,6 @@
-{{- if .Values.ingress.enabled -}}
-{{- $fullName := include "boilerplate-go-chart.fullname" . -}}
+---
+{{- if .Values.ingress.enabled }}
+{{- $fullName := include "boilerplate-go-chart.fullname" . }}
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:

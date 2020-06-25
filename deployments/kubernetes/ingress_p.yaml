@@ -1,5 +1,6 @@
-{{- if .Values.ingress.enabled -}}
-{{- $fullName := include "boilerplate-go-chart.fullname" . -}}
+---
+{{- if .Values.ingress.enabled }}
+{{- $fullName := include "boilerplate-go-chart.fullname" . }}
 {{ $chartName :=  include "boilerplate-go-chart.name" . }}
 {{ $chart :=  include "boilerplate-go-chart.chart" . }}
 {{ $releaseName := .Release.Name }}
