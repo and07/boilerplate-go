@@ -23,6 +23,9 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v2
 
+      - name: Super-Linter
+        uses: github/super-linter@v2.2.0
+
       - name: Lint Go Code
         run: |
           make lint
