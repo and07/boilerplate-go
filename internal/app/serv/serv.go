@@ -61,7 +61,11 @@ func WithPublicPort(portPublicHTTP string) Option {
 func WithGRPC(ctx context.Context, portGRPC string, fns ...func(*grpc.Server)) Option {
 	return func(s *Serv) {
 		s.grpcSrv = g.NewServer(ctx, portGRPC)
-		go s.grpcSrv.RunGRPC(ctx, fns...)
+		go func() {
+			if err := s.grpcSrv.RunGRPC(ctx, fns...); err != nil {
+				log.Error(err)
+			}
+		}() 
 	}
 }
 
