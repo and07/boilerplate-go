@@ -57,10 +57,10 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v2
         
-      - name: Super-Linter
-        uses: github/super-linter@v2.2.0
-        with:
-          fail_ci_if_error: true
+ #     - name: Super-Linter
+ #       uses: github/super-linter@v2.2.0
+ #       with:
+ #         fail_ci_if_error: true
         
   test-coverage:
     name: Test Coverage
@@ -86,7 +86,7 @@ jobs:
         with:
           token: ${{secrets.CODECOV_TOKEN}}
           file: ./coverage.txt
-          fail_ci_if_error: true
+  #        fail_ci_if_error: true
 
   build:
     name: Build
