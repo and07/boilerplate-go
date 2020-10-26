@@ -1,0 +1,185 @@
+---
+version: '3'
+
+services:
+
+  rabbitmq:
+    image: rabbitmq:management
+    container_name: "rabbitmq-${CI_JOB_ID:-local}"
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+      RABBITMQ_ERLANG_COOKIE: "SWQOKODSQALRPCLNMEQG"
+      RABBITMQ_DEFAULT_VHOST: "/"
+    volumes:
+      - "./enabled_plugins:/etc/rabbitmq/enabled_plugins"
+
+  redis:
+    image: 'bitnami/redis:latest'
+    container_name: "redis-${CI_JOB_ID:-local}"
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    ports:
+      - '6379:6379'
+    volumes:
+      - ./redis-persistence:/bitnami/redis/data
+
+  elasticsearch:
+    container_name: "elasticsearch-${CI_JOB_ID:-local}"
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.4.3
+    ports:
+      - "9200:9200"
+      - "9300:9300"      
+    environment:
+      - xpack.security.enabled=false
+      - discovery.type=single-node
+      - http.cors.enabled=true
+      - http.cors.allow-origin=*
+      - network.host=0.0.0.0
+    #volumes:
+      # - esdata01:/usr/share/elasticsearch/data
+      # - ./elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+      # - ./log4j2.properties:/usr/share/elasticsearch/config/log4j2.properties
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:6.4.3
+    container_name: "kibana-${CI_JOB_ID:-local}"
+    ports:
+      - "5601:5601"
+
+  jaeger-collector:
+    image: jaegertracing/jaeger-collector
+    ports:
+      - "14269:14269"
+      - "14268:14268"
+      - "14267:14267"
+      - "9411:9411"
+    restart: on-failure
+    environment:
+      - SPAN_STORAGE_TYPE=elasticsearch
+    command: [
+      "--es.server-urls=http://elasticsearch:9200",
+      "--es.num-shards=1",
+      "--es.num-replicas=0",
+      "--log-level=error"
+    ]
+    depends_on:
+      - elasticsearch
+
+  jaeger-agent:
+    image: jaegertracing/jaeger-agent
+    hostname: jaeger-agent
+    command: ["--collector.host-port=jaeger-collector:14267"]
+    ports:
+      - "5775:5775/udp"
+      - "6831:6831/udp"
+      - "6832:6832/udp"
+      - "5778:5778"
+    restart: on-failure
+    environment:
+      - SPAN_STORAGE_TYPE=elasticsearch
+    depends_on:
+      - jaeger-collector
+
+  jaeger-query:
+    image: jaegertracing/jaeger-query
+    environment:
+      - SPAN_STORAGE_TYPE=elasticsearch
+      - no_proxy=localhost
+    ports:
+      - "16686:16686"
+      - "16687:16687"
+    restart: on-failure
+    command: [
+      "--es.server-urls=http://elasticsearch:9200",
+      "--span-storage.type=elasticsearch",
+      "--log-level=debug"
+    ]
+    depends_on:
+      - jaeger-agent
+
+#https://medium.com/southbridge/prometheus-monitoring-ba8fbda6e83
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: "prometheus-${CI_JOB_ID:-local}"
+    volumes:
+     - ./monitor/prometheus.yml:/etc/prometheus/prometheus.yml
+    command: "--config.file=/etc/prometheus/prometheus.yml --storage.tsdb.path=/prometheus"
+    ports:
+     - 9090:9090
+    depends_on:
+     - exporter
+  exporter:
+    image: prom/node-exporter:latest
+    ports:
+     - "9100:9100"
+#    network_mode: host
+  grafana:
+    container_name: "grafana-${CI_JOB_ID:-local}"
+    image: grafana/grafana
+    ports:
+     - "3000:3000"
+    depends_on:
+      - prometheus
+
+#clickhouse
+#https://github.com/rongfengliang/clickhouse-docker-compose
+#docker run -it --rm  --network=network-local  --link clickhouse-local:9000 yandex/clickhouse-client --host clickhouse-local
+  ch-server:
+    image: yandex/clickhouse-server
+    container_name: "clickhouse-${CI_JOB_ID:-local}"
+    ports:
+    - "8123:8123"
+    - "9000:9000"
+    - "9009:9009"
+ 
+
+  # project:
+  #   image: "{{.User}}/{{.ServiceName}}:latest"
+  #   container_name: "{{.ServiceName}}-${CI_JOB_ID:-local}"
+  #   #links:
+  #     #- 'rabbitmq:rabbitmq'
+  #   ports:
+  #     - 8080:8080
+  #     - 8888:8888
+  #   #depends_on:
+  #     #- postgres_migrations
+  #     #- auth
+  #   environment:
+  #     REDIS_HOST: redis-${CI_JOB_ID:-local}:6379
+  #     RABBIT_CONNECTION_STRING: "amqp://guest:guest@rabbitmq-${CI_JOB_ID:-local}:5672"
+  #     CLICKHOUSE_URL: "tcp://clickhouse-${CI_JOB_ID:-local}:9000?debug=true"
+  #     ELASTIC_URL: "http://elasticsearch-${CI_JOB_ID:-local}:9200"
+  #     #PG_DB_DSN: postgres://test:test@postgres-${CI_JOB_ID:-local}:5432/ops?sslmode=disable
+  #   restart: always
+
+networks:
+  - default    
+
+      #  ulimits:
+  #    nproc: 65535
+  #    nofile:
+  #      soft: 262144
+  #      hard: 262144
+
+  #ch-client:
+  #  image: yandex/clickhouse-client
+  #  command: ['--host', 'clickhouse-local']
+
+#  clickhouse:
+#    image: roistat/clickhouse
+#    container_name: "clickhouse-${CI_JOB_ID:-local}"
+#    ports:
+#      - 9000:9000
+#      - 8123:8123
+#    volumes:
+#      - ./clickhouse-config.xml:/etc/clickhouse-server/config.xml
+#      - ./clickhouse-data:/opt/clickhouse/data
+
+networks:
+  default:
+    external:
+      name: network-${CI_JOB_ID:-local}

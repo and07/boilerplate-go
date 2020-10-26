@@ -1,0 +1,53 @@
+{{ define "base" }}
+{{ $domain := "example.com" }}
+<!DOCTYPE>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>{{block "title" .}} {{end}}</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="robots" content="index, follow">
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    {{block "style" .}} {{end}}
+</head>
+<body>
+<header>
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <nav class="navbar navbar-expand-lg navbar-light">
+                    <a class="navbar-brand" href="/">{{ $domain |safe }}</a>
+                </nav>
+            </div>
+            {{block "header" .}} {{end}}
+        </div>
+    </div>
+</header>
+<main class="mb-5">
+    <article>
+        <section>
+            <div class="container">
+                <div class="row">
+                    {{template "content" .Hi}}
+                </div>
+            </div>
+        </section>
+    </article>
+</main>
+<footer class="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <hr>
+                © {{.User}} 2019
+            </div>
+            {{block "footer" .}} {{end}}
+        </div>
+    </div>
+</footer>
+{{block "js" .}} {{end}}
+</body>
+</html>
+{{ end }}
