@@ -45,48 +45,6 @@ func main() {
 	defer span.Finish()
 
 	ctx = opentracing.ContextWithSpan(ctx, span)
-	/*
-		redisHost := os.Getenv("REDIS_HOST")
-		if redisHost == "" {
-			redisHost = "localhost:6379"
-		}
-
-		r := redis.New(ctx, redisHost)
-		defer r.Close()
-
-		rabbitmqConnectionString := os.Getenv("RABBIT_CONNECTION_STRING")
-		if rabbitmqConnectionString == "" {
-			rabbitmqConnectionString = "amqp://guest:guest@localhost:5672"
-		}
-
-		clRabbit, err := rabbitmq.New(ctx, rabbitmqConnectionString)
-		if err != nil {
-			log.Printf("rabbitmq.New: %v", err)
-		}
-		if clRabbit != nil {
-			defer clRabbit.Close()
-		}
-
-		//clRabbit.Publish(ctx,[]byte("test msg"), *exchange, *exchangeType)
-
-		if errSubscribe := clRabbit.Subscribe(ctx, *exchange, *exchangeType, *queue, func(d amqp.Delivery) {
-			log.Printf("Delivery: %#v", d)
-		}); errSubscribe != nil {
-			log.Printf("errSubscribe: %v", errSubscribe)
-		}
-
-		clickhouseURL := os.Getenv("CLICKHOUSE_URL")
-		if clickhouseURL == "" {
-			clickhouseURL = "tcp://localhost:9000?debug=true"
-		}
-		clickhouse.NewClickhouseClient(ctx, clickhouseURL)
-
-		elasticURL := os.Getenv("ELASTIC_URL")
-		if elasticURL == "" {
-			elasticURL = "http://127.0.0.1:9200"
-		}
-		elastic.NewElasticClient(ctx, elasticURL)
-	*/
 
 	cfg := &Config{}
 	if err := env.Parse(cfg); err != nil {
