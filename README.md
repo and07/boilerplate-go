@@ -81,3 +81,7 @@ curl -X GET "http://localhost:8843/address/Mxb9a117e772a965a3fddddf83398fd8d71bf
 ```sh
 http://localhost:8888/swaggerui/
 ```
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fand07%2Fboilerplate-go.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fand07%2Fboilerplate-go?ref=badge_large)
