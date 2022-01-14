@@ -18,8 +18,8 @@ func hiHandler(ctx context.Context, tpl *template.Template) func(w http.Response
 		counter.Inc()
 		
 		xRealIP := r.Header.Get("X-Real-Ip")
-		xForwardedFor = r.Header.Get("X-Forwarded-For")
-		remoteAddr = r.RemoteAddr
+		xForwardedFor := r.Header.Get("X-Forwarded-For")
+		remoteAddr := r.RemoteAddr
 		
 		tpl.RenderTemplate(w, "main.html", fmt.Sprintf("X-Real-Ip:%s X-Forwarded-For:%s RemoteAddr:%s", xRealIP, xForwardedFor, remoteAddr))
 	}
