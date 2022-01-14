@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"net/http"
+	"fmt"
 
 	"github.com/and07/boilerplate-go/internal/pkg/template"
 )
