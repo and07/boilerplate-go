@@ -8,14 +8,17 @@ go 1.14
 require (
 	github.com/caarlos0/env v3.5.0+incompatible
 	github.com/go-redis/redis v6.15.2+incompatible
-	github.com/golang/protobuf v1.3.5
+	github.com/golang/protobuf v1.5.2
+	github.com/gorilla/pat v1.0.1 // indirect
+	github.com/gorilla/sessions v1.1.1 // indirect
 	github.com/grpc-ecosystem/go-grpc-middleware v1.2.0
 	github.com/grpc-ecosystem/go-grpc-prometheus v1.2.0
-	github.com/grpc-ecosystem/grpc-gateway v1.14.4
+	github.com/grpc-ecosystem/grpc-gateway v1.16.0
 	github.com/jnewmano/grpc-json-proxy v0.0.0-20200227201450-d2f9a1e2ec3d
 	github.com/klim0v/grpc-gateway-example v0.0.0-20200421090150-0b0c1702054d
 	github.com/kshvakov/clickhouse v1.3.6
 	github.com/mailru/easyjson v0.0.0-20190403194419-1ea4449da983 // indirect
+	github.com/markbates/goth v1.69.0 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.1 // indirect
 	github.com/mssola/user_agent v0.5.2
@@ -34,10 +37,10 @@ require (
 	github.com/valyala/fasthttp v1.12.0
 	go.elastic.co/apm/module/apmgrpc v1.7.2
 	go.uber.org/zap v1.14.1
-	golang.org/x/sync v0.0.0-20190911185100-cd5d95a43a6e
-	google.golang.org/appengine v1.4.0
-	google.golang.org/genproto v0.0.0-20190927181202-20e1ac93f88c
-	google.golang.org/grpc v1.29.0
+	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c
+	google.golang.org/appengine v1.6.6
+	google.golang.org/genproto v0.0.0-20200929141702-51c3e5b607fe
+	google.golang.org/grpc v1.45.0
 	gopkg.in/airbrake/gobrake.v2 v2.0.9 // indirect
 	gopkg.in/gemnasium/logrus-airbrake-hook.v2 v2.1.2 // indirect
 	sourcegraph.com/sourcegraph/go-diff v0.0.0-20171119081133-3f415a150aec // indirect

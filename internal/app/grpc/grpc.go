@@ -90,11 +90,8 @@ func (g *GRPC) RegisterEndpoints(ctx context.Context, RegisterEndpointFns ...fun
 		return err
 	}
 
-	select {
-	case <-ctx.Done():
-		return ctx.Err()
-	default:
-	}
+	<-ctx.Done()
+
 	return nil
 }
 
@@ -129,13 +126,9 @@ func (g *GRPC) RunGRPC(ctx context.Context, fns ...func(*grpc.Server)) error {
 		log.Error(err)
 		return err
 	}
-	select {
-	case <-ctx.Done():
-		log.Infof("Shutdown grpc server %s", g.address)
-		g.grpcSrv.GracefulStop()
+	<-ctx.Done()
+	log.Infof("Shutdown grpc server %s", g.address)
+	g.grpcSrv.GracefulStop()
 
-		return ctx.Err()
-	default:
-	}
 	return nil
 }

@@ -1,0 +1,7 @@
+{{define "content"}}
+
+{{range $key,$value:=.Providers}}
+    <p><a href="/auth/?provider={{$value}}">Log in with {{index $.ProvidersMap $value}}</a></p>
+{{end}}
+
+{{end}}
