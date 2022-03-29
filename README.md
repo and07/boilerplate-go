@@ -73,18 +73,16 @@ grpc_cli call localhost:8842 BlockchainService.Subscribe 'query:"testete"'
 curl -v -X POST "http://localhost:8080/signup" -H "accept: application/json"  --data '{"email":"and_07@mail.ru","password":"xyz"}' 
 curl -v -X POST "http://localhost:8080/verify/mail" -H "accept: application/json"  --data '{"email":"and_07@mail.ru","code":"PatwtPil"}' 
 curl -v -X POST "http://localhost:8080/login" -H "accept: application/json"   --data '{"email":"and_07@mail.ru","password":"xyz"}' 
-curl -v -X GET "http://localhost:8080/greet" -H "accept: application/json" -H "Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySUQiOiIzYTFiNDcxOC04NTkxLTQ4MjktYTNkMi0yYWM2NjZmZGM1MDYiLCJLZXlUeXBlIjoiYWNjZXNzIiwiZXhwIjoxNjQ4MzI0MzU2LCJpc3MiOiJib29raXRlLmF1dGguc2VydmljZSJ9.Q05RpWNO0hI7wIQWqlCYiQJAeQBN1cImiT0y10558nOGyST71SooIfkX2BiUPTRFSvSheQ31OYwmaQEbXdo-IhCnuG_KL7YOdyjbsks0GKO0NJ1fBcWU7LtnHDeQ1FhxcIET9529SBp30kq2wq6nBPvvtf2RNsFDK2BFHPBJXuCBji8qgQNQiTvV1y3qBEDVzhQiB27WjN7TADoYXeDJ2jgbbQ8_vPYgjBiJyffH0h1MslWYZzRlVHzoCQ0PuFfkV3wUujN4jsD9mfMEpteXzgsvcf-pNMVOLRgtxrKCJ835Ibmy-gPYKfb9clUOTunoay7sPKPJeOvmHlENZz_dpg"
+curl -v -X GET "http://localhost:8080/greet" -H "accept: application/json" -H "Authorization: Bearer access_token"
 
 
-curl -v -X GET "http://localhost:8080/get-password-reset-code" -H "accept: application/json" -H "Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySUQiOiIzYTFiNDcxOC04NTkxLTQ4MjktYTNkMi0yYWM2NjZmZGM1MDYiLCJLZXlUeXBlIjoiYWNjZXNzIiwiZXhwIjoxNjQ4MzI0MzU2LCJpc3MiOiJib29raXRlLmF1dGguc2VydmljZSJ9.Q05RpWNO0hI7wIQWqlCYiQJAeQBN1cImiT0y10558nOGyST71SooIfkX2BiUPTRFSvSheQ31OYwmaQEbXdo-IhCnuG_KL7YOdyjbsks0GKO0NJ1fBcWU7LtnHDeQ1FhxcIET9529SBp30kq2wq6nBPvvtf2RNsFDK2BFHPBJXuCBji8qgQNQiTvV1y3qBEDVzhQiB27WjN7TADoYXeDJ2jgbbQ8_vPYgjBiJyffH0h1MslWYZzRlVHzoCQ0PuFfkV3wUujN4jsD9mfMEpteXzgsvcf-pNMVOLRgtxrKCJ835Ibmy-gPYKfb9clUOTunoay7sPKPJeOvmHlENZz_dpg"
+curl -v -X GET "http://localhost:8080/get-password-reset-code" -H "accept: application/json" -H "Authorization: Bearer access_token"
 
 curl -v -X POST "http://localhost:8080/verify/password-reset" -H "accept: application/json"  --data '{"email":"and_07@mail.ru","code":"fsfykSBG"}' 
 
-curl -v -X GET "http://localhost:8080/refresh-token" -H "accept: application/json" -H "Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySUQiOiIzYTFiNDcxOC04NTkxLTQ4MjktYTNkMi0yYWM2NjZmZGM1MDYiLCJDdXN0b21LZXkiOiI0ZDY2MTFkOGVlZTY5ZTY3ZWZhNDU2OWIxNTU3ODVlMzQwNTg4YzQ0ZWRiZjJmMjYwZGEzODczYTFmM2Y2ZGM3IiwiS2V5VHlwZSI6InJlZnJlc2giLCJpc3MiOiJib29raXRlLmF1dGguc2VydmljZSJ9.Y9oA9zm7m_K4ECcZz_UXEv8aTDOeHhFk1ObJjwk7XXpWlLtgZAIcLhyCXdXFMeUIgrUlHG1cPjTQ9MmiesE-yJ7GZMmvzDmF5YQBUCUHUmAu9ZqsYLkDBj_U05ePRZuyO8JuI8KTXK4p22A29ao1yxR0mZ3mQcRQ9g5KCoYsLGM7LTB_CtatwTb5aFT08BxPOkNHMUefRFFniZ-lyKm9IL4Q9QUXprX98IVORA1kFck4SZrYgp6quDvnodvy7XyNBo1QZtZidRg0jL_q__TTJBo-SZ9qwh7IfxFzZoeKpkusKUCUNouTkl51fpzsLlvWm3VNnGonNUBeYkxjZiSKMQ"
+curl -v -X GET "http://localhost:8080/refresh-token" -H "accept: application/json" -H "Authorization: Bearer refresh_token"
 
-
-
-curl -v -X GET "http://localhost:8080/profile" -H "accept: application/json" -H "Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySUQiOiIzYjg3Y2M0YS0xZDE5LTRhMzgtODc0My1jNjFkNDA1NzJlZmEiLCJLZXlUeXBlIjoiYWNjZXNzIiwiZXhwIjoxNjQ4NTQzMjIyLCJpc3MiOiJib29raXRlLmF1dGguc2VydmljZSJ9.RVE6nzgsHpWHBwJvM1LiROBexTS9umJgiQH-XsCKVWXAYLHV6g0Lowd-bMV7Di6onQPE4PalM5JXmZOc3Q0hWXRgtFFIDhgk35PomKzjHROCmd3F3Z4GDb3xpW_LCWHDPhRiLG8-ehUKoquOsTNqhSeSLghXxqMDnopWXb-huQAglg0nuCqgjzClhIsCnWXB8dLOwxMeOw_jrWRE3CP5tt2mSZ-mY4lyhGpSzs6xKCdbKLNq7AGQKDFyQRJLqpyKJKfz6bLQKU6OTEatdE9T5dX1R8DKFT0OAegowbT_v1YYcZhiARG9LZkvrUER69bbM33xxzTXFWS2KSWF7dMM2g"
+curl -v -X GET "http://localhost:8080/profile" -H "accept: application/json" -H "Authorization: Bearer access_token"
 
 
 

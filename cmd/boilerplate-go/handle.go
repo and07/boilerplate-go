@@ -17,7 +17,7 @@ import (
 	"github.com/hashicorp/go-hclog"
 	"github.com/jmoiron/sqlx"
 	"github.com/markbates/goth/gothic"
-	"google.golang.org/api/idtoken"
+	//"google.golang.org/api/idtoken"
 )
 
 func hiHandler(ctx context.Context, tpl *template.Template) func(w http.ResponseWriter, r *http.Request) {
@@ -84,6 +84,7 @@ func loginProviderHandler(ctx context.Context, tpl *template.Template) func(res 
 	}
 }
 
+/*
 func profileHandler(ctx context.Context, tpl *template.Template) func(res http.ResponseWriter, req *http.Request) {
 	// try to get the user without re-authenticating
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -113,6 +114,7 @@ func profileHandler(ctx context.Context, tpl *template.Template) func(res http.R
 
 	}
 }
+*/
 
 func publicHandle(ctx context.Context, tpl *template.Template, db *sqlx.DB, configs *utils.Configurations, logger hclog.Logger) http.Handler {
 	/*
@@ -140,11 +142,15 @@ func publicHandle(ctx context.Context, tpl *template.Template, db *sqlx.DB, conf
 	validator := data.NewValidation()
 
 	// creation of user table.
-	db.MustExec(userSchema)
-	db.MustExec(verificationSchema)
+	if db != nil {
+		db.MustExec(userSchema)
+		db.MustExec(verificationSchema)
+	}
 
 	// repository contains all the methods that interact with DB to perform CURD operations for user.
-	repository := data.NewPostgresRepository(db, logger)
+	//repository := data.NewPostgresRepository(db, logger)
+
+	repositoryMemory := data.NewMemoryRepository(logger)
 
 	// authService contains all methods that help in authorizing a user request
 	authService := service.NewAuthService(logger, configs)
@@ -161,7 +167,7 @@ func publicHandle(ctx context.Context, tpl *template.Template, db *sqlx.DB, conf
 		googleSECRET = "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"
 	}
 	// UserHandler encapsulates all the services related to user
-	uh := handlers.NewAuthHandler(logger, configs, validator, repository, authService, mailService, handlers.WithGoogleAuth(googleKEY, googleSECRET, "http://localhost:8080/auth/google/callback"))
+	uh := handlers.NewAuthHandler(logger, configs, validator, repositoryMemory, authService, mailService, handlers.WithGoogleAuth(googleKEY, googleSECRET, "http://localhost:8080/auth/google/callback"))
 
 	// create a serve mux
 	sm := mux.NewRouter()
@@ -189,7 +195,7 @@ func publicHandle(ctx context.Context, tpl *template.Template, db *sqlx.DB, conf
 	//get.HandleFunc("/auth/{provider}/callback", callbackProviderHandler(ctx, tpl))
 	get.HandleFunc("/auth/google/callback", uh.GoogleLogin)
 	get.HandleFunc("/logout/{provider}", logoutHandler(ctx, tpl))
-	get.HandleFunc("/login/{provider}", loginProviderHandler(ctx, tpl))
+	get.HandleFunc("/login/google", uh.GoogleOAuth)
 	get.HandleFunc("/auth", authHandler(ctx, tpl))
 
 	getR := sm.Methods(http.MethodGet).Subrouter()

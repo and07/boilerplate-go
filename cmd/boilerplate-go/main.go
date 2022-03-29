@@ -15,6 +15,7 @@ import (
 	"github.com/and07/boilerplate-go/pkg/utils"
 	"github.com/caarlos0/env"
 	"github.com/gorilla/sessions"
+	"github.com/jmoiron/sqlx"
 	"github.com/opentracing/opentracing-go"
 	"github.com/prometheus/client_golang/prometheus"
 	"google.golang.org/grpc"
@@ -147,13 +148,17 @@ func main() {
 
 	configs := utils.NewConfigurations(logger)
 
-	// create a new connection to the postgres db store
-	db, err := data.NewConnection(configs, logger)
-	if err != nil {
-		logger.Error("unable to connect to db", "error", err)
-		panic(err)
+	var db *sqlx.DB
+	var err error
+	if configs.DBConn != "" || configs.DBHost != "" {
+		// create a new connection to the postgres db store
+		db, err = data.NewConnection(configs, logger)
+		if err != nil {
+			logger.Error("unable to connect to db", "error", err)
+			panic(err)
+		}
+		defer db.Close()
 	}
-	defer db.Close()
 
 	srv.Run(ctx, publicHandle(ctx, tpl, db, configs, logger), api.RegisterBlockchainServiceHandlerFromEndpoint, api.RegisterHttpBodyExampleServiceHandlerFromEndpoint)
 
