@@ -1,4 +1,4 @@
-package handlers
+package httpserver
 
 //TODO
 // https://www.codershood.info/2020/04/16/facebook-login-in-golang-tutorial/

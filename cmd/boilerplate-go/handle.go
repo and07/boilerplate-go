@@ -9,7 +9,7 @@ import (
 
 	"github.com/and07/boilerplate-go/internal/pkg/template"
 	"github.com/and07/boilerplate-go/pkg/data"
-	handlers "github.com/and07/boilerplate-go/pkg/handlers/http"
+	handlers "github.com/and07/boilerplate-go/pkg/handlers/httpserver"
 	"github.com/and07/boilerplate-go/pkg/service"
 	"github.com/and07/boilerplate-go/pkg/service/mail"
 	"github.com/and07/boilerplate-go/pkg/utils"
