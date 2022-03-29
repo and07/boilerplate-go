@@ -57,7 +57,7 @@ func (s *Serv) runPrivateHTTP(ctx context.Context) *http.Server {
 	return srvPrivate
 }
 
-func (s *Serv) runPublicHTTP(ctx context.Context, h *http.ServeMux) *http.Server {
+func (s *Serv) runPublicHTTP(ctx context.Context, h http.Handler) *http.Server {
 	srvPublic := &http.Server{Addr: ":" + s.portPublicHTTP, Handler: h}
 	go func() {
 

@@ -1,7 +1,12 @@
 {{define "content"}}
 
-{{range $key,$value:=.Providers}}
-    <p><a href="/auth/?provider={{$value}}">Log in with {{index $.ProvidersMap $value}}</a></p>
-{{end}}
+
+<div class="jumbotron text-center text-success">
+    <h1><span class="fa fa-lock"></span> Social Authentication</h1>
+    <p>Login or Register with:</p>
+    {{range $key,$value:=.Providers}}
+      <a href="/login/{{$value}}" class="btn btn-danger"><span class="fa fa-google"></span>Log in with {{index $.ProvidersMap $value}}</a>
+    {{end}}
+</div>
 
 {{end}}

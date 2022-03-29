@@ -89,7 +89,7 @@ func New(ctx context.Context, opts ...Option) *Serv {
 }
 
 // Run ...
-func (s *Serv) Run(ctx context.Context, handles *http.ServeMux, RegisterEndpointFns ...func(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) error) {
+func (s *Serv) Run(ctx context.Context, handles http.Handler, RegisterEndpointFns ...func(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) error) {
 
 	ctx, cancel := context.WithCancel(ctx)
 

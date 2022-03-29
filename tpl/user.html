@@ -1,16 +1,31 @@
 {{define "content"}}
 
-<p><a href="/logout?provider={{.Provider}}">logout</a></p>
-<p>Name: {{.Name}} [{{.LastName}}, {{.FirstName}}]</p>
-<p>Email: {{.Email}}</p>
-<p>NickName: {{.NickName}}</p>
-<p>Location: {{.Location}}</p>
-<p>AvatarURL: {{.AvatarURL}} <img src="{{.AvatarURL}}"></p>
-<p>Description: {{.Description}}</p>
-<p>UserID: {{.UserID}}</p>
-<p>AccessToken: {{.AccessToken}}</p>
-<p>ExpiresAt: {{.ExpiresAt}}</p>
-<p>RefreshToken: {{.RefreshToken}}</p>
+<div class="jumbotron">
+    <h1 class="text-success  text-center"><span class="fa fa-user"></span> Profile Information</h1>
+    <div class="row">
+      <div class="col-sm-6">
+          <div class="well">
+                  <p><a href="/logout/{{.Provider}}">logout</a></p>
+                  <p><a href="/profile">profile</a></p>
+                  <p>Name: {{.Name}} [{{.LastName}}, {{.FirstName}}]</p>
+                  <p><strong>Email:</strong> {{.Email}}</p>
+                  <p>NickName: {{.NickName}}</p>
+                  <p>Location: {{.Location}}</p>
+                  <p>AvatarURL: {{.AvatarURL}} <img src="{{.AvatarURL}}"></p>
+                  <p>Description: {{.Description}}</p>
+                  <p>UserID: {{.UserID}}</p>
+                  <p>AccessToken: {{.AccessToken}}</p>
+                  <p>ExpiresAt: {{.ExpiresAt}}</p>
+                  <p>RefreshToken: {{.RefreshToken}}</p>
+                  <p>RawData: {{.RawData}}</p>
+
+
+          </div>
+      </div>
+  </div>
+</div>
+
+
 
 
 {{end}}

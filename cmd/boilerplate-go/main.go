@@ -11,6 +11,8 @@ import (
 	log "github.com/and07/boilerplate-go/internal/pkg/logger"
 	"github.com/and07/boilerplate-go/internal/pkg/template"
 	"github.com/and07/boilerplate-go/internal/pkg/tracing"
+	"github.com/and07/boilerplate-go/pkg/data"
+	"github.com/and07/boilerplate-go/pkg/utils"
 	"github.com/caarlos0/env"
 	"github.com/gorilla/sessions"
 	"github.com/opentracing/opentracing-go"
@@ -141,7 +143,19 @@ func main() {
 		}
 	}()
 
-	srv.Run(ctx, publicHandle(ctx, tpl), api.RegisterBlockchainServiceHandlerFromEndpoint, api.RegisterHttpBodyExampleServiceHandlerFromEndpoint)
+	logger := utils.NewLogger()
+
+	configs := utils.NewConfigurations(logger)
+
+	// create a new connection to the postgres db store
+	db, err := data.NewConnection(configs, logger)
+	if err != nil {
+		logger.Error("unable to connect to db", "error", err)
+		panic(err)
+	}
+	defer db.Close()
+
+	srv.Run(ctx, publicHandle(ctx, tpl, db, configs, logger), api.RegisterBlockchainServiceHandlerFromEndpoint, api.RegisterHttpBodyExampleServiceHandlerFromEndpoint)
 
 	log.Info("STOP APP")
 }
