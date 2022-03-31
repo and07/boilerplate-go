@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/kshvakov/clickhouse"
+	"github.com/ClickHouse/clickhouse-go"
 	"github.com/opentracing/opentracing-go"
 )
 

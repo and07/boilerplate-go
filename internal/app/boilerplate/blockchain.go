@@ -6,7 +6,7 @@ import (
 	"encoding/json"
 	"time"
 
-	"github.com/and07/boilerplate-go/api/gen-boilerplate-go/api"
+	api "github.com/and07/boilerplate-go/api/gen-boilerplate-go"
 	"github.com/golang/protobuf/jsonpb"
 	_struct "github.com/golang/protobuf/ptypes/struct"
 	"google.golang.org/grpc/codes"

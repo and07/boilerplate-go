@@ -113,5 +113,5 @@ func (ah *AuthHandler) ResetPassword(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusOK)
-	data.ToJSON(&GenericResponse{Status: false, Message: "Password Reset Successfully"}, w)
+	data.ToJSON(&GenericResponse{Status: true, Message: "Password Reset Successfully"}, w)
 }

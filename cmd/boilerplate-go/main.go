@@ -5,7 +5,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/and07/boilerplate-go/api/gen-boilerplate-go/api"
+	api "github.com/and07/boilerplate-go/api/gen-boilerplate-go"
 	"github.com/and07/boilerplate-go/internal/app/boilerplate"
 	"github.com/and07/boilerplate-go/internal/app/serv"
 	log "github.com/and07/boilerplate-go/internal/pkg/logger"

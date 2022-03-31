@@ -1,9 +1,37 @@
 syntax = "proto3";
-package api;
+
+package grpcserver;
+option go_package = "api/gen-boilerplate-go;grpcserver";
+
 import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
 import "google/protobuf/struct.proto";
-import "google/api/httpbody.proto";
 import "google/protobuf/empty.proto";
+import "google/api/httpbody.proto";
+
+
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  info: {
+    title: "boilerplate Service";
+    version: "2.0";
+    contact: {
+      name: "boilerplate";
+      url: "localhost:8843";
+    };
+  };
+  responses: {
+    key: "default";
+    value: {
+      description: "Common error";
+      schema: {
+        json_schema: {
+          ref: "#/definitions/commonCommonError";
+        }
+      }
+    }
+  }
+};
+
 
 
 message AddressRequest {

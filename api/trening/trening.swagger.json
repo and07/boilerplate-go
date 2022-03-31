@@ -1,0 +1,448 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Trening-Service",
+    "version": "1.0",
+    "contact": {
+      "name": "trening",
+      "url": "localhost:8843"
+    }
+  },
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/user/exercise": {
+      "get": {
+        "operationId": "TreningService_DetailExercise",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/treningDetailExerciseResponse"
+            }
+          },
+          "default": {
+            "description": "Common error",
+            "schema": {
+              "$ref": "#/definitions/commonCommonError"
+            }
+          }
+        },
+        "tags": [
+          "TreningService"
+        ]
+      },
+      "post": {
+        "operationId": "TreningService_CreateExercise",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/treningCreateExerciseResponse"
+            }
+          },
+          "default": {
+            "description": "Common error",
+            "schema": {
+              "$ref": "#/definitions/commonCommonError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/treningCreateExerciseRequest"
+            }
+          }
+        ],
+        "tags": [
+          "TreningService"
+        ]
+      }
+    },
+    "/user/exercises": {
+      "get": {
+        "operationId": "TreningService_ListExercise",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/treningListExerciseResponse"
+            }
+          },
+          "default": {
+            "description": "Common error",
+            "schema": {
+              "$ref": "#/definitions/commonCommonError"
+            }
+          }
+        },
+        "tags": [
+          "TreningService"
+        ]
+      }
+    },
+    "/user/parameters": {
+      "get": {
+        "operationId": "TreningService_DetailParametersUser",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/treningDetailParametersUserResponse"
+            }
+          },
+          "default": {
+            "description": "Common error",
+            "schema": {
+              "$ref": "#/definitions/commonCommonError"
+            }
+          }
+        },
+        "tags": [
+          "TreningService"
+        ]
+      },
+      "post": {
+        "operationId": "TreningService_CreateParametersUser",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/treningParametersUserResponse"
+            }
+          },
+          "default": {
+            "description": "Common error",
+            "schema": {
+              "$ref": "#/definitions/commonCommonError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/treningParametersUserRequest"
+            }
+          }
+        ],
+        "tags": [
+          "TreningService"
+        ]
+      }
+    },
+    "/user/trening": {
+      "get": {
+        "operationId": "TreningService_DetailTrening",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/treningDetailTreningResponse"
+            }
+          },
+          "default": {
+            "description": "Common error",
+            "schema": {
+              "$ref": "#/definitions/commonCommonError"
+            }
+          }
+        },
+        "tags": [
+          "TreningService"
+        ]
+      },
+      "post": {
+        "operationId": "TreningService_CreateTrening",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/treningCreateTreningResponse"
+            }
+          },
+          "default": {
+            "description": "Common error",
+            "schema": {
+              "$ref": "#/definitions/commonCommonError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/treningCreateTreningRequest"
+            }
+          }
+        ],
+        "tags": [
+          "TreningService"
+        ]
+      }
+    },
+    "/user/trenings": {
+      "get": {
+        "operationId": "TreningService_ListTrening",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/treningListTreningResponse"
+            }
+          },
+          "default": {
+            "description": "Common error",
+            "schema": {
+              "$ref": "#/definitions/commonCommonError"
+            }
+          }
+        },
+        "tags": [
+          "TreningService"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "treningCreateExerciseRequest": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "duration": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "relax": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "count": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "userId": {
+          "type": "string"
+        }
+      }
+    },
+    "treningCreateExerciseResponse": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "boolean"
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "treningCreateTreningRequest": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "interval": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "exercises": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/treningExercise"
+          }
+        },
+        "userId": {
+          "type": "string"
+        }
+      }
+    },
+    "treningCreateTreningResponse": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "boolean"
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "treningDetailExerciseResponse": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "boolean"
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "treningDetailParametersUserResponse": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "boolean"
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "treningDetailTreningResponse": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "boolean"
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "treningExercise": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "duration": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "relax": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "count": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "userId": {
+          "type": "string"
+        }
+      }
+    },
+    "treningListExerciseResponse": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "boolean"
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "treningListTreningResponse": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "boolean"
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "treningParametersUserRequest": {
+      "type": "object",
+      "properties": {
+        "weight": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "height": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "age": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "gender": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "activity": {
+          "$ref": "#/definitions/treningUserActivity"
+        },
+        "diet": {
+          "$ref": "#/definitions/treningUserDiet"
+        },
+        "desiredWeight": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "eat": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "userId": {
+          "type": "string"
+        }
+      }
+    },
+    "treningParametersUserResponse": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "boolean"
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "treningUserActivity": {
+      "type": "string",
+      "enum": [
+        "Basic",
+        "Low",
+        "Light",
+        "Medium",
+        "High"
+      ],
+      "default": "Basic"
+    },
+    "treningUserDiet": {
+      "type": "string",
+      "enum": [
+        "Balanced",
+        "Low_fat",
+        "Low_carbs",
+        "Low_protein"
+      ],
+      "default": "Balanced"
+    }
+  },
+  "securityDefinitions": {
+    "bearer": {
+      "type": "apiKey",
+      "description": "Authentication token, prefixed by Bearer: Bearer \u003ctoken\u003e",
+      "name": "Authorization",
+      "in": "header"
+    }
+  },
+  "security": [
+    {
+      "bearer": []
+    }
+  ]
+}

@@ -122,24 +122,35 @@ help: ## Display this help screen
 .PHONY: test
 test: .test ## Run tests
 
+#go mod tidy
+
 .PHONY: install-protoc
 install-protoc: ## Install protoc
-	go mod tidy
-	GOBIN=$(LOCAL_BIN)  go install \
+	GO111MODULE=off GOBIN=$(LOCAL_BIN)  go get \
     github.com/grpc-ecosystem/grpc-gateway/protoc-gen-grpc-gateway \
-    github.com/grpc-ecosystem/grpc-gateway/protoc-gen-swagger \
+    github.com/grpc-ecosystem/grpc-gateway/protoc-gen-openapiv2 \
     github.com/golang/protobuf/protoc-gen-go
 
-gen-protoc: ## protoc generation
-	mkdir -p "./api/gen-${SERVICE_NAME}"
-	protoc -I/usr/local/include -I. \
-		-I${GOPATH}/src \
-		-I${GOPATH}/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis \
-		-I${GOPATH}/src/github.com/grpc-ecosystem/grpc-gateway \
-		--grpc-gateway_out=logtostderr=true:./api/gen-$(SERVICE_NAME) \
-		--swagger_out=allow_merge=true,merge_file_name=api:./assets/swaggerui \
-		--go_out=plugins=grpc:./api/gen-$(SERVICE_NAME) ./api/*.proto
 
+protogen-api-lease-template-with-validators:
+	protoc 								\
+		-I. 								\
+		-I./third_party 								\
+		-I./third_party/googleapis 								\
+		-I./third_party/grpc-gateway/v2 								\
+        -I${GOPATH}/src \
+		--go_out=plugins=grpc,paths=source_relative:. 								\
+		--openapiv2_out=logtostderr=true,allow_delete_body=true,disable_default_errors=true:. 								\
+		--grpc-gateway_out=logtostderr=true,allow_delete_body=true,paths=source_relative:. \
+		--govalidators_out=paths=source_relative:. \
+		$(path)
+
+
+gen-protoc: ## protoc generation
+	make protogen-api-lease-template-with-validators path=./api/gen-$(SERVICE_NAME)/*.proto
+
+gen-trening-protoc: ## protoc generation
+	make protogen-api-lease-template-with-validators path=./api/trening/*.proto
 
 .PHONY: install-lint
 install-lint: ## install golangci-lint binary

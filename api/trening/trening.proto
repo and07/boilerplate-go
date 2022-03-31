@@ -1,0 +1,203 @@
+syntax = "proto3";
+
+package trening;
+option go_package = "api/trening;grpcserver";
+
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "third_party/mwitkow/go-proto-validators/validator.proto";
+import "google/protobuf/timestamp.proto";
+
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  info: {
+    title: "Trening-Service";
+    version: "1.0";
+    contact: {
+      name: "trening";
+      url: "localhost:8843";
+    };
+  };
+  security_definitions: {
+    security: {
+        key: "bearer";
+        value: {
+            type: TYPE_API_KEY;
+            in: IN_HEADER;
+            name: "Authorization";
+            description: "Authentication token, prefixed by Bearer: Bearer <token>";
+        }
+    }
+  }
+  security: {
+    security_requirement: {
+      key: "bearer"
+    }
+  }
+  responses: {
+    key: "default";
+    value: {
+      description: "Common error";
+      schema: {
+        json_schema: {
+          ref: "#/definitions/commonCommonError";
+        }
+      }
+    }
+  }
+};
+
+
+
+enum UserActivity {
+    Basic = 0;
+    Low = 1;
+    Light = 2;
+    Medium = 3;
+    High = 4;
+}
+
+enum UserDiet {
+    Balanced = 0;
+    Low_fat = 1;
+    Low_carbs = 2;
+    Low_protein = 3;
+}
+
+message ParametersUserRequest {
+  
+   int32 weight  = 1;
+   int32 height = 2;
+   int32 age = 3;
+   int32 gender = 4;
+   UserActivity activity = 5;
+   UserDiet diet = 6;
+   int32 desired_weight = 7;
+   int32 eat = 8;
+   string user_id = 9; 
+}
+
+message ParametersUserResponse{
+   bool status = 1;
+   string message = 2;
+}
+
+message DetailParametersUserRequest{}
+message DetailParametersUserResponse{
+   bool status = 1;
+   string message = 2;
+}
+
+message Exercise {
+   
+    string name = 1 [(validator.field) = {string_not_empty: true, regex: "^[a-zA-Z0-9_.-]*$"}];
+    google.protobuf.Timestamp duration = 2;
+    google.protobuf.Timestamp relax = 3;
+    int32 count = 4;
+    string user_id = 5; 
+}
+
+message CreateTreningRequest {
+
+    string name = 1;
+    google.protobuf.Timestamp interval = 2;
+    repeated Exercise exercises = 3;
+    string user_id = 4; 
+}
+message CreateTreningResponse{
+    bool status = 1;
+    string message = 2;
+}
+
+message ListTreningRequest{}
+message ListTreningResponse{
+    bool status = 1;
+    string message = 2;
+}
+
+message DetailTreningRequest{}
+message DetailTreningResponse{
+    bool status = 1;
+    string message = 2;
+}
+
+
+
+message CreateExerciseRequest {
+    
+    string name = 1;
+    google.protobuf.Timestamp duration = 2;
+    google.protobuf.Timestamp relax = 3;
+    int32 count = 4;
+    string user_id = 5; 
+}
+message CreateExerciseResponse{
+    bool status = 1;
+    string message = 2;
+}
+
+message ListExerciseRequest{}
+message ListExerciseResponse{
+    bool status = 1;
+    string message = 2;
+}
+
+message DetailExerciseRequest{}
+message DetailExerciseResponse{
+    bool status = 1;
+    string message = 2;
+}
+
+
+
+service TreningService {
+
+    rpc CreateParametersUser(ParametersUserRequest) returns (ParametersUserResponse) {
+        option (google.api.http) = {
+            post: "/user/parameters"
+            body: "*"
+        };
+        //option (grpc.gateway.protoc_gen_swagger.options.openapiv2_swagger) = {
+        //    security: { } // Disable security key
+        //};
+    }
+    rpc DetailParametersUser(DetailParametersUserRequest) returns (DetailParametersUserResponse) {
+        option (google.api.http) = {
+            get: "/user/parameters"
+        };
+    }
+
+    rpc CreateTrening(CreateTreningRequest) returns (CreateTreningResponse) {
+        option (google.api.http) = {
+            post: "/user/trening"
+            body: "*"
+        };
+    }
+    rpc ListTrening(ListTreningRequest) returns (ListTreningResponse) {
+        option (google.api.http) = {
+            get: "/user/trenings"
+        };
+    }
+    rpc DetailTrening(DetailTreningRequest) returns (DetailTreningResponse) {
+        option (google.api.http) = {
+            get: "/user/trening"
+        };
+    }
+
+    rpc CreateExercise(CreateExerciseRequest) returns (CreateExerciseResponse) {
+        option (google.api.http) = {
+            post: "/user/exercise"
+            body: "*"
+        };
+    }
+    rpc ListExercise(ListExerciseRequest) returns (ListExerciseResponse) {
+        option (google.api.http) = {
+            get: "/user/exercises"
+        };
+    }
+    rpc DetailExercise(DetailExerciseRequest) returns (DetailExerciseResponse) {
+        option (google.api.http) = {
+            get: "/user/exercise"
+        };
+    }
+
+}
