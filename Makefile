@@ -126,10 +126,11 @@ test: .test ## Run tests
 
 .PHONY: install-protoc
 install-protoc: ## Install protoc
-	GO111MODULE=off GOBIN=$(LOCAL_BIN)  go get \
-    github.com/grpc-ecosystem/grpc-gateway/protoc-gen-grpc-gateway \
-    github.com/grpc-ecosystem/grpc-gateway/protoc-gen-openapiv2 \
-    github.com/golang/protobuf/protoc-gen-go
+	GOBIN=$(LOCAL_BIN)  go install \
+    github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway \
+    github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2 \
+    google.golang.org/protobuf/cmd/protoc-gen-go@v1.4 \
+    google.golang.org/grpc/cmd/protoc-gen-go-grpc
 
 
 protogen-api-lease-template-with-validators:

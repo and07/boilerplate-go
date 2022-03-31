@@ -17,4 +17,3 @@ func GenerateRandomString(n int) string {
 	}
 	return sb.String()
 }
-

@@ -13,16 +13,15 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/golang/protobuf/descriptor"
-	"github.com/golang/protobuf/proto"
 	"github.com/golang/protobuf/ptypes/empty"
-	"github.com/grpc-ecosystem/grpc-gateway/runtime"
-	"github.com/grpc-ecosystem/grpc-gateway/utilities"
+	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
+	"github.com/grpc-ecosystem/grpc-gateway/v2/utilities"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/grpclog"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
+	"google.golang.org/protobuf/proto"
 )
 
 // Suppress "imported and not used" errors
@@ -31,7 +30,6 @@ var _ io.Reader
 var _ status.Status
 var _ = runtime.String
 var _ = utilities.NewDoubleArray
-var _ = descriptor.ForMessage
 var _ = metadata.Join
 
 func request_HttpBodyExampleService_HelloWorld_0(ctx context.Context, marshaler runtime.Marshaler, client HttpBodyExampleServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
@@ -73,7 +71,6 @@ func request_BlockchainService_Address_0(ctx context.Context, marshaler runtime.
 	}
 
 	protoReq.Address, err = runtime.String(val)
-
 	if err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "address", err)
 	}
@@ -107,7 +104,6 @@ func local_request_BlockchainService_Address_0(ctx context.Context, marshaler ru
 	}
 
 	protoReq.Address, err = runtime.String(val)
-
 	if err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "address", err)
 	}
@@ -164,12 +160,13 @@ func RegisterHttpBodyExampleServiceHandlerServer(ctx context.Context, mux *runti
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req)
+		var err error
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/grpcserver.HttpBodyExampleService/HelloWorld", runtime.WithHTTPPathPattern("/helloworld"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_HttpBodyExampleService_HelloWorld_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_HttpBodyExampleService_HelloWorld_0(ctx, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
@@ -196,12 +193,13 @@ func RegisterBlockchainServiceHandlerServer(ctx context.Context, mux *runtime.Se
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req)
+		var err error
+		ctx, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/grpcserver.BlockchainService/Address", runtime.WithHTTPPathPattern("/address/{address}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_BlockchainService_Address_0(rctx, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_BlockchainService_Address_0(ctx, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
@@ -265,12 +263,13 @@ func RegisterHttpBodyExampleServiceHandlerClient(ctx context.Context, mux *runti
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req)
+		var err error
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/grpcserver.HttpBodyExampleService/HelloWorld", runtime.WithHTTPPathPattern("/helloworld"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_HttpBodyExampleService_HelloWorld_0(rctx, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_HttpBodyExampleService_HelloWorld_0(ctx, inboundMarshaler, client, req, pathParams)
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
@@ -285,7 +284,7 @@ func RegisterHttpBodyExampleServiceHandlerClient(ctx context.Context, mux *runti
 }
 
 var (
-	pattern_HttpBodyExampleService_HelloWorld_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0}, []string{"helloworld"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_HttpBodyExampleService_HelloWorld_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0}, []string{"helloworld"}, ""))
 )
 
 var (
@@ -334,12 +333,13 @@ func RegisterBlockchainServiceHandlerClient(ctx context.Context, mux *runtime.Se
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req)
+		var err error
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/grpcserver.BlockchainService/Address", runtime.WithHTTPPathPattern("/address/{address}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_BlockchainService_Address_0(rctx, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_BlockchainService_Address_0(ctx, inboundMarshaler, client, req, pathParams)
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
@@ -354,12 +354,13 @@ func RegisterBlockchainServiceHandlerClient(ctx context.Context, mux *runtime.Se
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req)
+		var err error
+		ctx, err = runtime.AnnotateContext(ctx, mux, req, "/grpcserver.BlockchainService/Subscribe", runtime.WithHTTPPathPattern("/subscribe"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_BlockchainService_Subscribe_0(rctx, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_BlockchainService_Subscribe_0(ctx, inboundMarshaler, client, req, pathParams)
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
@@ -374,9 +375,9 @@ func RegisterBlockchainServiceHandlerClient(ctx context.Context, mux *runtime.Se
 }
 
 var (
-	pattern_BlockchainService_Address_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 4, 1, 5, 0}, []string{"address"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_BlockchainService_Address_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 4, 1, 5, 0}, []string{"address"}, ""))
 
-	pattern_BlockchainService_Subscribe_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0}, []string{"subscribe"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_BlockchainService_Subscribe_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0}, []string{"subscribe"}, ""))
 )
 
 var (

@@ -87,14 +87,14 @@ type UsernameUpdate struct {
 }
 
 type CodeVerificationReq struct {
-	Code string `json: "code"`
-	Type string `json" "type"`
+	Code string `json:"code"`
+	Type string `json:"type"`
 }
 
 type PasswordResetReq struct {
-	Password   string `json: "password"`
-	PasswordRe string `json: "password_re"`
-	Code       string `json: "code"`
+	Password   string `json:"password"`
+	PasswordRe string `json:"password_re"`
+	Code       string `json:"code"`
 }
 
 var ErrUserAlreadyExists = fmt.Sprintf("User already exists with the given email")

@@ -8,6 +8,11 @@
       "url": "localhost:8843"
     }
   },
+  "tags": [
+    {
+      "name": "TreningService"
+    }
+  ],
   "consumes": [
     "application/json"
   ],

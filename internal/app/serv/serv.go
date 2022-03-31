@@ -6,7 +6,7 @@ import (
 
 	g "github.com/and07/boilerplate-go/internal/app/grpc"
 	log "github.com/and07/boilerplate-go/internal/pkg/logger"
-	"github.com/grpc-ecosystem/grpc-gateway/runtime"
+	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/opentracing/opentracing-go"
 	"golang.org/x/sync/errgroup"
 	"google.golang.org/grpc"
