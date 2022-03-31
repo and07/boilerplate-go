@@ -167,7 +167,7 @@ func publicHandle(ctx context.Context, tpl *template.Template, db *sqlx.DB, conf
 		googleSECRET = "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"
 	}
 	// UserHandler encapsulates all the services related to user
-	uh := handlers.NewAuthHandler(logger, configs, validator, repositoryMemory, authService, mailService) //, handlers.WithGoogleAuth(googleKEY, googleSECRET, "http://localhost:8080/auth/google/callback"))
+	uh := handlers.NewAuthHandler(logger, configs, validator, repositoryMemory, authService, mailService, handlers.WithGoogleAuth(googleKEY, googleSECRET, "http://localhost:8080/auth/google/callback"))
 
 	// create a serve mux
 	sm := mux.NewRouter()
