@@ -150,7 +150,7 @@ func main() {
 
 	var db *sqlx.DB
 	var err error
-	if configs.DBConn != "" || configs.DBHost != "" {
+	if configs.DBConn != "" || configs.DBHost != "" && false {
 		// create a new connection to the postgres db store
 		db, err = data.NewConnection(configs, logger)
 		if err != nil {
