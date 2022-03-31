@@ -43,8 +43,8 @@ func NewConfigurations(logger hclog.Logger) *Configurations {
 	logger.Debug("db connection string", conn)
 
 	viper.SetDefault("DB_HOST", "localhost")
-	viper.SetDefault("DB_NAME", "bookite")
-	viper.SetDefault("DB_USER", "vignesh")
+	viper.SetDefault("DB_NAME", "postgres")
+	viper.SetDefault("DB_USER", "admin")
 	viper.SetDefault("DB_PASSWORD", "password")
 	viper.SetDefault("DB_PORT", "5432")
 	viper.SetDefault("ACCESS_TOKEN_PRIVATE_KEY_PATH", "./access-private.pem")
