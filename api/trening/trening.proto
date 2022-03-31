@@ -63,7 +63,7 @@ enum UserDiet {
     Low_protein = 3;
 }
 
-message ParametersUserRequest {
+message ParametersUser {
   
    int32 weight  = 1;
    int32 height = 2;
@@ -76,7 +76,20 @@ message ParametersUserRequest {
    string user_id = 9; 
 }
 
-message ParametersUserResponse{
+message CreateParametersUserRequest {
+  
+   int32 weight  = 1;
+   int32 height = 2;
+   int32 age = 3;
+   int32 gender = 4;
+   UserActivity activity = 5;
+   UserDiet diet = 6;
+   int32 desired_weight = 7;
+   int32 eat = 8;
+   string user_id = 9; 
+}
+
+message CreateParametersUserResponse{
    bool status = 1;
    string message = 2;
 }
@@ -85,15 +98,14 @@ message DetailParametersUserRequest{}
 message DetailParametersUserResponse{
    bool status = 1;
    string message = 2;
+   ParametersUser data = 3;
 }
 
-message Exercise {
-   
-    string name = 1 [(validator.field) = {string_not_empty: true, regex: "^[a-zA-Z0-9_.-]*$"}];
-    google.protobuf.Timestamp duration = 2;
-    google.protobuf.Timestamp relax = 3;
-    int32 count = 4;
-    string user_id = 5; 
+message Trening{
+    string name = 1;
+    google.protobuf.Timestamp interval = 2;
+    repeated Exercise exercises = 3;
+    string user_id = 4; 
 }
 
 message CreateTreningRequest {
@@ -112,15 +124,23 @@ message ListTreningRequest{}
 message ListTreningResponse{
     bool status = 1;
     string message = 2;
+    repeated Trening data = 3;
 }
 
 message DetailTreningRequest{}
 message DetailTreningResponse{
     bool status = 1;
     string message = 2;
+    Trening data = 3;
 }
 
-
+message Exercise {
+    string name = 1 [(validator.field) = {string_not_empty: true, regex: "^[a-zA-Z0-9_.-]*$"}];
+    google.protobuf.Timestamp duration = 2;
+    google.protobuf.Timestamp relax = 3;
+    int32 count = 4;
+    string user_id = 5; 
+}
 
 message CreateExerciseRequest {
     
@@ -139,26 +159,28 @@ message ListExerciseRequest{}
 message ListExerciseResponse{
     bool status = 1;
     string message = 2;
+    repeated Exercise data = 3;
 }
 
 message DetailExerciseRequest{}
 message DetailExerciseResponse{
     bool status = 1;
     string message = 2;
+    Exercise data = 3;
 }
 
 
 
 service TreningService {
 
-    rpc CreateParametersUser(ParametersUserRequest) returns (ParametersUserResponse) {
+    rpc CreateParametersUser(CreateParametersUserRequest) returns (CreateParametersUserResponse) {
         option (google.api.http) = {
             post: "/user/parameters"
             body: "*"
         };
-        //option (grpc.gateway.protoc_gen_swagger.options.openapiv2_swagger) = {
+        // option (grpc.gateway.protoc_gen_swagger.options.openapiv2_swagger) = {
         //    security: { } // Disable security key
-        //};
+        // };
     }
     rpc DetailParametersUser(DetailParametersUserRequest) returns (DetailParametersUserResponse) {
         option (google.api.http) = {

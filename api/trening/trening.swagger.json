@@ -121,7 +121,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/treningParametersUserResponse"
+              "$ref": "#/definitions/treningCreateParametersUserResponse"
             }
           },
           "default": {
@@ -137,7 +137,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/treningParametersUserRequest"
+              "$ref": "#/definitions/treningCreateParametersUserRequest"
             }
           }
         ],
@@ -256,6 +256,55 @@
         }
       }
     },
+    "treningCreateParametersUserRequest": {
+      "type": "object",
+      "properties": {
+        "weight": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "height": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "age": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "gender": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "activity": {
+          "$ref": "#/definitions/treningUserActivity"
+        },
+        "diet": {
+          "$ref": "#/definitions/treningUserDiet"
+        },
+        "desiredWeight": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "eat": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "userId": {
+          "type": "string"
+        }
+      }
+    },
+    "treningCreateParametersUserResponse": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "boolean"
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    },
     "treningCreateTreningRequest": {
       "type": "object",
       "properties": {
@@ -296,6 +345,9 @@
         },
         "message": {
           "type": "string"
+        },
+        "data": {
+          "$ref": "#/definitions/treningExercise"
         }
       }
     },
@@ -307,6 +359,9 @@
         },
         "message": {
           "type": "string"
+        },
+        "data": {
+          "$ref": "#/definitions/treningParametersUser"
         }
       }
     },
@@ -318,6 +373,9 @@
         },
         "message": {
           "type": "string"
+        },
+        "data": {
+          "$ref": "#/definitions/treningTrening"
         }
       }
     },
@@ -352,6 +410,12 @@
         },
         "message": {
           "type": "string"
+        },
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/treningExercise"
+          }
         }
       }
     },
@@ -363,10 +427,16 @@
         },
         "message": {
           "type": "string"
+        },
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/treningTrening"
+          }
         }
       }
     },
-    "treningParametersUserRequest": {
+    "treningParametersUser": {
       "type": "object",
       "properties": {
         "weight": {
@@ -404,13 +474,23 @@
         }
       }
     },
-    "treningParametersUserResponse": {
+    "treningTrening": {
       "type": "object",
       "properties": {
-        "status": {
-          "type": "boolean"
+        "name": {
+          "type": "string"
         },
-        "message": {
+        "interval": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "exercises": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/treningExercise"
+          }
+        },
+        "userId": {
           "type": "string"
         }
       }
