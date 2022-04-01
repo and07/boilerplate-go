@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"net/http"
 	"os"
-	"time"
 
 	"github.com/and07/boilerplate-go/internal/pkg/template"
 	"github.com/and07/boilerplate-go/pkg/data"
@@ -16,7 +15,6 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/hashicorp/go-hclog"
 	"github.com/jmoiron/sqlx"
-	"github.com/markbates/goth/gothic"
 	//"google.golang.org/api/idtoken"
 )
 
@@ -32,55 +30,6 @@ func hiHandler(ctx context.Context, tpl *template.Template) func(w http.Response
 		remoteAddr := r.RemoteAddr
 
 		tpl.RenderTemplate(w, "main.html", fmt.Sprintf("X-Real-Ip:%s X-Forwarded-For:%s RemoteAddr:%s", xRealIP, xForwardedFor, remoteAddr))
-	}
-}
-
-func callbackProviderHandler(ctx context.Context, tpl *template.Template) func(res http.ResponseWriter, req *http.Request) {
-	return func(w http.ResponseWriter, r *http.Request) {
-		user, err := gothic.CompleteUserAuth(w, r)
-		if err != nil {
-			fmt.Fprintln(w, err)
-			return
-		}
-		/*
-			// Get authorization code from URL
-			authCode := r.URL.Query().Get("code")
-
-			// Get ID token and access token through authorization code
-			oauth2Token, err := oauth2Config.Exchange(ctx, authCode)
-			if err != nil {
-				http.Error(w, "Failed to exchange token: "+err.Error(), http.StatusInternalServerError)
-				return
-			}
-			rawIDToken, ok := oauth2Token.Extra("id_token").(string)
-			if !ok {
-				http.Error(w, "No id_token field in oauth2 token.", http.StatusInternalServerError)
-				return
-			}
-		*/
-		expirationTime := time.Now().Add(5 * time.Minute)
-		http.SetCookie(w, &http.Cookie{
-			Name:    "token",
-			Value:   user.IDToken,
-			Expires: expirationTime,
-		})
-
-		tpl.RenderTemplate(w, "user.html", user)
-	}
-}
-
-func logoutHandler(ctx context.Context, tpl *template.Template) func(res http.ResponseWriter, req *http.Request) {
-	return func(w http.ResponseWriter, r *http.Request) {
-		gothic.Logout(w, r)
-		w.Header().Set("Location", "/")
-		w.WriteHeader(http.StatusTemporaryRedirect)
-	}
-}
-
-func loginProviderHandler(ctx context.Context, tpl *template.Template) func(res http.ResponseWriter, req *http.Request) {
-	// try to get the user without re-authenticating
-	return func(w http.ResponseWriter, r *http.Request) {
-		gothic.BeginAuthHandler(w, r)
 	}
 }
 
@@ -197,9 +146,7 @@ func publicHandle(ctx context.Context, tpl *template.Template, db *sqlx.DB, conf
 
 	get := sm.Methods(http.MethodGet).Subrouter()
 	get.HandleFunc("/", hiHandler(ctx, tpl))
-	//get.HandleFunc("/auth/{provider}/callback", callbackProviderHandler(ctx, tpl))
 	get.HandleFunc("/auth/google/callback", uh.GoogleLogin)
-	get.HandleFunc("/logout/{provider}", logoutHandler(ctx, tpl))
 	get.HandleFunc("/login/google", uh.GoogleOAuth)
 	get.HandleFunc("/auth", authHandler(ctx, tpl))
 

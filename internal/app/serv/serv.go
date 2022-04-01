@@ -4,9 +4,11 @@ import (
 	"context"
 	"net/http"
 
+	"github.com/and07/boilerplate-go/configs"
 	g "github.com/and07/boilerplate-go/internal/app/grpc"
 	log "github.com/and07/boilerplate-go/internal/pkg/logger"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
+	"github.com/hashicorp/go-hclog"
 	"github.com/opentracing/opentracing-go"
 	"golang.org/x/sync/errgroup"
 	"google.golang.org/grpc"
@@ -58,9 +60,9 @@ func WithPublicPort(portPublicHTTP string) Option {
 }
 
 // WithGRPC ...
-func WithGRPC(ctx context.Context, portGRPC string, fns ...func(*grpc.Server)) Option {
+func WithGRPC(ctx context.Context, cfg *configs.Configs, fns ...func(*grpc.Server)) Option {
 	return func(s *Serv) {
-		s.grpcSrv = g.NewServer(ctx, portGRPC)
+		s.grpcSrv = g.NewServer(ctx, cfg)
 		go s.grpcSrv.RunGRPC(ctx, fns...)
 	}
 }
@@ -89,7 +91,7 @@ func New(ctx context.Context, opts ...Option) *Serv {
 }
 
 // Run ...
-func (s *Serv) Run(ctx context.Context, handles http.Handler, RegisterEndpointFns ...func(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) error) {
+func (s *Serv) Run(ctx context.Context, handles http.Handler, logger hclog.Logger, RegisterEndpointFns ...func(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) error) {
 
 	ctx, cancel := context.WithCancel(ctx)
 
@@ -108,7 +110,7 @@ func (s *Serv) Run(ctx context.Context, handles http.Handler, RegisterEndpointFn
 		var group errgroup.Group
 
 		group.Go(func() error {
-			return s.grpcSrv.RegisterEndpoints(ctx, RegisterEndpointFns...)
+			return s.grpcSrv.RegisterEndpoints(ctx, logger, RegisterEndpointFns...)
 		})
 
 		if err := group.Wait(); err != nil {

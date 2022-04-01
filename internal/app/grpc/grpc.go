@@ -1,18 +1,24 @@
 package grpc
 
 import (
+	"bytes"
 	"context"
 	"net"
 	"net/http"
+	"os"
 	"strconv"
 
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
+	grpc_zap "github.com/grpc-ecosystem/go-grpc-middleware/logging/zap"
+	grpc_ctxtags "github.com/grpc-ecosystem/go-grpc-middleware/tags"
+	grpc_validator "github.com/grpc-ecosystem/go-grpc-middleware/validator"
 	grpc_prometheus "github.com/grpc-ecosystem/go-grpc-prometheus"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
-	"github.com/tmc/grpc-websocket-proxy/wsproxy"
+	"github.com/hashicorp/go-hclog"
 	"golang.org/x/sync/errgroup"
 
 	//"github.com/and07/boilerplate-go/service"
+	"github.com/and07/boilerplate-go/configs"
 	log "github.com/and07/boilerplate-go/internal/pkg/logger"
 	_ "github.com/jnewmano/grpc-json-proxy/codec" // GRPC Proxy
 	"go.elastic.co/apm/module/apmgrpc"
@@ -20,6 +26,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/health"
 	healthpb "google.golang.org/grpc/health/grpc_health_v1"
+	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/reflection"
 )
 
@@ -29,36 +36,57 @@ const defaultGRPCPort = 8842
 type GRPC struct {
 	grpcSrv *grpc.Server
 	address string
+	cfg     *configs.Configs
 }
 
 // NewServer ...
-func NewServer(ctx context.Context, GRPCPort string) *GRPC {
+func NewServer(ctx context.Context, cfg *configs.Configs) *GRPC {
+	simpleLogger, err := zap.NewDevelopment()
+	if err != nil {
+		os.Exit(1)
+	}
 	var address string
-	if GRPCPort != "" {
-		address = ":" + GRPCPort
+	if cfg.PortGrpc != "" {
+		address = ":" + cfg.PortGrpc
 	} else {
 		address = ":" + strconv.Itoa(defaultGRPCPort)
 	}
 
+	grpc_prometheus.EnableClientHandlingTimeHistogram()
 	server := grpc.NewServer(
-		grpc.UnaryInterceptor(
-			grpc_middleware.ChainUnaryServer(
-				grpc_prometheus.UnaryServerInterceptor,
-				apmgrpc.NewUnaryServerInterceptor(apmgrpc.WithRecovery()),
-			),
-		),
 		grpc.StreamInterceptor(grpc_prometheus.StreamServerInterceptor),
+		grpc_middleware.WithUnaryServerChain(
+			grpc_prometheus.UnaryServerInterceptor,
+			apmgrpc.NewUnaryServerInterceptor(apmgrpc.WithRecovery()),
+			grpc_ctxtags.UnaryServerInterceptor(grpc_ctxtags.WithFieldExtractor(grpc_ctxtags.CodeGenRequestFieldExtractor)),
+			grpc_zap.UnaryServerInterceptor(simpleLogger),
+			grpc_validator.UnaryServerInterceptor(),
+		),
 	)
 
 	return &GRPC{
 		grpcSrv: server,
 		address: address,
+		cfg:     cfg,
 	}
 }
 
 // RegisterEndpoints ...
-func (g *GRPC) RegisterEndpoints(ctx context.Context, RegisterEndpointFns ...func(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) error) error {
-	mux := runtime.NewServeMux(runtime.WithMarshalerOption(runtime.MIMEWildcard, &runtime.JSONPb{}))
+func (g *GRPC) RegisterEndpoints(ctx context.Context, logger hclog.Logger, RegisterEndpointFns ...func(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) error) error {
+	mux := runtime.NewServeMux(
+		runtime.WithMetadata(func(ctx context.Context, req *http.Request) metadata.MD {
+			m := make(map[string]string)
+			m["authorization"] = req.Header.Get("Authorization")
+
+			b := bytes.NewBufferString("")
+			req.Header.Write(b)
+
+			logger.Debug("metadata", req.Header.Get("Authorization"))
+
+			return metadata.New(m)
+		}),
+		runtime.WithMarshalerOption(runtime.MIMEWildcard, &runtime.JSONPb{}),
+	)
 	opts := []grpc.DialOption{
 		grpc.WithInsecure(),
 		grpc.WithDefaultCallOptions(grpc.MaxCallRecvMsgSize(50000000)),
@@ -66,6 +94,8 @@ func (g *GRPC) RegisterEndpoints(ctx context.Context, RegisterEndpointFns ...fun
 
 	headers := func(h http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+
+			logger.Debug("Authorization ", r.Header.Get("Authorization"))
 
 			w.Header().Set("Access-Control-Allow-Origin", "*")
 			w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
@@ -76,14 +106,14 @@ func (g *GRPC) RegisterEndpoints(ctx context.Context, RegisterEndpointFns ...fun
 	}
 
 	for _, fn := range RegisterEndpointFns {
-		if err := fn(ctx, mux, ":8842", opts); err != nil {
+		if err := fn(ctx, mux, ":"+g.cfg.PortGrpc, opts); err != nil {
 			log.Error(err)
 		}
 	}
 
 	var group errgroup.Group
 	group.Go(func() error {
-		return http.ListenAndServe(":8843", wsproxy.WebsocketProxy(headers(mux)))
+		return http.ListenAndServe(":"+g.cfg.PortGrpcGateway, headers(mux))
 	})
 	if err := group.Wait(); err != nil {
 		log.Error(err)
@@ -126,8 +156,9 @@ func (g *GRPC) RunGRPC(ctx context.Context, fns ...func(*grpc.Server)) error {
 		log.Error(err)
 		return err
 	}
-	<-ctx.Done()
+
 	log.Infof("Shutdown grpc server %s", g.address)
+	<-ctx.Done()
 	g.grpcSrv.GracefulStop()
 
 	return nil
