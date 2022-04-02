@@ -1,4 +1,4 @@
-package main
+package data
 
 // schema for user table
 const userSchema = `

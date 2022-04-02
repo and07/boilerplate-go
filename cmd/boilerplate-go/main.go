@@ -26,11 +26,6 @@ import (
 	//"github.com/markbates/goth/providers/facebook"
 )
 
-const (
-	pPublicPort  = "8080"
-	pPrivatePort = "8888"
-)
-
 var counter prometheus.Counter
 
 func init() {
@@ -82,6 +77,11 @@ func main() {
 	// authService contains all methods that help in authorizing a user request
 	authService := service.NewAuthService(logger, configs)
 
+	// repository contains all the methods that interact with DB to perform CURD operations for user.
+	repositoryAuth := data.NewAuthPostgresRepository(db, logger)
+
+	//repositoryAuth := data.NewAuthMemoryRepository(logger)
+
 	hw := func(grpcSrv *grpc.Server) {
 		impl := boilerplate.New(ctx)
 		api.RegisterHttpBodyExampleServiceServer(grpcSrv, impl)
@@ -94,8 +94,8 @@ func main() {
 	}
 
 	ts := func(grpcSrv *grpc.Server) {
-		treningHandler := trening.NewTreningHandler()
-		apiTrening.RegisterTreningServiceServer(grpcSrv, apiTrening.NewTeningFacade(token.NewExtractor(), authService, treningHandler))
+		treningHandler := trening.NewTreningHandler(data.NewTreningPostgresRepository(db, logger), logger)
+		apiTrening.RegisterTreningServiceServer(grpcSrv, apiTrening.NewTeningFacade(token.NewExtractor(), authService, treningHandler, logger))
 	}
 
 	srv := serv.New(ctx,
@@ -126,7 +126,14 @@ func main() {
 		}
 	}()
 
-	srv.Run(ctx, publicHandle(ctx, tpl, db, configs, authService, logger), logger, api.RegisterBlockchainServiceHandlerFromEndpoint, api.RegisterHttpBodyExampleServiceHandlerFromEndpoint, apiTrening.RegisterTreningServiceHandlerFromEndpoint)
+	srv.Run(
+		ctx,
+		publicHandle(ctx, tpl, repositoryAuth, configs, authService, logger),
+		logger,
+		api.RegisterBlockchainServiceHandlerFromEndpoint,
+		api.RegisterHttpBodyExampleServiceHandlerFromEndpoint,
+		apiTrening.RegisterTreningServiceHandlerFromEndpoint,
+	)
 
 	log.Info("STOP APP")
 }

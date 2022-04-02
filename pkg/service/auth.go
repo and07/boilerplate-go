@@ -143,7 +143,7 @@ func (auth *AuthService) ValidateAccessToken(tokenString string) (string, error)
 	token, err := jwt.ParseWithClaims(tokenString, &AccessTokenCustomClaims{}, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodRSA); !ok {
 			auth.logger.Error("Unexpected signing method in auth token")
-			return nil, errors.New("Unexpected signing method in auth token")
+			return nil, errors.New("unexpected signing method in auth token")
 		}
 		verifyBytes, err := ioutil.ReadFile(auth.configs.AccessTokenPublicKeyPath)
 		if err != nil {
@@ -179,7 +179,7 @@ func (auth *AuthService) ValidateRefreshToken(tokenString string) (string, strin
 	token, err := jwt.ParseWithClaims(tokenString, &RefreshTokenCustomClaims{}, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodRSA); !ok {
 			auth.logger.Error("Unexpected signing method in auth token")
-			return nil, errors.New("Unexpected signing method in auth token")
+			return nil, errors.New("unexpected signing method in auth token")
 		}
 		verifyBytes, err := ioutil.ReadFile(auth.configs.RefreshTokenPublicKeyPath)
 		if err != nil {

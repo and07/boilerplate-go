@@ -4,17 +4,18 @@ import (
 	"context"
 	"fmt"
 	"net/http"
-	"os"
 
+	"github.com/and07/boilerplate-go/configs"
+	log "github.com/and07/boilerplate-go/internal/pkg/logger"
 	"github.com/and07/boilerplate-go/internal/pkg/template"
 	"github.com/and07/boilerplate-go/pkg/data"
 	handlers "github.com/and07/boilerplate-go/pkg/handlers/httpserver"
 	"github.com/and07/boilerplate-go/pkg/service"
 	"github.com/and07/boilerplate-go/pkg/service/mail"
 	"github.com/and07/boilerplate-go/pkg/utils"
+	"github.com/caarlos0/env"
 	"github.com/gorilla/mux"
 	"github.com/hashicorp/go-hclog"
-	"github.com/jmoiron/sqlx"
 	//"google.golang.org/api/idtoken"
 )
 
@@ -65,7 +66,7 @@ func profileHandler(ctx context.Context, tpl *template.Template) func(res http.R
 }
 */
 
-func publicHandle(ctx context.Context, tpl *template.Template, db *sqlx.DB, configs *utils.Configurations, authService service.Authentication, logger hclog.Logger) http.Handler {
+func publicHandle(ctx context.Context, tpl *template.Template, repository data.AuthRepository, cfg *utils.Configurations, authService service.Authentication, logger hclog.Logger) http.Handler {
 	/*
 			rPublic := pat.New()
 			rPublic.Get("/auth/{provider}/callback", userHandler(ctx, tpl))
@@ -90,35 +91,16 @@ func publicHandle(ctx context.Context, tpl *template.Template, db *sqlx.DB, conf
 	// validator contains all the methods that are need to validate the user json in request
 	validator := data.NewValidation()
 
-	// creation of user table.
-	if db != nil {
-		db.MustExec(userSchema)
-		db.MustExec(verificationSchema)
-	}
-
-	// repository contains all the methods that interact with DB to perform CURD operations for user.
-	//repository := data.NewPostgresRepository(db, logger)
-
-	repositoryMemory := data.NewMemoryRepository(logger)
-
 	// mailService contains the utility methods to send an email
-	mailService := mail.NewMGMailService(logger, configs)
+	mailService := mail.NewMGMailService(logger, cfg)
 
-	googleKEY := os.Getenv("GOOGLE_KEY")
-	if googleKEY == "" {
-		googleKEY = "328290909614-jar104iq8508k7n2lhrj453up6oieo4j.apps.googleusercontent.com"
-	}
-	googleSECRET := os.Getenv("GOOGLE_SECRET")
-	if googleSECRET == "" {
-		googleSECRET = "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"
-	}
-	googleAuthCollback := os.Getenv("GOOGLE_AUTH_CALLBACK")
-	if googleAuthCollback == "" {
-		googleAuthCollback = "http://localhost:8080/auth/google/callback"
+	cfgGoogleAuth := &configs.GoogleAuthConfigs{}
+	if err := env.Parse(cfgGoogleAuth); err != nil {
+		log.Error(err)
 	}
 
 	// UserHandler encapsulates all the services related to user
-	uh := handlers.NewAuthHandler(logger, configs, validator, repositoryMemory, authService, mailService, handlers.WithGoogleAuth(googleKEY, googleSECRET, googleAuthCollback))
+	uh := handlers.NewAuthHandler(logger, cfg, validator, repository, authService, mailService, handlers.WithGoogleAuth(cfgGoogleAuth.GoogleKey, cfgGoogleAuth.GoogleSecret, cfgGoogleAuth.GoogleAuthCallback))
 
 	// create a serve mux
 	sm := mux.NewRouter()

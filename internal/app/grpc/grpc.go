@@ -24,10 +24,12 @@ import (
 	"go.elastic.co/apm/module/apmgrpc"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/health"
 	healthpb "google.golang.org/grpc/health/grpc_health_v1"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/reflection"
+	"google.golang.org/protobuf/encoding/protojson"
 )
 
 const defaultGRPCPort = 8842
@@ -85,17 +87,19 @@ func (g *GRPC) RegisterEndpoints(ctx context.Context, logger hclog.Logger, Regis
 
 			return metadata.New(m)
 		}),
-		runtime.WithMarshalerOption(runtime.MIMEWildcard, &runtime.JSONPb{}),
+		runtime.WithMarshalerOption(runtime.MIMEWildcard, &runtime.JSONPb{MarshalOptions: protojson.MarshalOptions{
+			EmitUnpopulated: true,
+		},
+			UnmarshalOptions: protojson.UnmarshalOptions{},
+		}),
 	)
 	opts := []grpc.DialOption{
-		grpc.WithInsecure(),
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
 		grpc.WithDefaultCallOptions(grpc.MaxCallRecvMsgSize(50000000)),
 	}
 
 	headers := func(h http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
-			logger.Debug("Authorization ", r.Header.Get("Authorization"))
 
 			w.Header().Set("Access-Control-Allow-Origin", "*")
 			w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")

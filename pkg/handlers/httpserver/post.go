@@ -271,12 +271,12 @@ func (ah *AuthHandler) verify(actualVerificationData *data.VerificationData, ver
 		ah.logger.Error("verification data provided is expired")
 		err := ah.repo.DeleteVerificationData(context.Background(), actualVerificationData.Email, actualVerificationData.Type)
 		ah.logger.Error("unable to delete verification data from db", "error", err)
-		return false, errors.New("Confirmation code has expired. Please try generating a new code")
+		return false, errors.New("confirmation code has expired. Please try generating a new code")
 	}
 
 	if actualVerificationData.Code != verificationData.Code {
 		ah.logger.Error("verification of mail failed. Invalid verification code provided")
-		return false, errors.New("Verification code provided is Invalid. Please look in your mail for the code")
+		return false, errors.New("verification code provided is Invalid. Please look in your mail for the code")
 	}
 
 	return true, nil

@@ -171,7 +171,7 @@ func extractToken(r *http.Request) (string, error) {
 	authHeader := r.Header.Get("Authorization")
 	authHeaderContent := strings.Split(authHeader, " ")
 	if len(authHeaderContent) != 2 {
-		return "", errors.New("Token not provided or malformed")
+		return "", errors.New("token not provided or malformed")
 	}
 	return authHeaderContent[1], nil
 }

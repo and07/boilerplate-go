@@ -15,8 +15,15 @@ type PostgresRepository struct {
 	logger hclog.Logger
 }
 
-// NewPostgresRepository returns a new PostgresRepository instance
-func NewPostgresRepository(db *sqlx.DB, logger hclog.Logger) *PostgresRepository {
+// NewAuthPostgresRepository returns a new PostgresRepository instance
+func NewAuthPostgresRepository(db *sqlx.DB, logger hclog.Logger) *PostgresRepository {
+
+	// creation of user table.
+	if db != nil {
+		db.MustExec(userSchema)
+		db.MustExec(verificationSchema)
+	}
+
 	return &PostgresRepository{db, logger}
 }
 
@@ -76,7 +83,7 @@ func (repo *PostgresRepository) UpdateUserVerificationStatus(ctx context.Context
 	return nil
 }
 
-// StoreMailVerificationData adds a mail verification data to db
+// StoreVerificationData adds a mail verification data to db
 func (repo *PostgresRepository) StoreVerificationData(ctx context.Context, verificationData *VerificationData) error {
 
 	query := "insert into verifications(email, code, expiresat, type) values($1, $2, $3, $4)"
@@ -84,7 +91,7 @@ func (repo *PostgresRepository) StoreVerificationData(ctx context.Context, verif
 	return err
 }
 
-// GetMailVerificationCode retrieves the stored verification code.
+// GetVerificationData retrieves the stored verification code.
 func (repo *PostgresRepository) GetVerificationData(ctx context.Context, email string, verificationDataType VerificationDataType) (*VerificationData, error) {
 
 	query := "select * from verifications where email = $1 and type = $2"
@@ -96,7 +103,7 @@ func (repo *PostgresRepository) GetVerificationData(ctx context.Context, email s
 	return &verificationData, nil
 }
 
-// DeleteMailVerificationData deletes a used verification data
+// DeleteVerificationData deletes a used verification data
 func (repo *PostgresRepository) DeleteVerificationData(ctx context.Context, email string, verificationDataType VerificationDataType) error {
 
 	query := "delete from verifications where email = $1 and type = $2"

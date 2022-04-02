@@ -14,6 +14,7 @@ type treningFacade struct {
 	extractor      extractor
 	authService    service.Authentication
 	treningHandler treningHandler
+	logger         logger
 }
 
 func (t *treningFacade) CreateParametersUser(ctx context.Context, request *CreateParametersUserRequest) (response *CreateParametersUserResponse, err error) {
@@ -51,8 +52,6 @@ func (t *treningFacade) CreateParametersUser(ctx context.Context, request *Creat
 		Message: res.Message,
 	}
 
-	log.Println("userID - ", userID)
-
 	return
 }
 
@@ -65,7 +64,31 @@ func (t *treningFacade) DetailParametersUser(ctx context.Context, request *Detai
 		}
 		return
 	}
-	log.Println("userID - ", userID)
+
+	res, err := t.treningHandler.DetailParametersUser(ctx, &models.DetailParametersUserRequest{
+		UserID: userID,
+	})
+	if err != nil {
+		return
+	}
+	data := ParametersUser{
+		Weight:        res.Data.Weight,
+		Height:        res.Data.Height,
+		Age:           res.Data.Age,
+		Gender:        res.Data.Gender,
+		Activity:      UserActivity(res.Data.Activity),
+		Diet:          UserDiet(res.Data.Diet),
+		DesiredWeight: res.Data.DesiredWeight,
+		Eat:           res.Data.Eat,
+	}
+
+	response = &DetailParametersUserResponse{
+		Status: res.Status,
+		Data:   &data,
+	}
+
+	t.logger.Debug("userParams %#v", res.Data)
+
 	return
 }
 
@@ -160,10 +183,11 @@ func (t *treningFacade) userID(ctx context.Context) (string, error) {
 	return userID, nil
 }
 
-func NewTeningFacade(extractor extractor, authService service.Authentication, treningHandler treningHandler) *treningFacade {
+func NewTeningFacade(extractor extractor, authService service.Authentication, treningHandler treningHandler, logger logger) *treningFacade {
 	return &treningFacade{
 		extractor:      extractor,
 		authService:    authService,
 		treningHandler: treningHandler,
+		logger:         logger,
 	}
 }

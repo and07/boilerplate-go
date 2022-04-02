@@ -22,3 +22,10 @@ type treningHandler interface {
 	ListExercise(ctx context.Context, request *models.ListExerciseRequest) (response *models.ListExerciseResponse, err error)
 	DetailExercise(ctx context.Context, request *models.DetailExerciseRequest) (response *models.DetailExerciseResponse, err error)
 }
+
+type logger interface {
+	Debug(msg string, args ...interface{})
+	Info(msg string, args ...interface{})
+	Warn(msg string, args ...interface{})
+	Error(msg string, args ...interface{})
+}

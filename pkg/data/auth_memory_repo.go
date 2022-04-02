@@ -19,8 +19,8 @@ type MemoryRepository struct {
 	mx               sync.RWMutex
 }
 
-// NewPostgresRepository returns a new PostgresRepository instance
-func NewMemoryRepository(logger hclog.Logger) *MemoryRepository {
+// NewAuthMemoryRepository returns a new PostgresRepository instance
+func NewAuthMemoryRepository(logger hclog.Logger) *MemoryRepository {
 	return &MemoryRepository{
 		logger:           logger,
 		userData:         make(map[string]*User),
@@ -117,7 +117,7 @@ func (repo *MemoryRepository) UpdatePassword(ctx context.Context, userID string,
 	return nil
 }
 
-// StoreMailVerificationData adds a mail verification data to db
+// StoreVerificationData adds a mail verification data to db
 func (repo *MemoryRepository) StoreVerificationData(ctx context.Context, verificationData *VerificationData) error {
 
 	repo.logger.Debug("verificationData ", hclog.Fmt("%#v", verificationData))
@@ -129,7 +129,7 @@ func (repo *MemoryRepository) StoreVerificationData(ctx context.Context, verific
 	return nil
 }
 
-// GetMailVerificationCode retrieves the stored verification code.
+// GetVerificationData retrieves the stored verification code.
 func (repo *MemoryRepository) GetVerificationData(ctx context.Context, email string, verificationDataType VerificationDataType) (*VerificationData, error) {
 	repo.mx.RLock()
 	verificationData := repo.verificationData[email+strconv.Itoa(int(verificationDataType))]
@@ -138,7 +138,7 @@ func (repo *MemoryRepository) GetVerificationData(ctx context.Context, email str
 	return verificationData, nil
 }
 
-// DeleteMailVerificationData deletes a used verification data
+// DeleteVerificationData deletes a used verification data
 func (repo *MemoryRepository) DeleteVerificationData(ctx context.Context, email string, verificationDataType VerificationDataType) error {
 	repo.mx.Lock()
 	delete(repo.verificationData, email+strconv.Itoa(int(verificationDataType)))

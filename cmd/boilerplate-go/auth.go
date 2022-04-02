@@ -8,6 +8,7 @@ import (
 	"github.com/and07/boilerplate-go/internal/pkg/template"
 )
 
+// ProviderIndex ...
 type ProviderIndex struct {
 	Providers    []string
 	ProvidersMap map[string]string

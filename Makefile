@@ -14,7 +14,7 @@ LOCAL_BIN:=$(CURDIR)/bin
 
 # Check global GOLANGCI-LINT
 GOLANGCI_BIN:=$(LOCAL_BIN)/golangci-lint
-GOLANGCI_TAG:=1.26.0
+GOLANGCI_TAG:=1.45.2
 
 # Check local bin version
 ifneq ($(wildcard $(GOLANGCI_BIN)),)

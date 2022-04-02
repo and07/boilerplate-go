@@ -26,7 +26,7 @@ type Configurations struct {
 	MailVerifTemplate       string
 	PassResetTemplate       string
 
-	SendGridApiKey string
+	SendGridAPIKey string
 
 	MailGunDomain        string
 	MailGunPrivateAPIKey string
@@ -75,7 +75,7 @@ func NewConfigurations(logger hclog.Logger) *Configurations {
 		MailVerifTemplate:       viper.GetString("MAIL_VERIFICATION_TEMPLATE"),
 		PassResetTemplate:       viper.GetString("PASSWORD_RESET_TEMPLATE"),
 
-		SendGridApiKey:       viper.GetString("SENDGRID_API_KEY"),
+		SendGridAPIKey:       viper.GetString("SENDGRID_API_KEY"),
 		MailGunDomain:        viper.GetString("MAILGUN_DOMAIN"),
 		MailGunPrivateAPIKey: viper.GetString("MAILGUN_PRIVATE_API_KEY"),
 	}

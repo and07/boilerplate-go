@@ -25,7 +25,7 @@ type AuthHandler struct {
 	logger      hclog.Logger
 	configs     *utils.Configurations
 	validator   *data.Validation
-	repo        data.Repository
+	repo        data.AuthRepository
 	authService service.Authentication
 	mailService mail.MailService
 	oauthConfGl *oauth2.Config
@@ -42,7 +42,7 @@ func WithGoogleAuth(clientKey string, secret string, callbackURL string, scopes 
 }
 
 // NewUserHandler returns a new UserHandler instance
-func NewAuthHandler(l hclog.Logger, c *utils.Configurations, v *data.Validation, r data.Repository, auth service.Authentication, mail mail.MailService, opts ...Option) *AuthHandler {
+func NewAuthHandler(l hclog.Logger, c *utils.Configurations, v *data.Validation, r data.AuthRepository, auth service.Authentication, mail mail.MailService, opts ...Option) *AuthHandler {
 	a := &AuthHandler{
 		logger:      l,
 		configs:     c,

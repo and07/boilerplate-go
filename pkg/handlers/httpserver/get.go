@@ -189,7 +189,7 @@ func (ah *AuthHandler) GoogleLogin(w http.ResponseWriter, r *http.Request) {
 	ah.logger.Info("TOKEN>> Expiration Time>> " + token.Expiry.String())
 	ah.logger.Info("TOKEN>> RefreshToken>> " + token.RefreshToken)
 
-	resp, err := http.Get("https://www.googleapis.com/oauth2/v2/userinfo?access_token=" + url.QueryEscape(token.AccessToken))
+	resp, err := http.Get(endpointProfile + "?access_token=" + url.QueryEscape(token.AccessToken))
 	if err != nil {
 		ah.logger.Error("Get: " + err.Error() + "\n")
 		data.ToJSON(&GenericResponse{Status: false, Message: err.Error()}, w)
