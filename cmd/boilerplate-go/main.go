@@ -9,10 +9,12 @@ import (
 	"github.com/and07/boilerplate-go/configs"
 	"github.com/and07/boilerplate-go/internal/app/boilerplate"
 	"github.com/and07/boilerplate-go/internal/app/serv"
+	trening "github.com/and07/boilerplate-go/internal/app/trening/handlers"
 	log "github.com/and07/boilerplate-go/internal/pkg/logger"
 	"github.com/and07/boilerplate-go/internal/pkg/template"
 	"github.com/and07/boilerplate-go/internal/pkg/tracing"
 	"github.com/and07/boilerplate-go/pkg/data"
+	"github.com/and07/boilerplate-go/pkg/service"
 	"github.com/and07/boilerplate-go/pkg/token"
 	"github.com/and07/boilerplate-go/pkg/utils"
 	"github.com/caarlos0/env"
@@ -62,6 +64,24 @@ func main() {
 	tpl := template.NewTemplate("tpl/layouts/", "tpl/", `{{define "main" }} {{ template "base" . }} {{ end }}`)
 	tpl.Init()
 
+	logger := utils.NewLogger()
+	configs := utils.NewConfigurations(logger)
+
+	var db *sqlx.DB
+	var err error
+	if configs.DBConn != "" || configs.DBHost != "" {
+		// create a new connection to the postgres db store
+		db, err = data.NewConnection(configs, logger)
+		if err != nil {
+			logger.Error("unable to connect to db", "error", err)
+			panic(err)
+		}
+		defer db.Close()
+	}
+
+	// authService contains all methods that help in authorizing a user request
+	authService := service.NewAuthService(logger, configs)
+
 	hw := func(grpcSrv *grpc.Server) {
 		impl := boilerplate.New(ctx)
 		api.RegisterHttpBodyExampleServiceServer(grpcSrv, impl)
@@ -74,7 +94,8 @@ func main() {
 	}
 
 	ts := func(grpcSrv *grpc.Server) {
-		apiTrening.RegisterTreningServiceServer(grpcSrv, apiTrening.NewtTeningFacade(token.NewExtractor()))
+		treningHandler := trening.NewTreningHandler()
+		apiTrening.RegisterTreningServiceServer(grpcSrv, apiTrening.NewTeningFacade(token.NewExtractor(), authService, treningHandler))
 	}
 
 	srv := serv.New(ctx,
@@ -105,23 +126,7 @@ func main() {
 		}
 	}()
 
-	logger := utils.NewLogger()
-
-	configs := utils.NewConfigurations(logger)
-
-	var db *sqlx.DB
-	var err error
-	if configs.DBConn != "" || configs.DBHost != "" {
-		// create a new connection to the postgres db store
-		db, err = data.NewConnection(configs, logger)
-		if err != nil {
-			logger.Error("unable to connect to db", "error", err)
-			panic(err)
-		}
-		defer db.Close()
-	}
-
-	srv.Run(ctx, publicHandle(ctx, tpl, db, configs, logger), logger, api.RegisterBlockchainServiceHandlerFromEndpoint, api.RegisterHttpBodyExampleServiceHandlerFromEndpoint, apiTrening.RegisterTreningServiceHandlerFromEndpoint)
+	srv.Run(ctx, publicHandle(ctx, tpl, db, configs, authService, logger), logger, api.RegisterBlockchainServiceHandlerFromEndpoint, api.RegisterHttpBodyExampleServiceHandlerFromEndpoint, apiTrening.RegisterTreningServiceHandlerFromEndpoint)
 
 	log.Info("STOP APP")
 }

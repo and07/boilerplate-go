@@ -26,9 +26,10 @@ func (t *token) ExtractGRPC(ctx context.Context) (header string, existStatus boo
 		return
 	}
 
-	if token, existStatus := md[strings.ToLower(HeaderName)]; existStatus && len(token) > 0 {
-		if header = token[0]; header != "" {
-			return header, existStatus
+	if authHeaderContent, existStatus := md[strings.ToLower(HeaderName)]; existStatus && len(authHeaderContent) > 0 {
+		if header = authHeaderContent[0]; header != "" {
+			authHeaderContent := strings.Split(header, " ")
+			return authHeaderContent[1], existStatus
 		}
 	}
 

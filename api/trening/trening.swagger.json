@@ -37,6 +37,14 @@
             }
           }
         },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
         "tags": [
           "TreningService"
         ]
@@ -111,6 +119,14 @@
             }
           }
         },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
         "tags": [
           "TreningService"
         ]
@@ -163,6 +179,14 @@
             }
           }
         },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
         "tags": [
           "TreningService"
         ]
@@ -239,9 +263,6 @@
         "count": {
           "type": "integer",
           "format": "int32"
-        },
-        "userId": {
-          "type": "string"
         }
       }
     },
@@ -288,9 +309,6 @@
         "eat": {
           "type": "integer",
           "format": "int32"
-        },
-        "userId": {
-          "type": "string"
         }
       }
     },
@@ -320,9 +338,6 @@
           "items": {
             "$ref": "#/definitions/treningExercise"
           }
-        },
-        "userId": {
-          "type": "string"
         }
       }
     },
@@ -396,9 +411,6 @@
         "count": {
           "type": "integer",
           "format": "int32"
-        },
-        "userId": {
-          "type": "string"
         }
       }
     },
@@ -468,9 +480,6 @@
         "eat": {
           "type": "integer",
           "format": "int32"
-        },
-        "userId": {
-          "type": "string"
         }
       }
     },
@@ -489,9 +498,6 @@
           "items": {
             "$ref": "#/definitions/treningExercise"
           }
-        },
-        "userId": {
-          "type": "string"
         }
       }
     },

@@ -65,7 +65,7 @@ func profileHandler(ctx context.Context, tpl *template.Template) func(res http.R
 }
 */
 
-func publicHandle(ctx context.Context, tpl *template.Template, db *sqlx.DB, configs *utils.Configurations, logger hclog.Logger) http.Handler {
+func publicHandle(ctx context.Context, tpl *template.Template, db *sqlx.DB, configs *utils.Configurations, authService service.Authentication, logger hclog.Logger) http.Handler {
 	/*
 			rPublic := pat.New()
 			rPublic.Get("/auth/{provider}/callback", userHandler(ctx, tpl))
@@ -101,19 +101,16 @@ func publicHandle(ctx context.Context, tpl *template.Template, db *sqlx.DB, conf
 
 	repositoryMemory := data.NewMemoryRepository(logger)
 
-	// authService contains all methods that help in authorizing a user request
-	authService := service.NewAuthService(logger, configs)
-
 	// mailService contains the utility methods to send an email
 	mailService := mail.NewMGMailService(logger, configs)
 
 	googleKEY := os.Getenv("GOOGLE_KEY")
 	if googleKEY == "" {
-		googleKEY = "328290909614-3casaiclr5c4ftspb91kun5ckl1av5om.apps.googleusercontent.com"
+		googleKEY = "328290909614-jar104iq8508k7n2lhrj453up6oieo4j.apps.googleusercontent.com"
 	}
 	googleSECRET := os.Getenv("GOOGLE_SECRET")
 	if googleSECRET == "" {
-		googleSECRET = "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"
+		googleSECRET = "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"
 	}
 	googleAuthCollback := os.Getenv("GOOGLE_AUTH_CALLBACK")
 	if googleAuthCollback == "" {

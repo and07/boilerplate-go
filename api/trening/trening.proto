@@ -73,7 +73,6 @@ message ParametersUser {
    UserDiet diet = 6;
    int32 desired_weight = 7;
    int32 eat = 8;
-   string user_id = 9; 
 }
 
 message CreateParametersUserRequest {
@@ -85,8 +84,7 @@ message CreateParametersUserRequest {
    UserActivity activity = 5;
    UserDiet diet = 6;
    int32 desired_weight = 7;
-   int32 eat = 8;
-   string user_id = 9; 
+   int32 eat = 8; 
 }
 
 message CreateParametersUserResponse{
@@ -94,7 +92,9 @@ message CreateParametersUserResponse{
    string message = 2;
 }
 
-message DetailParametersUserRequest{}
+message DetailParametersUserRequest{
+    string id = 1;
+}
 message DetailParametersUserResponse{
    bool status = 1;
    string message = 2;
@@ -105,7 +105,6 @@ message Trening{
     string name = 1;
     google.protobuf.Timestamp interval = 2;
     repeated Exercise exercises = 3;
-    string user_id = 4; 
 }
 
 message CreateTreningRequest {
@@ -113,7 +112,6 @@ message CreateTreningRequest {
     string name = 1;
     google.protobuf.Timestamp interval = 2;
     repeated Exercise exercises = 3;
-    string user_id = 4; 
 }
 message CreateTreningResponse{
     bool status = 1;
@@ -127,7 +125,9 @@ message ListTreningResponse{
     repeated Trening data = 3;
 }
 
-message DetailTreningRequest{}
+message DetailTreningRequest{
+    string id = 1;
+}
 message DetailTreningResponse{
     bool status = 1;
     string message = 2;
@@ -139,7 +139,6 @@ message Exercise {
     google.protobuf.Timestamp duration = 2;
     google.protobuf.Timestamp relax = 3;
     int32 count = 4;
-    string user_id = 5; 
 }
 
 message CreateExerciseRequest {
@@ -148,7 +147,6 @@ message CreateExerciseRequest {
     google.protobuf.Timestamp duration = 2;
     google.protobuf.Timestamp relax = 3;
     int32 count = 4;
-    string user_id = 5; 
 }
 message CreateExerciseResponse{
     bool status = 1;
@@ -162,7 +160,9 @@ message ListExerciseResponse{
     repeated Exercise data = 3;
 }
 
-message DetailExerciseRequest{}
+message DetailExerciseRequest{
+    string id = 1;
+}
 message DetailExerciseResponse{
     bool status = 1;
     string message = 2;

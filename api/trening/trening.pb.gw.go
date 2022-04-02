@@ -65,9 +65,20 @@ func local_request_TreningService_CreateParametersUser_0(ctx context.Context, ma
 
 }
 
+var (
+	filter_TreningService_DetailParametersUser_0 = &utilities.DoubleArray{Encoding: map[string]int{}, Base: []int(nil), Check: []int(nil)}
+)
+
 func request_TreningService_DetailParametersUser_0(ctx context.Context, marshaler runtime.Marshaler, client TreningServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq DetailParametersUserRequest
 	var metadata runtime.ServerMetadata
+
+	if err := req.ParseForm(); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_TreningService_DetailParametersUser_0); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
 
 	msg, err := client.DetailParametersUser(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
@@ -77,6 +88,13 @@ func request_TreningService_DetailParametersUser_0(ctx context.Context, marshale
 func local_request_TreningService_DetailParametersUser_0(ctx context.Context, marshaler runtime.Marshaler, server TreningServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq DetailParametersUserRequest
 	var metadata runtime.ServerMetadata
+
+	if err := req.ParseForm(); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_TreningService_DetailParametersUser_0); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
 
 	msg, err := server.DetailParametersUser(ctx, &protoReq)
 	return msg, metadata, err
@@ -135,9 +153,20 @@ func local_request_TreningService_ListTrening_0(ctx context.Context, marshaler r
 
 }
 
+var (
+	filter_TreningService_DetailTrening_0 = &utilities.DoubleArray{Encoding: map[string]int{}, Base: []int(nil), Check: []int(nil)}
+)
+
 func request_TreningService_DetailTrening_0(ctx context.Context, marshaler runtime.Marshaler, client TreningServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq DetailTreningRequest
 	var metadata runtime.ServerMetadata
+
+	if err := req.ParseForm(); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_TreningService_DetailTrening_0); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
 
 	msg, err := client.DetailTrening(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
@@ -147,6 +176,13 @@ func request_TreningService_DetailTrening_0(ctx context.Context, marshaler runti
 func local_request_TreningService_DetailTrening_0(ctx context.Context, marshaler runtime.Marshaler, server TreningServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq DetailTreningRequest
 	var metadata runtime.ServerMetadata
+
+	if err := req.ParseForm(); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_TreningService_DetailTrening_0); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
 
 	msg, err := server.DetailTrening(ctx, &protoReq)
 	return msg, metadata, err
@@ -205,9 +241,20 @@ func local_request_TreningService_ListExercise_0(ctx context.Context, marshaler 
 
 }
 
+var (
+	filter_TreningService_DetailExercise_0 = &utilities.DoubleArray{Encoding: map[string]int{}, Base: []int(nil), Check: []int(nil)}
+)
+
 func request_TreningService_DetailExercise_0(ctx context.Context, marshaler runtime.Marshaler, client TreningServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq DetailExerciseRequest
 	var metadata runtime.ServerMetadata
+
+	if err := req.ParseForm(); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_TreningService_DetailExercise_0); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
 
 	msg, err := client.DetailExercise(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
@@ -217,6 +264,13 @@ func request_TreningService_DetailExercise_0(ctx context.Context, marshaler runt
 func local_request_TreningService_DetailExercise_0(ctx context.Context, marshaler runtime.Marshaler, server TreningServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq DetailExerciseRequest
 	var metadata runtime.ServerMetadata
+
+	if err := req.ParseForm(); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_TreningService_DetailExercise_0); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
 
 	msg, err := server.DetailExercise(ctx, &protoReq)
 	return msg, metadata, err
