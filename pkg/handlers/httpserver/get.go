@@ -12,7 +12,6 @@ import (
 	"github.com/and07/boilerplate-go/pkg/data"
 	"github.com/and07/boilerplate-go/pkg/service/mail"
 	"github.com/and07/boilerplate-go/pkg/utils"
-	"golang.org/x/oauth2"
 )
 
 // RefreshToken handles refresh token request
@@ -105,7 +104,7 @@ func (ah *AuthHandler) GeneratePassResetCode(w http.ResponseWriter, r *http.Requ
 	to := []string{user.Email}
 	subject := "Password Reset for Bookite"
 	mailType := mail.PassReset
-	mailData := &mail.MailData{
+	mailData := &mail.Data{
 		Username: user.Username,
 		Code:     utils.GenerateRandomString(8),
 	}
@@ -141,6 +140,7 @@ func (ah *AuthHandler) GeneratePassResetCode(w http.ResponseWriter, r *http.Requ
 	data.ToJSON(&GenericResponse{Status: true, Message: "Please check your mail for password reset code"}, w)
 }
 
+// GoogleOAuth ...
 func (ah *AuthHandler) GoogleOAuth(w http.ResponseWriter, r *http.Request) {
 	URL, err := url.Parse(ah.oauthConfGl.Endpoint.AuthURL)
 	if err != nil {
@@ -160,6 +160,7 @@ func (ah *AuthHandler) GoogleOAuth(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, url, http.StatusTemporaryRedirect)
 }
 
+// GoogleLogin ...
 func (ah *AuthHandler) GoogleLogin(w http.ResponseWriter, r *http.Request) {
 
 	ah.logger.Info("Callback-gl..")
@@ -179,7 +180,7 @@ func (ah *AuthHandler) GoogleLogin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	token, err := ah.oauthConfGl.Exchange(oauth2.NoContext, code)
+	token, err := ah.oauthConfGl.Exchange(context.Background(), code)
 	if err != nil {
 		ah.logger.Error("oauthConfGl.Exchange() failed with " + err.Error() + "\n")
 		data.ToJSON(&GenericResponse{Status: false, Message: err.Error()}, w)
@@ -205,7 +206,7 @@ func (ah *AuthHandler) GoogleLogin(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var u googleUser
-	if err := json.Unmarshal(response, &u); err != nil {
+	if err = json.Unmarshal(response, &u); err != nil {
 		ah.logger.Error("Unmarshal: " + err.Error() + "\n")
 		data.ToJSON(&GenericResponse{Status: false, Message: err.Error()}, w)
 		return

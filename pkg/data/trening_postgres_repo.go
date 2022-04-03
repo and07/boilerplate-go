@@ -13,6 +13,8 @@ import (
 type TreningRepository interface {
 	CreateUserParams(ctx context.Context, userParams *ParametersUser) error
 	GetUserParamsByID(ctx context.Context, userID string) (*ParametersUser, error)
+	CreateExercise(ctx context.Context, exercise *Exercise) error
+	ListExercise(ctx context.Context, userID string) (res []Exercise, err error)
 }
 
 type treningPostgresRepository struct {
@@ -26,6 +28,8 @@ func NewTreningPostgresRepository(db *sqlx.DB, logger hclog.Logger) TreningRepos
 	// creation of trening table.
 	if db != nil {
 		db.MustExec(treningUserParamsSchema)
+		db.MustExec(treningExercise)
+		//db.MustExec(trening)
 	}
 
 	return &treningPostgresRepository{db, logger}
@@ -57,4 +61,32 @@ func (repo *treningPostgresRepository) GetUserParamsByID(ctx context.Context, us
 	}
 	repo.logger.Debug("read users params", hclog.Fmt("%#v", userParams))
 	return &userParams, nil
+}
+
+// CreateExercise inserts the given exercise into the database
+func (repo *treningPostgresRepository) CreateExercise(ctx context.Context, exercise *Exercise) error {
+	exercise.UID = uuid.NewV4().String()
+	exercise.CreatedAt = time.Now()
+	exercise.UpdatedAt = time.Now()
+
+	repo.logger.Info("creating exercise", hclog.Fmt("%#v", exercise))
+	query := `insert into trening_users_params 
+		(uid, user_id, name, duration, relax, count, number_of_sets, number_of_repetitions, type, createdat, updatedat) 
+	values 
+		($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11);
+	`
+	_, err := repo.db.ExecContext(ctx, query, exercise.UID, exercise.UserID, exercise.Name, exercise.Duration, exercise.Relax, exercise.Count, exercise.NumberOfSets, exercise.NumberOfRepetitions, exercise.Type, exercise.CreatedAt, exercise.UpdatedAt)
+	return err
+}
+
+func (repo *treningPostgresRepository) ListExercise(ctx context.Context, userID string) (res []Exercise, err error) {
+	repo.logger.Info("list exercise")
+	query := `select * from users where user_id = $1`
+	res = []Exercise{}
+	err = repo.db.Select(&res, query, userID)
+	if err != nil {
+		return
+	}
+
+	return
 }

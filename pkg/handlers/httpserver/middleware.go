@@ -133,7 +133,7 @@ func (ah *AuthHandler) MiddlewareValidateRefreshToken(next http.Handler) http.Ha
 	})
 }
 
-// MiddlerwareValidateVerificationData validates whether the request contains the email
+// MiddlewareValidateVerificationData validates whether the request contains the email
 // and confirmation code that are required for the verification
 func (ah *AuthHandler) MiddlewareValidateVerificationData(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

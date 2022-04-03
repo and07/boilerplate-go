@@ -2,8 +2,6 @@ package models
 
 import (
 	"time"
-
-	"github.com/golang/protobuf/ptypes/timestamp"
 )
 
 type UserDiet int32
@@ -46,11 +44,17 @@ type DetailParametersUserResponse struct {
 	Data    *ParametersUser `protobuf:"bytes,3,opt,name=data,proto3" json:"data,omitempty"`
 }
 
+type ExerciseType int32
+
 type Exercise struct {
-	Name     string    `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	Duration time.Time `protobuf:"bytes,2,opt,name=duration,proto3" json:"duration,omitempty"`
-	Relax    time.Time `protobuf:"bytes,3,opt,name=relax,proto3" json:"relax,omitempty"`
-	Count    int32     `protobuf:"varint,4,opt,name=count,proto3" json:"count,omitempty"`
+	Name                string       `json:"name,omitempty"`
+	Duration            time.Time    `json:"duration,omitempty"`
+	Relax               time.Time    `json:"relax,omitempty"`
+	Count               int32        `json:"count,omitempty"`
+	NumberOfSets        int32        `json:"number_of_sets,omitempty"`
+	NumberOfRepetitions int32        `json:"number_of_repetitions,omitempty"`
+	Type                ExerciseType `json:"type,omitempty"`
+	UID                 string       `json:"uid,omitempty"`
 }
 type CreateTreningRequest struct {
 	Name      string      `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
@@ -85,11 +89,15 @@ type DetailTreningResponse struct {
 	Data    *Trening `protobuf:"bytes,3,opt,name=data,proto3" json:"data,omitempty"`
 }
 type CreateExerciseRequest struct {
-	Name     string               `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	Duration *timestamp.Timestamp `protobuf:"bytes,2,opt,name=duration,proto3" json:"duration,omitempty"`
-	Relax    *timestamp.Timestamp `protobuf:"bytes,3,opt,name=relax,proto3" json:"relax,omitempty"`
-	Count    int32                `protobuf:"varint,4,opt,name=count,proto3" json:"count,omitempty"`
-	UserID   string
+	Name                string       `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	Duration            time.Time    `protobuf:"bytes,2,opt,name=duration,proto3" json:"duration,omitempty"`
+	Relax               time.Time    `protobuf:"bytes,3,opt,name=relax,proto3" json:"relax,omitempty"`
+	Count               int32        `protobuf:"varint,4,opt,name=count,proto3" json:"count,omitempty"`
+	NumberOfSets        int32        `json:"number_of_sets,omitempty"`
+	NumberOfRepetitions int32        `json:"number_of_repetitions,omitempty"`
+	Type                ExerciseType `json:"type,omitempty"`
+	UserID              string
+	UID                 string
 }
 type CreateExerciseResponse struct {
 	Status  bool   `protobuf:"varint,1,opt,name=status,proto3" json:"status,omitempty"`

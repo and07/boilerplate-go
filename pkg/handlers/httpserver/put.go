@@ -44,7 +44,7 @@ func (ah *AuthHandler) UpdateUsername(w http.ResponseWriter, r *http.Request) {
 	}, w)
 }
 
-// PasswordReset handles the password reset request
+// ResetPassword handles the password reset request
 func (ah *AuthHandler) ResetPassword(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")

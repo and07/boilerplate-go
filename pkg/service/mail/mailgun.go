@@ -62,7 +62,7 @@ func (ms *MGMailService) SendMail(mailReq *Mail) error {
 }
 
 // NewMail returns a new mail request.
-func (ms *MGMailService) NewMail(from string, to []string, subject string, mailType MailType, data *MailData) *Mail {
+func (ms *MGMailService) NewMail(from string, to []string, subject string, mailType Type, data *Data) *Mail {
 	return &Mail{
 		from:    from,
 		to:      to,

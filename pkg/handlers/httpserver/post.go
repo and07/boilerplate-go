@@ -60,7 +60,7 @@ func (ah *AuthHandler) Signup(w http.ResponseWriter, r *http.Request) {
 	to := []string{user.Email}
 	subject := "Email Verification for Bookite"
 	mailType := mail.MailConfirmation
-	mailData := &mail.MailData{
+	mailData := &mail.Data{
 		Username: user.Username,
 		Code:     utils.GenerateRandomString(8),
 	}

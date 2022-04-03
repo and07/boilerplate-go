@@ -17,3 +17,17 @@ type ParametersUser struct {
 	CreatedAt     time.Time `json:"createdat" db:"createdat"`
 	UpdatedAt     time.Time `json:"updatedat" db:"updatedat"`
 }
+
+type Exercise struct {
+	UID                 string    `json:"uid" db:"uid"`
+	UserID              string    `json:"user_id,omitempty" db:"user_id"`
+	Name                string    `json:"name,omitempty" db:"name"`
+	Duration            time.Time `json:"duration,omitempty" db:"duration"`
+	Relax               time.Time `json:"relax,omitempty" db:"relax"`
+	Count               int32     `json:"count,omitempty" db:"count"`
+	NumberOfSets        int32     `json:"number_of_sets,omitempty" db:"number_of_sets"`
+	NumberOfRepetitions int32     `json:"number_of_repetitions,omitempty" db:"number_of_repetitions"`
+	Type                int32     `json:"type,omitempty" db:"type"`
+	CreatedAt           time.Time `json:"createdat" db:"createdat"`
+	UpdatedAt           time.Time `json:"updatedat" db:"updatedat"`
+}

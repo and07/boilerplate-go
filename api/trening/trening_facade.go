@@ -8,6 +8,7 @@ import (
 	"github.com/and07/boilerplate-go/pkg/service"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 type treningFacade struct {
@@ -140,7 +141,26 @@ func (t *treningFacade) CreateExercise(ctx context.Context, request *CreateExerc
 		}
 		return
 	}
-	log.Println("userID - ", userID)
+
+	res, err := t.treningHandler.CreateExercise(ctx, &models.CreateExerciseRequest{
+		UserID:              userID,
+		Name:                request.Name,
+		Duration:            request.Duration.AsTime(),
+		Relax:               request.Relax.AsTime(),
+		Count:               request.Count,
+		NumberOfSets:        request.NumberOfSets,
+		NumberOfRepetitions: request.NumberOfRepetitions,
+		Type:                models.ExerciseType(request.Type),
+	})
+	if err != nil {
+		return
+	}
+
+	response = &CreateExerciseResponse{
+		Status:  res.Status,
+		Message: res.Message,
+	}
+
 	return
 }
 
@@ -153,7 +173,29 @@ func (t *treningFacade) ListExercise(ctx context.Context, request *ListExerciseR
 		}
 		return
 	}
-	log.Println("userID - ", userID)
+
+	res, err := t.treningHandler.ListExercise(ctx, &models.ListExerciseRequest{
+		UserID: userID,
+	})
+	if err != nil {
+		return
+	}
+
+	response.Data = make([]*Exercise, len(res.Data))
+
+	for i, e := range res.Data {
+		response.Data[i] = &Exercise{
+			Uid:                 e.UID,
+			Name:                e.Name,
+			Duration:            timestamppb.New(e.Duration),
+			Relax:               timestamppb.New(e.Relax),
+			Count:               e.Count,
+			NumberOfSets:        e.NumberOfSets,
+			NumberOfRepetitions: e.NumberOfRepetitions,
+			Type:                ExerciseType(e.Type),
+		}
+	}
+
 	return
 }
 
@@ -183,6 +225,7 @@ func (t *treningFacade) userID(ctx context.Context) (string, error) {
 	return userID, nil
 }
 
+// NewTeningFacade ...
 func NewTeningFacade(extractor extractor, authService service.Authentication, treningHandler treningHandler, logger logger) *treningFacade {
 	return &treningFacade{
 		extractor:      extractor,

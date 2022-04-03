@@ -263,6 +263,17 @@
         "count": {
           "type": "integer",
           "format": "int32"
+        },
+        "numberOfSets": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "numberOfRepetitions": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "type": {
+          "$ref": "#/definitions/treningExerciseType"
         }
       }
     },
@@ -411,8 +422,31 @@
         "count": {
           "type": "integer",
           "format": "int32"
+        },
+        "numberOfSets": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "numberOfRepetitions": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "type": {
+          "$ref": "#/definitions/treningExerciseType"
+        },
+        "uid": {
+          "type": "string"
         }
       }
+    },
+    "treningExerciseType": {
+      "type": "string",
+      "enum": [
+        "arms",
+        "legs",
+        "other"
+      ],
+      "default": "arms"
     },
     "treningListExerciseResponse": {
       "type": "object",

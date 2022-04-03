@@ -7,10 +7,10 @@ import (
 	"time"
 
 	api "github.com/and07/boilerplate-go/api/gen-boilerplate-go"
-	"github.com/golang/protobuf/jsonpb"
 	_struct "github.com/golang/protobuf/ptypes/struct"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"google.golang.org/protobuf/encoding/protojson"
 )
 
 // BlockchainServer ...
@@ -50,7 +50,8 @@ func (b *BlockchainServer) Subscribe(req *api.SubscribeRequest, stream api.Block
 			var bb bytes.Buffer
 			bb.Write(byteData)
 			data := &_struct.Struct{Fields: make(map[string]*_struct.Value)}
-			if err := (&jsonpb.Unmarshaler{}).Unmarshal(&bb, data); err != nil {
+
+			if err := protojson.Unmarshal(byteData, data); err != nil {
 				return err
 			}
 

@@ -134,11 +134,22 @@ message DetailTreningResponse{
     Trening data = 3;
 }
 
+
+enum ExerciseType {
+    arms = 0;
+    legs = 1;
+    other = 2;
+}
+
 message Exercise {
     string name = 1 [(validator.field) = {string_not_empty: true, regex: "^[a-zA-Z0-9_.-]*$"}];
     google.protobuf.Timestamp duration = 2;
     google.protobuf.Timestamp relax = 3;
     int32 count = 4;
+    int32 number_of_sets         = 5;
+	int32 number_of_repetitions  = 6;
+    ExerciseType type = 7;
+    string uid = 8;
 }
 
 message CreateExerciseRequest {
@@ -147,6 +158,9 @@ message CreateExerciseRequest {
     google.protobuf.Timestamp duration = 2;
     google.protobuf.Timestamp relax = 3;
     int32 count = 4;
+    int32 number_of_sets         = 5;
+	int32 number_of_repetitions  = 6;
+    ExerciseType type = 7;
 }
 message CreateExerciseResponse{
     bool status = 1;

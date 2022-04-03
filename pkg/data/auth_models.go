@@ -16,6 +16,7 @@ type User struct {
 	UpdatedAt  time.Time `json:"updatedat" sql:"updatedat"`
 }
 
+// VerificationDataType ...
 type VerificationDataType int
 
 const (

@@ -18,3 +18,32 @@ const treningUserParamsSchema = `
 			Primary Key (uid)
 		);
 `
+
+const treningExercise = `
+	create table if not exists trening_exercise (
+		uid 		  			Varchar(36) not null unique,
+		user_id 	   			Varchar(36) not null,
+		name 	       			Varchar(100) not null ,
+		duration			    Timestamp,
+		relax              	    Timestamp not null,
+		count                   integer,
+		number_of_sets          integer,
+		number_of_repetitions   integer,
+		type 				    integer,
+		createdat      			Timestamp not null,
+		updatedat     			Timestamp not null,
+		Primary Key (uid)
+	);
+`
+const trening = `
+	create table if not exists trening (
+		uid 		  			Varchar(36) not null unique,
+		user_id 	   			Varchar(36) not null,
+		name 	       			Varchar(100) not null ,
+		exercise			    Varchar(36) not null,
+		interval 				Timestamp not null,
+		createdat      			Timestamp not null,
+		updatedat     			Timestamp not null,
+		Primary Key (uid)
+	);
+`

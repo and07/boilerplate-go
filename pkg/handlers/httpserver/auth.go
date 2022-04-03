@@ -20,14 +20,14 @@ type UserIDKey struct{}
 // VerificationDataKey is used as the key for storing the VerificationData in context at middleware
 type VerificationDataKey struct{}
 
-// UserHandler wraps instances needed to perform operations on user object
+// AuthHandler wraps instances needed to perform operations on user object
 type AuthHandler struct {
 	logger      hclog.Logger
 	configs     *utils.Configurations
 	validator   *data.Validation
 	repo        data.AuthRepository
 	authService service.Authentication
-	mailService mail.MailService
+	mailService mail.Service
 	oauthConfGl *oauth2.Config
 }
 
@@ -42,7 +42,7 @@ func WithGoogleAuth(clientKey string, secret string, callbackURL string, scopes 
 }
 
 // NewUserHandler returns a new UserHandler instance
-func NewAuthHandler(l hclog.Logger, c *utils.Configurations, v *data.Validation, r data.AuthRepository, auth service.Authentication, mail mail.MailService, opts ...Option) *AuthHandler {
+func NewAuthHandler(l hclog.Logger, c *utils.Configurations, v *data.Validation, r data.AuthRepository, auth service.Authentication, mail mail.Service, opts ...Option) *AuthHandler {
 	a := &AuthHandler{
 		logger:      l,
 		configs:     c,
@@ -70,7 +70,7 @@ type ValidationError struct {
 	Errors []string `json:"errors"`
 }
 
-// Below data types are used for encoding and decoding b/t go types and json
+// TokenResponse below data types are used for encoding and decoding b/t go types and json
 type TokenResponse struct {
 	RefreshToken string `json:"refresh_token"`
 	AccessToken  string `json:"access_token"`
