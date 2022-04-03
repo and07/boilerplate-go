@@ -70,7 +70,7 @@ func (repo *treningPostgresRepository) CreateExercise(ctx context.Context, exerc
 	exercise.UpdatedAt = time.Now()
 
 	repo.logger.Info("creating exercise", hclog.Fmt("%#v", exercise))
-	query := `insert into trening_users_params 
+	query := `insert into trening_exercise 
 		(uid, user_id, name, duration, relax, count, number_of_sets, number_of_repetitions, type, createdat, updatedat) 
 	values 
 		($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11);
@@ -80,11 +80,12 @@ func (repo *treningPostgresRepository) CreateExercise(ctx context.Context, exerc
 }
 
 func (repo *treningPostgresRepository) ListExercise(ctx context.Context, userID string) (res []Exercise, err error) {
-	repo.logger.Info("list exercise")
-	query := `select * from users where user_id = $1`
+	repo.logger.Info("list exercise for user ", userID)
+	query := `select * from trening_exercise where user_id = $1`
 	res = []Exercise{}
 	err = repo.db.Select(&res, query, userID)
 	if err != nil {
+		repo.logger.Debug("ListExercise repo.db.Select", err)
 		return
 	}
 

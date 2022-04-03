@@ -117,6 +117,8 @@ func (s *service) ListExercise(ctx context.Context, request *models.ListExercise
 		s.logger.Error("unable to get exercise to database", "error", err)
 		return nil, err
 	}
+	response = &models.ListExerciseResponse{}
+
 	response.Data = make([]*models.Exercise, len(res))
 	for i, e := range res {
 		response.Data[i] = &models.Exercise{

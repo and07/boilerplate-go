@@ -180,7 +180,8 @@ func (t *treningFacade) ListExercise(ctx context.Context, request *ListExerciseR
 	if err != nil {
 		return
 	}
-
+	response = &ListExerciseResponse{}
+	response.Status = res.Status
 	response.Data = make([]*Exercise, len(res.Data))
 
 	for i, e := range res.Data {

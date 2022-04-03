@@ -92,6 +92,13 @@ curl -X GET "http://localhost:8843/helloworld" -H "accept: application/json"
 curl -X POST "http://localhost:8843/user/parameters" -H "accept: application/json"  -H "Authorization: Bearer access_token" --data '{"weight":1,"height":2,"age":2,"gender":0,"eat":1 }'
 curl -X GET "http://localhost:8843/user/parameters" -H "accept: application/json"  -H "Authorization: Bearer access_token"
 
+
+
+curl -X POST "http://localhost:8843/user/exercise" -H "accept: application/json"  -H "Authorization: Bearer access_token" --data '{"number_of_sets":1, "number_of_repetitions": 30, "name":"sssss1"}'
+
+
+curl -X GET "http://localhost:8843/user/exercises" -H "accept: application/json"  -H "Authorization: Bearer access_token"
+
 curl -X GET "http://localhost:8843/address/Mxb9a117e772a965a3fddddf83398fd8d71bf57ff6?height=1" -H "accept: application/json"
 ```
 
