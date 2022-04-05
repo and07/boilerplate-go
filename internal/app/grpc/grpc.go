@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+	"strings"
 
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	grpc_zap "github.com/grpc-ecosystem/go-grpc-middleware/logging/zap"
@@ -78,12 +79,17 @@ func (g *GRPC) RegisterEndpoints(ctx context.Context, logger hclog.Logger, Regis
 	mux := runtime.NewServeMux(
 		runtime.WithMetadata(func(ctx context.Context, req *http.Request) metadata.MD {
 			m := make(map[string]string)
-			m["authorization"] = req.Header.Get("Authorization")
+
+			token, exist := extractTokenHTTP(req)
+			if !exist {
+				logger.Debug("token not exist")
+			}
+			m["authorization"] = token
 
 			b := bytes.NewBufferString("")
 			req.Header.Write(b)
 
-			logger.Debug("metadata", req.Header.Get("Authorization"))
+			logger.Debug("metadata", m)
 
 			return metadata.New(m)
 		}),
@@ -117,7 +123,8 @@ func (g *GRPC) RegisterEndpoints(ctx context.Context, logger hclog.Logger, Regis
 
 	var group errgroup.Group
 	group.Go(func() error {
-		return http.ListenAndServe(":"+g.cfg.Port, headers(mux))
+		log.Infof("http.Public start : %s (grpc Gateway)", g.cfg.PortGrpcGateway)
+		return http.ListenAndServe(":"+g.cfg.PortGrpcGateway, headers(mux))
 	})
 	if err := group.Wait(); err != nil {
 		log.Error(err)
@@ -166,4 +173,14 @@ func (g *GRPC) RunGRPC(ctx context.Context, fns ...func(*grpc.Server)) error {
 	g.grpcSrv.GracefulStop()
 
 	return nil
+}
+
+func extractTokenHTTP(r *http.Request) (header string, existStatus bool) {
+
+	authHeader := r.Header.Get("Authorization")
+	authHeaderContent := strings.Split(authHeader, " ")
+	if len(authHeaderContent) != 2 {
+		return
+	}
+	return authHeaderContent[1], true
 }

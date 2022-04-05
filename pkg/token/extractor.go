@@ -9,16 +9,18 @@ import (
 )
 
 const (
+	// HeaderName ...
 	HeaderName = "Authorization"
 )
 
-// Token ...
+// Extractor ...
 type Extractor interface {
 	ExtractGRPC(ctx context.Context) (header string, existStatus bool)
 }
 
 type token struct{}
 
+// ExtractGRPC ...
 func (t *token) ExtractGRPC(ctx context.Context) (header string, existStatus bool) {
 
 	md, existStatus := metadata.FromIncomingContext(ctx)
@@ -26,10 +28,9 @@ func (t *token) ExtractGRPC(ctx context.Context) (header string, existStatus boo
 		return
 	}
 
-	if authHeaderContent, existStatus := md[strings.ToLower(HeaderName)]; existStatus && len(authHeaderContent) > 0 {
-		if header = authHeaderContent[0]; header != "" {
-			authHeaderContent := strings.Split(header, " ")
-			return authHeaderContent[1], existStatus
+	if authHeader, existStatus := md[strings.ToLower(HeaderName)]; existStatus && len(authHeader) > 0 {
+		if header = authHeader[0]; header != "" {
+			return header, existStatus
 		}
 	}
 
@@ -37,6 +38,7 @@ func (t *token) ExtractGRPC(ctx context.Context) (header string, existStatus boo
 
 }
 
+// ExtractHTTP ...
 func (t *token) ExtractHTTP(r *http.Request) (header string, existStatus bool) {
 
 	authHeader := r.Header.Get("Authorization")
@@ -47,7 +49,7 @@ func (t *token) ExtractHTTP(r *http.Request) (header string, existStatus bool) {
 	return authHeaderContent[1], true
 }
 
-// NewToken ...
+// NewExtractor ...
 func NewExtractor() Extractor {
 	return &token{}
 }

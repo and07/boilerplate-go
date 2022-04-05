@@ -74,20 +74,12 @@ curl -v -X POST "http://localhost:8080/signup" -H "accept: application/json"  --
 curl -v -X POST "http://localhost:8080/verify/mail" -H "accept: application/json"  --data '{"email":"and_07@mail.ru","code":"PatwtPil"}' 
 curl -v -X POST "http://localhost:8080/login" -H "accept: application/json"   --data '{"email":"and_07@mail.ru","password":"xyz"}' 
 curl -v -X GET "http://localhost:8080/greet" -H "accept: application/json" -H "Authorization: Bearer access_token"
-
-
 curl -v -X GET "http://localhost:8080/get-password-reset-code" -H "accept: application/json" -H "Authorization: Bearer access_token"
-
 curl -v -X POST "http://localhost:8080/verify/password-reset" -H "accept: application/json"  --data '{"email":"and_07@mail.ru","code":"fsfykSBG"}' 
-
 curl -v -X GET "http://localhost:8080/refresh-token" -H "accept: application/json" -H "Authorization: Bearer refresh_token"
-
 curl -v -X GET "http://localhost:8080/profile" -H "accept: application/json" -H "Authorization: Bearer access_token"
 
 
-
-
-curl -X GET "http://localhost:8843/helloworld" -H "accept: application/json"
 
 curl -X POST "http://localhost:8843/user/parameters" -H "accept: application/json"  -H "Authorization: Bearer access_token" --data '{"weight":1,"height":2,"age":2,"gender":0,"eat":1 }'
 curl -X GET "http://localhost:8843/user/parameters" -H "accept: application/json"  -H "Authorization: Bearer access_token"
@@ -95,10 +87,10 @@ curl -X GET "http://localhost:8843/user/parameters" -H "accept: application/json
 
 
 curl -X POST "http://localhost:8843/user/exercise" -H "accept: application/json"  -H "Authorization: Bearer access_token" --data '{"number_of_sets":1, "number_of_repetitions": 30, "name":"sssss1"}'
-
-
 curl -X GET "http://localhost:8843/user/exercises" -H "accept: application/json"  -H "Authorization: Bearer access_token"
 
+
+curl -X GET "http://localhost:8843/helloworld" -H "accept: application/json"
 curl -X GET "http://localhost:8843/address/Mxb9a117e772a965a3fddddf83398fd8d71bf57ff6?height=1" -H "accept: application/json"
 ```
 
@@ -108,3 +100,4 @@ curl -X GET "http://localhost:8843/address/Mxb9a117e772a965a3fddddf83398fd8d71bf
 ```sh
 http://localhost:8888/swaggerui/
 ```
+postgres://chfzqrkywzizio:58ef1839461b82d06330a466a18cb427750efa6d8cf906b0aab32941a40f80ac@ec2-54-228-32-29.eu-west-1.compute.amazonaws.com:5432/d7o4ahj2g0ql8n
