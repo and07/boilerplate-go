@@ -1,6 +1,11 @@
 package data
 
-import "time"
+import (
+	"database/sql/driver"
+	"encoding/json"
+	"errors"
+	"time"
+)
 
 // ParametersUser ...
 type ParametersUser struct {
@@ -19,15 +24,45 @@ type ParametersUser struct {
 }
 
 type Exercise struct {
-	UID                 string    `json:"uid" db:"uid"`
-	UserID              string    `json:"user_id,omitempty" db:"user_id"`
-	Name                string    `json:"name,omitempty" db:"name"`
-	Duration            time.Time `json:"duration,omitempty" db:"duration"`
-	Relax               time.Time `json:"relax,omitempty" db:"relax"`
-	Count               int32     `json:"count,omitempty" db:"count"`
-	NumberOfSets        int32     `json:"number_of_sets,omitempty" db:"number_of_sets"`
-	NumberOfRepetitions int32     `json:"number_of_repetitions,omitempty" db:"number_of_repetitions"`
-	Type                int32     `json:"type,omitempty" db:"type"`
-	CreatedAt           time.Time `json:"createdat" db:"createdat"`
-	UpdatedAt           time.Time `json:"updatedat" db:"updatedat"`
+	UID                 string        `json:"uid" db:"uid"`
+	UserID              string        `json:"user_id,omitempty" db:"user_id"`
+	Name                string        `json:"name,omitempty" db:"name"`
+	Duration            time.Duration `json:"duration,omitempty" db:"duration"`
+	Relax               time.Duration `json:"relax,omitempty" db:"relax"`
+	Count               int32         `json:"count,omitempty" db:"count"`
+	NumberOfSets        int32         `json:"number_of_sets,omitempty" db:"number_of_sets"`
+	NumberOfRepetitions int32         `json:"number_of_repetitions,omitempty" db:"number_of_repetitions"`
+	Type                int32         `json:"type,omitempty" db:"type"`
+	CreatedAt           time.Time     `json:"createdat" db:"createdat"`
+	UpdatedAt           time.Time     `json:"updatedat" db:"updatedat"`
+}
+
+type ExerciseSlice []Exercise
+
+// Make the Exercise struct implement the driver.Valuer interface. This method
+// simply returns the JSON-encoded representation of the struct.
+func (a ExerciseSlice) Value() (driver.Value, error) {
+	return json.Marshal(a)
+}
+
+// Make the Exercise struct implement the sql.Scanner interface. This method
+// simply decodes a JSON-encoded value into the struct fields.
+func (s *ExerciseSlice) Scan(src interface{}) error {
+	switch v := src.(type) {
+	case []byte:
+		return json.Unmarshal(v, s)
+	case string:
+		return json.Unmarshal([]byte(v), s)
+	}
+	return errors.New("type assertion failed")
+}
+
+type Trening struct {
+	UID       string        `json:"uid" db:"uid"`
+	Name      string        `json:"name,omitempty"  db:"name"`
+	Interval  time.Duration `json:"interval,omitempty"  db:"interval"`
+	Exercises ExerciseSlice `json:"exercises,omitempty"  db:"exercises"`
+	UserID    string        `json:"user_id,omitempty" db:"user_id"`
+	CreatedAt time.Time     `json:"createdat" db:"createdat"`
+	UpdatedAt time.Time     `json:"updatedat" db:"updatedat"`
 }

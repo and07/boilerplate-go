@@ -72,7 +72,7 @@ func (auth *AuthService) GenerateRefreshToken(user *data.User) (string, error) {
 		cusKey,
 		tokenType,
 		jwt.StandardClaims{
-			Issuer: "bookite.auth.service",
+			Issuer: "auth.service",
 		},
 	}
 
@@ -104,7 +104,7 @@ func (auth *AuthService) GenerateAccessToken(user *data.User) (string, error) {
 		tokenType,
 		jwt.StandardClaims{
 			ExpiresAt: time.Now().Add(time.Minute * time.Duration(auth.configs.JwtExpiration)).Unix(),
-			Issuer:    "bookite.auth.service",
+			Issuer:    "auth.service",
 		},
 	}
 

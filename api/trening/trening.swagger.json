@@ -102,6 +102,28 @@
         ]
       }
     },
+    "/user/exercises/default": {
+      "get": {
+        "operationId": "TreningService_ListExerciseDefault",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/treningListExerciseResponse"
+            }
+          },
+          "default": {
+            "description": "Common error",
+            "schema": {
+              "$ref": "#/definitions/commonCommonError"
+            }
+          }
+        },
+        "tags": [
+          "TreningService"
+        ]
+      }
+    },
     "/user/parameters": {
       "get": {
         "operationId": "TreningService_DetailParametersUser",
@@ -253,12 +275,10 @@
           "type": "string"
         },
         "duration": {
-          "type": "string",
-          "format": "date-time"
+          "type": "string"
         },
         "relax": {
-          "type": "string",
-          "format": "date-time"
+          "type": "string"
         },
         "count": {
           "type": "integer",
@@ -341,8 +361,7 @@
           "type": "string"
         },
         "interval": {
-          "type": "string",
-          "format": "date-time"
+          "type": "string"
         },
         "exercises": {
           "type": "array",
@@ -412,12 +431,10 @@
           "type": "string"
         },
         "duration": {
-          "type": "string",
-          "format": "date-time"
+          "type": "string"
         },
         "relax": {
-          "type": "string",
-          "format": "date-time"
+          "type": "string"
         },
         "count": {
           "type": "integer",
@@ -524,14 +541,16 @@
           "type": "string"
         },
         "interval": {
-          "type": "string",
-          "format": "date-time"
+          "type": "string"
         },
         "exercises": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/treningExercise"
           }
+        },
+        "uid": {
+          "type": "string"
         }
       }
     },

@@ -40,8 +40,8 @@ const trening = `
 		uid 		  			Varchar(36) not null unique,
 		user_id 	   			Varchar(36) not null,
 		name 	       			Varchar(100) not null ,
-		exercise			    Varchar(36) not null,
-		interval 				Timestamp not null,
+		exercises			    jsonb,
+		interval 				Varchar(36) not null,
 		createdat      			Timestamp not null,
 		updatedat     			Timestamp not null,
 		Primary Key (uid)

@@ -3,12 +3,13 @@ package grpcserver
 import (
 	"context"
 	"log"
+	"time"
 
 	"github.com/and07/boilerplate-go/internal/app/trening/models"
 	"github.com/and07/boilerplate-go/pkg/service"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"google.golang.org/protobuf/types/known/timestamppb"
+	"google.golang.org/protobuf/types/known/durationpb"
 )
 
 type treningFacade struct {
@@ -70,6 +71,10 @@ func (t *treningFacade) DetailParametersUser(ctx context.Context, request *Detai
 		UserID: userID,
 	})
 	if err != nil {
+		response = &DetailParametersUserResponse{
+			Status:  false,
+			Message: err.Error(),
+		}
 		return
 	}
 	data := ParametersUser{
@@ -102,7 +107,40 @@ func (t *treningFacade) CreateTrening(ctx context.Context, request *CreateTrenin
 		}
 		return
 	}
-	log.Println("userID - ", userID)
+
+	var exercises []*models.Exercise
+
+	for _, e := range request.Exercises {
+		exercises = append(exercises, &models.Exercise{
+			Name:                e.Name,
+			Duration:            e.Duration.AsDuration(),
+			Relax:               e.Relax.AsDuration(),
+			Count:               e.Count,
+			NumberOfSets:        e.NumberOfSets,
+			NumberOfRepetitions: e.NumberOfRepetitions,
+			Type:                models.ExerciseType(e.Type),
+		})
+	}
+
+	// TODO
+	res, err := t.treningHandler.CreateTrening(ctx, &models.CreateTreningRequest{
+		UserID:    userID,
+		Name:      request.Name,
+		Interval:  request.Interval.AsDuration(),
+		Exercises: exercises,
+	})
+	if err != nil {
+		response = &CreateTreningResponse{
+			Status:  false,
+			Message: err.Error(),
+		}
+		return
+	}
+	response = &CreateTreningResponse{
+		Status:  true,
+		Message: res.Message,
+	}
+
 	return
 }
 
@@ -115,7 +153,47 @@ func (t *treningFacade) ListTrening(ctx context.Context, request *ListTreningReq
 		}
 		return
 	}
-	log.Println("userID - ", userID)
+
+	res, err := t.treningHandler.ListTrening(ctx, &models.ListTreningRequest{
+		UserID: userID,
+	})
+	if err != nil {
+		response = &ListTreningResponse{
+			Status:  false,
+			Message: err.Error(),
+		}
+		return
+	}
+
+	var trenings []*Trening
+	for _, t := range res.Data {
+
+		var exercises []*Exercise
+		for _, e := range t.Exercises {
+			exercises = append(exercises, &Exercise{
+				Name:                e.Name,
+				Duration:            durationpb.New(e.Duration * time.Second),
+				Relax:               durationpb.New(e.Relax * time.Second),
+				Count:               e.Count,
+				NumberOfSets:        e.NumberOfSets,
+				NumberOfRepetitions: e.NumberOfRepetitions,
+				Type:                ExerciseType(e.Type),
+			})
+		}
+
+		trenings = append(trenings, &Trening{
+			Uid:       t.UID,
+			Name:      t.Name,
+			Interval:  durationpb.New(t.Interval * time.Second),
+			Exercises: exercises,
+		})
+	}
+
+	response = &ListTreningResponse{
+		Status: res.Status,
+		Data:   trenings,
+	}
+
 	return
 }
 
@@ -145,8 +223,8 @@ func (t *treningFacade) CreateExercise(ctx context.Context, request *CreateExerc
 	res, err := t.treningHandler.CreateExercise(ctx, &models.CreateExerciseRequest{
 		UserID:              userID,
 		Name:                request.Name,
-		Duration:            request.Duration.AsTime(),
-		Relax:               request.Relax.AsTime(),
+		Duration:            request.Duration.AsDuration(),
+		Relax:               request.Relax.AsDuration(),
 		Count:               request.Count,
 		NumberOfSets:        request.NumberOfSets,
 		NumberOfRepetitions: request.NumberOfRepetitions,
@@ -188,8 +266,8 @@ func (t *treningFacade) ListExercise(ctx context.Context, request *ListExerciseR
 		response.Data[i] = &Exercise{
 			Uid:                 e.UID,
 			Name:                e.Name,
-			Duration:            timestamppb.New(e.Duration),
-			Relax:               timestamppb.New(e.Relax),
+			Duration:            durationpb.New(e.Duration),
+			Relax:               durationpb.New(e.Relax),
 			Count:               e.Count,
 			NumberOfSets:        e.NumberOfSets,
 			NumberOfRepetitions: e.NumberOfRepetitions,
@@ -210,6 +288,70 @@ func (t *treningFacade) DetailExercise(ctx context.Context, request *DetailExerc
 		return
 	}
 	log.Println("userID - ", userID)
+	return
+}
+
+func (t *treningFacade) ListExerciseDefault(ctx context.Context, request *ListExerciseRequest) (response *ListExerciseResponse, err error) {
+	_, err = t.userID(ctx)
+	if err != nil {
+		response = &ListExerciseResponse{
+			Status:  false,
+			Message: err.Error(),
+		}
+		return
+	}
+
+	response = &ListExerciseResponse{
+		Status: true,
+		Data: []*Exercise{
+			{
+				Name:                "Exercise1",
+				Duration:            durationpb.New(time.Duration(20) * time.Second),
+				Relax:               durationpb.New(time.Duration(20) * time.Second),
+				Count:               10,
+				NumberOfSets:        3,
+				NumberOfRepetitions: 15,
+				Type:                ExerciseType_other,
+			},
+			{
+				Name:                "Exercise2",
+				Duration:            durationpb.New(time.Duration(20) * time.Second),
+				Relax:               durationpb.New(time.Duration(20) * time.Second),
+				Count:               10,
+				NumberOfSets:        3,
+				NumberOfRepetitions: 15,
+				Type:                ExerciseType_other,
+			},
+			{
+				Name:                "Exercise3",
+				Duration:            durationpb.New(time.Duration(20) * time.Second),
+				Relax:               durationpb.New(time.Duration(20) * time.Second),
+				Count:               10,
+				NumberOfSets:        3,
+				NumberOfRepetitions: 15,
+				Type:                ExerciseType_other,
+			},
+			{
+				Name:                "Exercise4",
+				Duration:            durationpb.New(time.Duration(20) * time.Second),
+				Relax:               durationpb.New(time.Duration(20) * time.Second),
+				Count:               10,
+				NumberOfSets:        3,
+				NumberOfRepetitions: 15,
+				Type:                ExerciseType_other,
+			},
+			{
+				Name:                "Exercise5",
+				Duration:            durationpb.New(time.Duration(20) * time.Second),
+				Relax:               durationpb.New(time.Duration(20) * time.Second),
+				Count:               10,
+				NumberOfSets:        3,
+				NumberOfRepetitions: 15,
+				Type:                ExerciseType_other,
+			},
+		},
+	}
+
 	return
 }
 

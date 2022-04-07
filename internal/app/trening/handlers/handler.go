@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"context"
+	"time"
 
 	"github.com/and07/boilerplate-go/internal/app/trening/models"
 	"github.com/and07/boilerplate-go/pkg/data"
@@ -77,9 +78,76 @@ func (s *service) DetailParametersUser(ctx context.Context, request *models.Deta
 }
 
 func (s *service) CreateTrening(ctx context.Context, request *models.CreateTreningRequest) (response *models.CreateTreningResponse, err error) {
+
+	var exercises data.ExerciseSlice
+
+	for _, e := range request.Exercises {
+		exercises = append(exercises, data.Exercise{
+			UserID:              request.UserID,
+			Name:                e.Name,
+			Duration:            e.Duration / time.Second,
+			Relax:               e.Relax / time.Second,
+			Count:               e.Count,
+			NumberOfSets:        e.NumberOfSets,
+			NumberOfRepetitions: e.NumberOfRepetitions,
+			Type:                int32(e.Type),
+		})
+	}
+
+	err = s.repo.CreateTrening(ctx, &data.Trening{
+		Name:      request.Name,
+		UserID:    request.UserID,
+		Interval:  request.Interval / time.Second,
+		Exercises: exercises,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	response = &models.CreateTreningResponse{
+		Status: true,
+	}
+
+	return
+}
+func (s *service) UpdateTrening(ctx context.Context, request *models.UpdateTreningRequest) (response *models.UpdateTreningResponse, err error) {
 	return
 }
 func (s *service) ListTrening(ctx context.Context, request *models.ListTreningRequest) (response *models.ListTreningResponse, err error) {
+
+	res, err := s.repo.ListTrening(ctx, request.UserID)
+	if err != nil {
+		return nil, err
+	}
+	var trenings []*models.Trening
+	for _, t := range res {
+
+		var exercises []*models.Exercise
+		for _, e := range t.Exercises {
+			exercises = append(exercises, &models.Exercise{
+				Name:                e.Name,
+				Duration:            e.Duration,
+				Relax:               e.Relax,
+				Count:               e.Count,
+				NumberOfSets:        e.NumberOfSets,
+				NumberOfRepetitions: e.NumberOfRepetitions,
+				Type:                models.ExerciseType(e.Type),
+			})
+		}
+
+		trenings = append(trenings, &models.Trening{
+			UID:       t.UID,
+			Name:      t.Name,
+			Interval:  t.Interval,
+			Exercises: exercises,
+		})
+	}
+
+	response = &models.ListTreningResponse{
+		Status: true,
+		Data:   trenings,
+	}
+
 	return
 }
 func (s *service) DetailTrening(ctx context.Context, request *models.DetailTreningRequest) (response *models.DetailTreningResponse, err error) {

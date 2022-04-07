@@ -28,9 +28,10 @@ func (t *token) ExtractGRPC(ctx context.Context) (header string, existStatus boo
 		return
 	}
 
-	if authHeader, existStatus := md[strings.ToLower(HeaderName)]; existStatus && len(authHeader) > 0 {
-		if header = authHeader[0]; header != "" {
-			return header, existStatus
+	if authHeaderContent, existStatus := md[strings.ToLower(HeaderName)]; existStatus && len(authHeaderContent) > 0 {
+		if header = authHeaderContent[0]; header != "" {
+			authHeaderContent := strings.Split(header, " ")
+			return authHeaderContent[1], existStatus
 		}
 	}
 
@@ -49,7 +50,7 @@ func (t *token) ExtractHTTP(r *http.Request) (header string, existStatus bool) {
 	return authHeaderContent[1], true
 }
 
-// NewExtractor ...
+// NewToken ...
 func NewExtractor() Extractor {
 	return &token{}
 }

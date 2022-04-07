@@ -102,7 +102,7 @@ func (ah *AuthHandler) GeneratePassResetCode(w http.ResponseWriter, r *http.Requ
 	// Send verification mail
 	from := "vikisquarez@gmail.com"
 	to := []string{user.Email}
-	subject := "Password Reset for Bookite"
+	subject := "Password Reset"
 	mailType := mail.PassReset
 	mailData := &mail.Data{
 		Username: user.Username,

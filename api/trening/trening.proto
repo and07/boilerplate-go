@@ -6,7 +6,7 @@ option go_package = "api/trening;grpcserver";
 import "google/api/annotations.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
 import "third_party/mwitkow/go-proto-validators/validator.proto";
-import "google/protobuf/timestamp.proto";
+import "google/protobuf/duration.proto";
 
 option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
   info: {
@@ -103,14 +103,15 @@ message DetailParametersUserResponse{
 
 message Trening{
     string name = 1;
-    google.protobuf.Timestamp interval = 2;
+    google.protobuf.Duration interval = 2;
     repeated Exercise exercises = 3;
+    string uid = 4;
 }
 
 message CreateTreningRequest {
 
     string name = 1;
-    google.protobuf.Timestamp interval = 2;
+    google.protobuf.Duration interval = 2;
     repeated Exercise exercises = 3;
 }
 message CreateTreningResponse{
@@ -143,8 +144,8 @@ enum ExerciseType {
 
 message Exercise {
     string name = 1 [(validator.field) = {string_not_empty: true, regex: "^[a-zA-Z0-9_.-]*$"}];
-    google.protobuf.Timestamp duration = 2;
-    google.protobuf.Timestamp relax = 3;
+    google.protobuf.Duration duration = 2;
+    google.protobuf.Duration relax = 3;
     int32 count = 4;
     int32 number_of_sets         = 5;
 	int32 number_of_repetitions  = 6;
@@ -155,8 +156,8 @@ message Exercise {
 message CreateExerciseRequest {
     
     string name = 1;
-    google.protobuf.Timestamp duration = 2;
-    google.protobuf.Timestamp relax = 3;
+    google.protobuf.Duration duration = 2;
+    google.protobuf.Duration relax = 3;
     int32 count = 4;
     int32 number_of_sets         = 5;
 	int32 number_of_repetitions  = 6;
@@ -228,6 +229,11 @@ service TreningService {
     rpc ListExercise(ListExerciseRequest) returns (ListExerciseResponse) {
         option (google.api.http) = {
             get: "/user/exercises"
+        };
+    }
+    rpc ListExerciseDefault(ListExerciseRequest) returns (ListExerciseResponse) {
+        option (google.api.http) = {
+            get: "/user/exercises/default"
         };
     }
     rpc DetailExercise(DetailExerciseRequest) returns (DetailExerciseResponse) {

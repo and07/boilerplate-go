@@ -1,8 +1,6 @@
 package httpserver
 
 import (
-	"fmt"
-
 	"github.com/and07/boilerplate-go/pkg/data"
 	"github.com/and07/boilerplate-go/pkg/service"
 	"github.com/and07/boilerplate-go/pkg/service/mail"
@@ -34,14 +32,14 @@ type AuthHandler struct {
 // Option ...
 type Option func(*AuthHandler)
 
-// WithDebugPort ...
+// WithGoogleAuth ...
 func WithGoogleAuth(clientKey string, secret string, callbackURL string, scopes ...string) Option {
 	return func(a *AuthHandler) {
 		a.oauthConfGl = newConfig(clientKey, secret, callbackURL, scopes...)
 	}
 }
 
-// NewUserHandler returns a new UserHandler instance
+// NewAuthHandler returns a new UserHandler instance
 func NewAuthHandler(l hclog.Logger, c *utils.Configurations, v *data.Validation, r data.AuthRepository, auth service.Authentication, mail mail.Service, opts ...Option) *AuthHandler {
 	a := &AuthHandler{
 		logger:      l,
@@ -76,30 +74,42 @@ type TokenResponse struct {
 	AccessToken  string `json:"access_token"`
 }
 
+// AuthResponse ...
 type AuthResponse struct {
 	RefreshToken string `json:"refresh_token"`
 	AccessToken  string `json:"access_token"`
 	Username     string `json:"username"`
 }
 
+// UsernameUpdate ...
 type UsernameUpdate struct {
 	Username string `json:"username"`
 }
 
+// CodeVerificationReq ...
 type CodeVerificationReq struct {
 	Code string `json:"code"`
 	Type string `json:"type"`
 }
 
+// PasswordResetReq ...
 type PasswordResetReq struct {
 	Password   string `json:"password"`
 	PasswordRe string `json:"password_re"`
 	Code       string `json:"code"`
 }
 
-var ErrUserAlreadyExists = fmt.Sprintf("User already exists with the given email")
-var ErrUserNotFound = fmt.Sprintf("No user account exists with given email. Please sign in first")
-var UserCreationFailed = fmt.Sprintf("Unable to create user.Please try again later")
+// ErrUserAlreadyExists ...
+var ErrUserAlreadyExists = "User already exists with the given email"
 
+// ErrUserNotFound ...
+var ErrUserNotFound = "No user account exists with given email. Please sign in first"
+
+// UserCreationFailed ...
+var UserCreationFailed = "Unable to create user.Please try again later"
+
+// PgDuplicateKeyMsg ...
 var PgDuplicateKeyMsg = "duplicate key value violates unique constraint"
+
+// PgNoRowsMsg ...
 var PgNoRowsMsg = "no rows in result set"

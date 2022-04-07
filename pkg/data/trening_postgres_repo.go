@@ -15,6 +15,8 @@ type TreningRepository interface {
 	GetUserParamsByID(ctx context.Context, userID string) (*ParametersUser, error)
 	CreateExercise(ctx context.Context, exercise *Exercise) error
 	ListExercise(ctx context.Context, userID string) (res []Exercise, err error)
+	CreateTrening(ctx context.Context, trening *Trening) error
+	ListTrening(ctx context.Context, userID string) (res []Trening, err error)
 }
 
 type treningPostgresRepository struct {
@@ -29,7 +31,7 @@ func NewTreningPostgresRepository(db *sqlx.DB, logger hclog.Logger) TreningRepos
 	if db != nil {
 		db.MustExec(treningUserParamsSchema)
 		db.MustExec(treningExercise)
-		//db.MustExec(trening)
+		db.MustExec(trening)
 	}
 
 	return &treningPostgresRepository{db, logger}
@@ -89,5 +91,34 @@ func (repo *treningPostgresRepository) ListExercise(ctx context.Context, userID 
 		return
 	}
 
+	return
+}
+
+// CreateTrening inserts the given exercise into the database
+func (repo *treningPostgresRepository) CreateTrening(ctx context.Context, trening *Trening) error {
+	trening.UID = uuid.NewV4().String()
+	trening.CreatedAt = time.Now()
+	trening.UpdatedAt = time.Now()
+
+	repo.logger.Info("creating trening", hclog.Fmt("%#v", trening))
+	query := `insert into trening 
+		(uid, user_id, name, interval, exercises, createdat, updatedat) 
+	values 
+		($1, $2, $3, $4, $5, $6, $7);
+	`
+	_, err := repo.db.ExecContext(ctx, query, trening.UID, trening.UserID, trening.Name, trening.Interval, trening.Exercises, trening.CreatedAt, trening.UpdatedAt)
+	return err
+}
+
+// ListTrening inserts the given exercise into the database
+func (repo *treningPostgresRepository) ListTrening(ctx context.Context, userID string) (res []Trening, err error) {
+	repo.logger.Info("list exercise for user ", userID)
+	query := `select * from trening where user_id = $1`
+	res = []Trening{}
+	err = repo.db.Select(&res, query, userID)
+	if err != nil {
+		repo.logger.Debug("ListTrening repo.db.Select", err)
+		return
+	}
 	return
 }

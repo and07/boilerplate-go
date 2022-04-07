@@ -58,7 +58,7 @@ func (ah *AuthHandler) Signup(w http.ResponseWriter, r *http.Request) {
 	// Send verification mail
 	from := "vikisquarez@gmail.com"
 	to := []string{user.Email}
-	subject := "Email Verification for Bookite"
+	subject := "Email Verification"
 	mailType := mail.MailConfirmation
 	mailData := &mail.Data{
 		Username: user.Username,
