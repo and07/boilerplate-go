@@ -123,8 +123,8 @@ func (g *GRPC) RegisterEndpoints(ctx context.Context, logger hclog.Logger, Regis
 
 	var group errgroup.Group
 	group.Go(func() error {
-		log.Infof("http.Public start : %s (grpc Gateway)", g.cfg.PortGrpcGateway)
-		return http.ListenAndServe(":"+g.cfg.PortGrpcGateway, headers(mux))
+		log.Infof("http.Public start : %s (grpc Gateway)", g.cfg.Port)
+		return http.ListenAndServe(":"+g.cfg.Port, headers(mux))
 	})
 	if err := group.Wait(); err != nil {
 		log.Error(err)
