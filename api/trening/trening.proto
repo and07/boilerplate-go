@@ -168,7 +168,9 @@ message CreateExerciseResponse{
     string message = 2;
 }
 
-message ListExerciseRequest{}
+message ListExerciseRequest{
+    string type = 1;
+}
 message ListExerciseResponse{
     bool status = 1;
     string message = 2;

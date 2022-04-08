@@ -301,55 +301,20 @@ func (t *treningFacade) ListExerciseDefault(ctx context.Context, request *ListEx
 		return
 	}
 
+	exercises := exerciseDefault
+
+	if request.Type != "" {
+		exercises = []*Exercise{}
+		for _, e := range exerciseDefault {
+			if request.Type == e.Type.String() {
+				exercises = append(exercises, e)
+			}
+		}
+	}
+
 	response = &ListExerciseResponse{
 		Status: true,
-		Data: []*Exercise{
-			{
-				Name:                "Exercise1",
-				Duration:            durationpb.New(time.Duration(20) * time.Second),
-				Relax:               durationpb.New(time.Duration(20) * time.Second),
-				Count:               10,
-				NumberOfSets:        3,
-				NumberOfRepetitions: 15,
-				Type:                ExerciseType_other,
-			},
-			{
-				Name:                "Exercise2",
-				Duration:            durationpb.New(time.Duration(20) * time.Second),
-				Relax:               durationpb.New(time.Duration(20) * time.Second),
-				Count:               10,
-				NumberOfSets:        3,
-				NumberOfRepetitions: 15,
-				Type:                ExerciseType_other,
-			},
-			{
-				Name:                "Exercise3",
-				Duration:            durationpb.New(time.Duration(20) * time.Second),
-				Relax:               durationpb.New(time.Duration(20) * time.Second),
-				Count:               10,
-				NumberOfSets:        3,
-				NumberOfRepetitions: 15,
-				Type:                ExerciseType_other,
-			},
-			{
-				Name:                "Exercise4",
-				Duration:            durationpb.New(time.Duration(20) * time.Second),
-				Relax:               durationpb.New(time.Duration(20) * time.Second),
-				Count:               10,
-				NumberOfSets:        3,
-				NumberOfRepetitions: 15,
-				Type:                ExerciseType_other,
-			},
-			{
-				Name:                "Exercise5",
-				Duration:            durationpb.New(time.Duration(20) * time.Second),
-				Relax:               durationpb.New(time.Duration(20) * time.Second),
-				Count:               10,
-				NumberOfSets:        3,
-				NumberOfRepetitions: 15,
-				Type:                ExerciseType_other,
-			},
-		},
+		Data:   exercises,
 	}
 
 	return
