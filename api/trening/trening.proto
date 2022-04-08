@@ -73,6 +73,7 @@ message ParametersUser {
    UserDiet diet = 6;
    int32 desired_weight = 7;
    int32 eat = 8;
+   string username = 9;
 }
 
 message CreateParametersUserRequest {
