@@ -29,6 +29,12 @@ type service struct {
 
 func (s *service) CreateParametersUser(ctx context.Context, request *models.CreateParametersUserRequest) (response *models.CreateParametersUserResponse, err error) {
 
+	usr, err := s.repo.GetUserByID(ctx, request.UserID)
+	if err != nil {
+		s.logger.Error("unable to insert user to database", "error", err)
+		return nil, err
+	}
+
 	if err = s.repo.CreateUserParams(ctx, &data.ParametersUser{
 		Weight:        request.Weight,
 		Height:        request.Height,
@@ -39,8 +45,8 @@ func (s *service) CreateParametersUser(ctx context.Context, request *models.Crea
 		DesiredWeight: request.DesiredWeight,
 		Eat:           request.Eat,
 		UserID:        request.UserID,
+		UserName:      usr.Username,
 	}); err != nil {
-
 		s.logger.Error("unable to insert user params to database", "error", err)
 		return nil, err
 	}
@@ -71,6 +77,7 @@ func (s *service) DetailParametersUser(ctx context.Context, request *models.Deta
 			Diet:          models.UserDiet(userParams.Diet),
 			DesiredWeight: userParams.DesiredWeight,
 			Eat:           userParams.Eat,
+			Username:      userParams.UserName,
 		},
 	}
 

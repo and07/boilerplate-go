@@ -86,6 +86,7 @@ func (t *treningFacade) DetailParametersUser(ctx context.Context, request *Detai
 		Diet:          UserDiet(res.Data.Diet),
 		DesiredWeight: res.Data.DesiredWeight,
 		Eat:           res.Data.Eat,
+		Username:      res.Data.Username,
 	}
 
 	response = &DetailParametersUserResponse{

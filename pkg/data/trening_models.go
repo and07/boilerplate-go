@@ -11,6 +11,7 @@ import (
 type ParametersUser struct {
 	UID           string    `json:"uid" db:"uid"`
 	UserID        string    `json:"user_id,omitempty" db:"user_id"`
+	UserName      string    `json:"username,omitempty" db:"username"`
 	Weight        int32     `json:"weight,omitempty" db:"weight"`
 	Height        int32     `json:"height,omitempty" db:"height"`
 	Age           int32     `json:"age,omitempty" db:"age"`

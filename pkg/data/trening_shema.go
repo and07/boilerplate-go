@@ -5,6 +5,7 @@ const treningUserParamsSchema = `
 		create table if not exists trening_users_params (
 			uid 		   Varchar(36) not null unique,
 			user_id 	   Varchar(36) not null unique,
+			username       Varchar(225),
 			weight 	       integer ,
 			height         integer,
 			age            integer,
@@ -42,6 +43,8 @@ const trening = `
 		name 	       			Varchar(100) not null ,
 		exercises			    jsonb,
 		interval 				Varchar(36) not null,
+		type 				    integer default 0,
+		status 				    integer default 0,
 		createdat      			Timestamp not null,
 		updatedat     			Timestamp not null,
 		Primary Key (uid)

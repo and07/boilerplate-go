@@ -36,6 +36,7 @@ type ParametersUser struct {
 	Diet          UserDiet     `protobuf:"varint,6,opt,name=diet,proto3,enum=trening.UserDiet" json:"diet,omitempty"`
 	DesiredWeight int32        `protobuf:"varint,7,opt,name=desired_weight,json=desiredWeight,proto3" json:"desired_weight,omitempty"`
 	Eat           int32        `protobuf:"varint,8,opt,name=eat,proto3" json:"eat,omitempty"`
+	Username      string       `protobuf:"varint,8,opt,name=username,proto3" json:"username,omitempty"`
 }
 
 type DetailParametersUserResponse struct {

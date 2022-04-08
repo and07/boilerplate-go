@@ -70,12 +70,12 @@ grpc_cli call localhost:8842 BlockchainService.Subscribe 'query:"testete"'
 
 ## GRPC http proxy
 ```sh
-curl -v -X POST "http://localhost:8080/signup" -H "accept: application/json"  --data '{"email":"and_07@mail.ru","password":"xyz"}' 
-curl -v -X POST "http://localhost:8080/verify/mail" -H "accept: application/json"  --data '{"email":"and_07@mail.ru","code":"PatwtPil"}' 
-curl -v -X POST "http://localhost:8080/login" -H "accept: application/json"   --data '{"email":"and_07@mail.ru","password":"xyz"}' 
+curl -v -X POST "http://localhost:8080/signup" -H "accept: application/json"  --data '{"email":"tete@mail.ccc","password":"xyz", "username":"TEEST"}' 
+curl -v -X POST "http://localhost:8080/verify/mail" -H "accept: application/json"  --data '{"email":"tete@mail.ccc","code":"PatwtPil"}' 
+curl -v -X POST "http://localhost:8080/login" -H "accept: application/json"   --data '{"email":"tete@mail.ccc","password":"xyz"}' 
 curl -v -X GET "http://localhost:8080/greet" -H "accept: application/json" -H "Authorization: Bearer access_token"
 curl -v -X GET "http://localhost:8080/get-password-reset-code" -H "accept: application/json" -H "Authorization: Bearer access_token"
-curl -v -X POST "http://localhost:8080/verify/password-reset" -H "accept: application/json"  --data '{"email":"and_07@mail.ru","code":"fsfykSBG"}' 
+curl -v -X POST "http://localhost:8080/verify/password-reset" -H "accept: application/json"  --data '{"email":"tete@mail.ccc","code":"fsfykSBG"}' 
 curl -v -X GET "http://localhost:8080/refresh-token" -H "accept: application/json" -H "Authorization: Bearer refresh_token"
 curl -v -X GET "http://localhost:8080/profile" -H "accept: application/json" -H "Authorization: Bearer access_token"
 
