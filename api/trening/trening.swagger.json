@@ -384,6 +384,9 @@
           "items": {
             "$ref": "#/definitions/treningExercise"
           }
+        },
+        "status": {
+          "$ref": "#/definitions/treningStatusTrening"
         }
       }
     },
@@ -552,6 +555,18 @@
           "type": "string"
         }
       }
+    },
+    "treningStatusTrening": {
+      "type": "string",
+      "enum": [
+        "Create",
+        "Start",
+        "Stop",
+        "Pause",
+        "Break",
+        "Finish"
+      ],
+      "default": "Create"
     },
     "treningTrening": {
       "type": "object",
