@@ -109,11 +109,22 @@ message Trening{
     string uid = 4;
 }
 
+enum StatusTrening {
+    Create = 0;
+    Start = 1;
+    Stop = 2;
+    Pause = 3;
+    Break = 4;
+    Finish = 5;
+}
+
+
 message CreateTreningRequest {
 
-    string name = 1;
+    string name = 1 [(validator.field) = {string_not_empty: true}];
     google.protobuf.Duration interval = 2;
     repeated Exercise exercises = 3;
+    StatusTrening status = 4;
 }
 message CreateTreningResponse{
     bool status = 1;
