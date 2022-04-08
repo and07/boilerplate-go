@@ -85,7 +85,7 @@ curl -X POST "http://localhost:8843/user/parameters" -H "accept: application/jso
 curl -X GET "http://localhost:8843/user/parameters" -H "accept: application/json"  -H "Authorization: Bearer access_token"
 
 
-curl -X GET "http://localhost:8843/user/exercises/default" -H "accept: application/json"  -H "Authorization:  Bearer access_token"
+curl -X GET "http://localhost:8843/user/exercises/default?type=arms" -H "accept: application/json"  -H "Authorization:  Bearer access_token"
 
 
 curl -X POST "http://localhost:8843/user/trening" -H "accept: application/json"  -H "Authorization: Bearer access_token" --data '{"name":"sssss1","exercises":[{"name":"Exercise1","duration":"20s","relax":"20s","count":10,"numberOfSets":3,"numberOfRepetitions":15,"type":"other","uid":""},{"name":"Exercise2","duration":"20s","relax":"20s","count":10,"numberOfSets":3,"numberOfRepetitions":15,"type":"other","uid":""},{"name":"Exercise3","duration":"20s","relax":"20s","count":10,"numberOfSets":3,"numberOfRepetitions":15,"type":"other","uid":""},{"name":"Exercise4","duration":"20s","relax":"20s","count":10,"numberOfSets":3,"numberOfRepetitions":15,"type":"other","uid":""},{"name":"Exercise5","duration":"20s","relax":"20s","count":10,"numberOfSets":3,"numberOfRepetitions":15,"type":"other","uid":""}], "interval": "30s" }'
