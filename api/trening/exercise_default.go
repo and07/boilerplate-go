@@ -15,6 +15,7 @@ var exerciseDefault = []*Exercise{
 		NumberOfSets:        3,
 		NumberOfRepetitions: 15,
 		Type:                ExerciseType_other,
+		Image:               "https://fitseven.ru/wp-content/uploads/2020/07/uprazhneniya-na-press-velosiped.jpg",
 	},
 	{
 		Name:                "Exercise2",
@@ -24,6 +25,7 @@ var exerciseDefault = []*Exercise{
 		NumberOfSets:        3,
 		NumberOfRepetitions: 15,
 		Type:                ExerciseType_arms,
+		Image:               "https://fitseven.ru/wp-content/uploads/2020/07/uprazhneniya-na-press-skruchivaniya.jpg",
 	},
 	{
 		Name:                "Exercise3",
@@ -42,6 +44,7 @@ var exerciseDefault = []*Exercise{
 		NumberOfSets:        3,
 		NumberOfRepetitions: 15,
 		Type:                ExerciseType_legs,
+		Image:               "https://fitseven.ru/wp-content/uploads/2020/07/uprazhneniya-na-press-planka.jpg",
 	},
 	{
 		Name:                "Exercise5",
@@ -51,6 +54,7 @@ var exerciseDefault = []*Exercise{
 		NumberOfSets:        3,
 		NumberOfRepetitions: 15,
 		Type:                ExerciseType_other,
+		Image:               "https://fitseven.ru/wp-content/uploads/2020/07/uprazhneniya-na-press-planka-na-rukah.jpg",
 	},
 	{
 		Name:                "Exercise6",
@@ -69,5 +73,6 @@ var exerciseDefault = []*Exercise{
 		NumberOfSets:        3,
 		NumberOfRepetitions: 15,
 		Type:                ExerciseType_legs,
+		Image:               "https://fitseven.ru/wp-content/uploads/2020/07/uprazhneniya-na-press-podyem-nog.jpg",
 	},
 }
