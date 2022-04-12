@@ -109,6 +109,7 @@ func (s *service) CreateTrening(ctx context.Context, request *models.CreateTreni
 		UserID:    request.UserID,
 		Interval:  request.Interval / time.Second,
 		Exercises: exercises,
+		Status:    1, // create
 	})
 	if err != nil {
 		return nil, err
