@@ -120,6 +120,8 @@ func (t *treningFacade) CreateTrening(ctx context.Context, request *CreateTrenin
 			NumberOfSets:        e.NumberOfSets,
 			NumberOfRepetitions: e.NumberOfRepetitions,
 			Type:                models.ExerciseType(e.Type),
+			Image:               e.Image,
+			Video:               e.Video,
 		})
 	}
 
@@ -180,6 +182,8 @@ func (t *treningFacade) ListTrening(ctx context.Context, request *ListTreningReq
 				NumberOfSets:        e.NumberOfSets,
 				NumberOfRepetitions: e.NumberOfRepetitions,
 				Type:                ExerciseType(e.Type),
+				Video:               e.Video,
+				Image:               e.Image,
 			})
 		}
 
@@ -208,7 +212,43 @@ func (t *treningFacade) DetailTrening(ctx context.Context, request *DetailTrenin
 		}
 		return
 	}
-	log.Println("userID - ", userID)
+	res, err := t.treningHandler.DetailTrening(ctx, &models.DetailTreningRequest{
+		UserID: userID,
+		UID:    request.Uid,
+	})
+	if err != nil {
+		response = &DetailTreningResponse{
+			Status:  false,
+			Message: err.Error(),
+		}
+		return
+	}
+
+	var exercises []*Exercise
+	for _, e := range res.Data.Exercises {
+		exercises = append(exercises, &Exercise{
+			Name:                e.Name,
+			Duration:            durationpb.New(e.Duration * time.Second),
+			Relax:               durationpb.New(e.Relax * time.Second),
+			Count:               e.Count,
+			NumberOfSets:        e.NumberOfSets,
+			NumberOfRepetitions: e.NumberOfRepetitions,
+			Type:                ExerciseType(e.Type),
+			Video:               e.Video,
+			Image:               e.Image,
+		})
+	}
+
+	response = &DetailTreningResponse{
+		Status: res.Status,
+		Data: &Trening{
+			Uid:       res.Data.UID,
+			Name:      res.Data.Name,
+			Interval:  durationpb.New(res.Data.Interval * time.Second),
+			Exercises: exercises,
+		},
+	}
+
 	return
 }
 

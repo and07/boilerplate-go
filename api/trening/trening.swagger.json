@@ -39,7 +39,7 @@
         },
         "parameters": [
           {
-            "name": "id",
+            "name": "uid",
             "in": "query",
             "required": false,
             "type": "string"
@@ -219,7 +219,7 @@
         },
         "parameters": [
           {
-            "name": "id",
+            "name": "uid",
             "in": "query",
             "required": false,
             "type": "string"

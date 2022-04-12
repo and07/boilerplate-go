@@ -99,6 +99,8 @@ func (s *service) CreateTrening(ctx context.Context, request *models.CreateTreni
 			NumberOfSets:        e.NumberOfSets,
 			NumberOfRepetitions: e.NumberOfRepetitions,
 			Type:                int32(e.Type),
+			Image:               e.Image,
+			Video:               e.Video,
 		})
 	}
 
@@ -140,6 +142,8 @@ func (s *service) ListTrening(ctx context.Context, request *models.ListTreningRe
 				NumberOfSets:        e.NumberOfSets,
 				NumberOfRepetitions: e.NumberOfRepetitions,
 				Type:                models.ExerciseType(e.Type),
+				Image:               e.Image,
+				Video:               e.Video,
 			})
 		}
 
@@ -176,6 +180,38 @@ func (s *service) UpdateTreningStatus(ctx context.Context, request *models.Updat
 }
 
 func (s *service) DetailTrening(ctx context.Context, request *models.DetailTreningRequest) (response *models.DetailTreningResponse, err error) {
+
+	res, err := s.repo.DetailTrening(ctx, request.UserID, request.UID)
+	if err != nil {
+		s.logger.Error("unable to get trening to database", "error", err)
+		return nil, err
+	}
+
+	var exercises []*models.Exercise
+	for _, e := range res.Exercises {
+		exercises = append(exercises, &models.Exercise{
+			Name:                e.Name,
+			Duration:            e.Duration,
+			Relax:               e.Relax,
+			Count:               e.Count,
+			NumberOfSets:        e.NumberOfSets,
+			NumberOfRepetitions: e.NumberOfRepetitions,
+			Type:                models.ExerciseType(e.Type),
+			Image:               e.Image,
+			Video:               e.Video,
+		})
+	}
+
+	response = &models.DetailTreningResponse{
+		Status: true,
+		Data: &models.Trening{
+			UID:       res.UID,
+			Name:      res.Name,
+			Interval:  res.Interval,
+			Exercises: exercises,
+		},
+	}
+
 	return
 }
 
