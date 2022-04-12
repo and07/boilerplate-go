@@ -157,6 +157,7 @@ func (t *treningFacade) ListTrening(ctx context.Context, request *ListTreningReq
 
 	res, err := t.treningHandler.ListTrening(ctx, &models.ListTreningRequest{
 		UserID: userID,
+		Status: int(request.Status.Number()),
 	})
 	if err != nil {
 		response = &ListTreningResponse{
@@ -208,6 +209,37 @@ func (t *treningFacade) DetailTrening(ctx context.Context, request *DetailTrenin
 		return
 	}
 	log.Println("userID - ", userID)
+	return
+}
+
+func (t *treningFacade) UpdateTreningStatus(ctx context.Context, request *UpdateTreningStatusRequest) (response *UpdateTreningStatusResponse, err error) {
+	//TODO
+	userID, err := t.userID(ctx)
+	if err != nil {
+		response = &UpdateTreningStatusResponse{
+			Status:  false,
+			Message: err.Error(),
+		}
+		return
+	}
+	t.logger.Debug("request", request.Status)
+
+	res, err := t.treningHandler.UpdateTreningStatus(ctx, &models.UpdateTreningStatusRequest{
+		UserID: userID,
+		Status: int(request.Status.Number()),
+		UID:    request.Uid,
+	})
+	if err != nil {
+		response = &UpdateTreningStatusResponse{
+			Status:  false,
+			Message: err.Error(),
+		}
+		return
+	}
+
+	response = &UpdateTreningStatusResponse{
+		Status: res.Status,
+	}
 	return
 }
 

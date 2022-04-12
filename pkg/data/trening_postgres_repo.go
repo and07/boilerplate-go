@@ -17,7 +17,8 @@ type TreningRepository interface {
 	CreateExercise(ctx context.Context, exercise *Exercise) error
 	ListExercise(ctx context.Context, userID string) (res []Exercise, err error)
 	CreateTrening(ctx context.Context, trening *Trening) error
-	ListTrening(ctx context.Context, userID string) (res []Trening, err error)
+	ListTrening(ctx context.Context, userID string, status int) (res []Trening, err error)
+	UpdateTreningStatus(ctx context.Context, trening *Trening) error
 }
 
 type treningPostgresRepository struct {
@@ -99,7 +100,7 @@ func (repo *treningPostgresRepository) ListExercise(ctx context.Context, userID 
 	res = []Exercise{}
 	err = repo.db.Select(&res, query, userID)
 	if err != nil {
-		repo.logger.Debug("ListExercise repo.db.Select", err)
+		repo.logger.Error("ListExercise repo.db.Select", err)
 		return
 	}
 
@@ -123,14 +124,33 @@ func (repo *treningPostgresRepository) CreateTrening(ctx context.Context, trenin
 }
 
 // ListTrening inserts the given exercise into the database
-func (repo *treningPostgresRepository) ListTrening(ctx context.Context, userID string) (res []Trening, err error) {
-	repo.logger.Info("list exercise for user ", userID)
+func (repo *treningPostgresRepository) ListTrening(ctx context.Context, userID string, status int) (res []Trening, err error) {
+	repo.logger.Info("list trening for user ", userID)
 	query := `select * from trening where user_id = $1`
+	args := []interface{}{userID}
+	if status > 0 {
+		query = `select * from trening where user_id = $1 and status = $2`
+		args = append(args, status)
+	}
+
 	res = []Trening{}
-	err = repo.db.Select(&res, query, userID)
+
+	repo.logger.Debug("ListTrening repo.db.Select", query, args)
+	err = repo.db.Select(&res, query, args...)
 	if err != nil {
-		repo.logger.Debug("ListTrening repo.db.Select", err)
+		repo.logger.Error("ListTrening repo.db.Select", err)
 		return
 	}
 	return
+}
+
+// UpdateTreningStatus updates the status of the given trening
+func (repo *treningPostgresRepository) UpdateTreningStatus(ctx context.Context, trening *Trening) error {
+	trening.UpdatedAt = time.Now()
+
+	query := "update trening set status = $1, updatedat = $2 where uid = $3"
+	if _, err := repo.db.ExecContext(ctx, query, trening.Status, trening.UpdatedAt, trening.UID); err != nil {
+		return err
+	}
+	return nil
 }

@@ -16,6 +16,7 @@ type TreningHandler interface {
 	CreateTrening(ctx context.Context, request *models.CreateTreningRequest) (response *models.CreateTreningResponse, err error)
 	ListTrening(ctx context.Context, request *models.ListTreningRequest) (response *models.ListTreningResponse, err error)
 	DetailTrening(ctx context.Context, request *models.DetailTreningRequest) (response *models.DetailTreningResponse, err error)
+	UpdateTreningStatus(ctx context.Context, request *models.UpdateTreningStatusRequest) (response *models.UpdateTreningStatusResponse, err error)
 
 	CreateExercise(ctx context.Context, request *models.CreateExerciseRequest) (response *models.CreateExerciseResponse, err error)
 	ListExercise(ctx context.Context, request *models.ListExerciseRequest) (response *models.ListExerciseResponse, err error)
@@ -122,7 +123,7 @@ func (s *service) UpdateTrening(ctx context.Context, request *models.UpdateTreni
 }
 func (s *service) ListTrening(ctx context.Context, request *models.ListTreningRequest) (response *models.ListTreningResponse, err error) {
 
-	res, err := s.repo.ListTrening(ctx, request.UserID)
+	res, err := s.repo.ListTrening(ctx, request.UserID, request.Status)
 	if err != nil {
 		return nil, err
 	}
@@ -157,6 +158,23 @@ func (s *service) ListTrening(ctx context.Context, request *models.ListTreningRe
 
 	return
 }
+
+func (s *service) UpdateTreningStatus(ctx context.Context, request *models.UpdateTreningStatusRequest) (response *models.UpdateTreningStatusResponse, err error) {
+
+	if err = s.repo.UpdateTreningStatus(ctx, &data.Trening{UID: request.UID, UserID: request.UserID, Status: request.Status}); err != nil {
+		s.logger.Error("unable to update trening status to database", "error", err)
+		return nil, err
+	}
+
+	s.logger.Debug("request", request)
+
+	response = &models.UpdateTreningStatusResponse{
+		Status: true,
+	}
+
+	return
+}
+
 func (s *service) DetailTrening(ctx context.Context, request *models.DetailTreningRequest) (response *models.DetailTreningResponse, err error) {
 	return
 }

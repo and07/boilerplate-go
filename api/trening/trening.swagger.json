@@ -260,6 +260,38 @@
         ]
       }
     },
+    "/user/trening/status": {
+      "put": {
+        "operationId": "TreningService_UpdateTreningStatus",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/treningUpdateTreningStatusResponse"
+            }
+          },
+          "default": {
+            "description": "Common error",
+            "schema": {
+              "$ref": "#/definitions/commonCommonError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/treningUpdateTreningStatusRequest"
+            }
+          }
+        ],
+        "tags": [
+          "TreningService"
+        ]
+      }
+    },
     "/user/trenings": {
       "get": {
         "operationId": "TreningService_ListTrening",
@@ -277,6 +309,23 @@
             }
           }
         },
+        "parameters": [
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "Create",
+              "Start",
+              "Stop",
+              "Pause",
+              "Break",
+              "Finish"
+            ],
+            "default": "Create"
+          }
+        ],
         "tags": [
           "TreningService"
         ]
@@ -384,9 +433,6 @@
           "items": {
             "$ref": "#/definitions/treningExercise"
           }
-        },
-        "status": {
-          "$ref": "#/definitions/treningStatusTrening"
         }
       }
     },
@@ -590,6 +636,31 @@
           }
         },
         "uid": {
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/definitions/treningStatusTrening"
+        }
+      }
+    },
+    "treningUpdateTreningStatusRequest": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "$ref": "#/definitions/treningStatusTrening"
+        },
+        "uid": {
+          "type": "string"
+        }
+      }
+    },
+    "treningUpdateTreningStatusResponse": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "boolean"
+        },
+        "message": {
           "type": "string"
         }
       }

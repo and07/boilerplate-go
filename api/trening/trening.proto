@@ -102,12 +102,6 @@ message DetailParametersUserResponse{
    ParametersUser data = 3;
 }
 
-message Trening{
-    string name = 1;
-    google.protobuf.Duration interval = 2;
-    repeated Exercise exercises = 3;
-    string uid = 4;
-}
 
 enum StatusTrening {
     Create = 0;
@@ -118,20 +112,27 @@ enum StatusTrening {
     Finish = 5;
 }
 
-
-message CreateTreningRequest {
-
-    string name = 1 [(validator.field) = {string_not_empty: true}];
+message Trening{
+    string name = 1;
     google.protobuf.Duration interval = 2;
     repeated Exercise exercises = 3;
-    StatusTrening status = 4;
+    string uid = 4;
+    StatusTrening status = 5;
+}
+
+message CreateTreningRequest {
+    string name = 1 [(validator.field) = {string_not_empty: true}];
+    google.protobuf.Duration interval = 2;
+    repeated Exercise exercises = 3; 
 }
 message CreateTreningResponse{
     bool status = 1;
     string message = 2;
 }
 
-message ListTreningRequest{}
+message ListTreningRequest{
+    StatusTrening status = 1;
+}
 message ListTreningResponse{
     bool status = 1;
     string message = 2;
@@ -147,6 +148,15 @@ message DetailTreningResponse{
     Trening data = 3;
 }
 
+
+message UpdateTreningStatusRequest{
+    StatusTrening status = 1;
+    string uid = 2;
+}
+message UpdateTreningStatusResponse{
+    bool status = 1;
+    string message = 2;
+}
 
 enum ExerciseType {
     arms = 0;
@@ -233,6 +243,12 @@ service TreningService {
     rpc DetailTrening(DetailTreningRequest) returns (DetailTreningResponse) {
         option (google.api.http) = {
             get: "/user/trening"
+        };
+    }
+    rpc UpdateTreningStatus(UpdateTreningStatusRequest) returns (UpdateTreningStatusResponse) {
+        option (google.api.http) = {
+            put: "/user/trening/status"
+            body: "*"
         };
     }
 

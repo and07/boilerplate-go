@@ -60,10 +60,12 @@ func (s *ExerciseSlice) Scan(src interface{}) error {
 
 type Trening struct {
 	UID       string        `json:"uid" db:"uid"`
-	Name      string        `json:"name,omitempty"  db:"name"`
-	Interval  time.Duration `json:"interval,omitempty"  db:"interval"`
-	Exercises ExerciseSlice `json:"exercises,omitempty"  db:"exercises"`
 	UserID    string        `json:"user_id,omitempty" db:"user_id"`
+	Name      string        `json:"name,omitempty"  db:"name"`
+	Exercises ExerciseSlice `json:"exercises,omitempty"  db:"exercises"`
+	Interval  time.Duration `json:"interval,omitempty"  db:"interval"`
+	Type      int           `json:"type,omitempty" db:"type"`
+	Status    int           `json:"status,omitempty" db:"status"`
 	CreatedAt time.Time     `json:"createdat" db:"createdat"`
 	UpdatedAt time.Time     `json:"updatedat" db:"updatedat"`
 }

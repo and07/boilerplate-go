@@ -82,7 +82,19 @@ type UpdateTreningResponse struct {
 }
 type ListTreningRequest struct {
 	UserID string
+	Status int
 }
+
+type UpdateTreningStatusRequest struct {
+	UID    string
+	UserID string
+	Status int
+}
+type UpdateTreningStatusResponse struct {
+	Status  bool   `protobuf:"varint,1,opt,name=status,proto3" json:"status,omitempty"`
+	Message string `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`
+}
+
 type Trening struct {
 	UID       string
 	Name      string        `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
