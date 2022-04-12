@@ -316,6 +316,7 @@
             "required": false,
             "type": "string",
             "enum": [
+              "Unknown",
               "Create",
               "Start",
               "Stop",
@@ -323,7 +324,7 @@
               "Break",
               "Finish"
             ],
-            "default": "Create"
+            "default": "Unknown"
           }
         ],
         "tags": [
@@ -611,6 +612,7 @@
     "treningStatusTrening": {
       "type": "string",
       "enum": [
+        "Unknown",
         "Create",
         "Start",
         "Stop",
@@ -618,7 +620,7 @@
         "Break",
         "Finish"
       ],
-      "default": "Create"
+      "default": "Unknown"
     },
     "treningTrening": {
       "type": "object",
