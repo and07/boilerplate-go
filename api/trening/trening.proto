@@ -104,12 +104,13 @@ message DetailParametersUserResponse{
 
 
 enum StatusTrening {
-    Create = 0;
-    Start = 1;
-    Stop = 2;
-    Pause = 3;
-    Break = 4;
-    Finish = 5;
+    Unknown = 0;
+    Create = 1;
+    Start = 2;
+    Stop = 3;
+    Pause = 4;
+    Break = 5;
+    Finish = 6;
 }
 
 message Trening{
