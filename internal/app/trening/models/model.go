@@ -56,6 +56,8 @@ type Exercise struct {
 	NumberOfRepetitions int32         `json:"number_of_repetitions,omitempty"`
 	Type                ExerciseType  `json:"type,omitempty"`
 	UID                 string        `json:"uid,omitempty"`
+	Image               string        `json:"image,omitempty"`
+	Video               string        `json:"video,omitempty"`
 }
 type CreateTreningRequest struct {
 	Name      string        `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
@@ -107,7 +109,7 @@ type ListTreningResponse struct {
 	Data    []*Trening `protobuf:"bytes,3,rep,name=data,proto3" json:"data,omitempty"`
 }
 type DetailTreningRequest struct {
-	ID     string
+	UID    string
 	UserID string
 }
 type DetailTreningResponse struct {

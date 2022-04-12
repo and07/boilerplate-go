@@ -19,6 +19,7 @@ type TreningRepository interface {
 	CreateTrening(ctx context.Context, trening *Trening) error
 	ListTrening(ctx context.Context, userID string, status int) (res []Trening, err error)
 	UpdateTreningStatus(ctx context.Context, trening *Trening) error
+	DetailTrening(ctx context.Context, userID string, uid string) (res Trening, err error)
 }
 
 type treningPostgresRepository struct {
@@ -139,6 +140,20 @@ func (repo *treningPostgresRepository) ListTrening(ctx context.Context, userID s
 	err = repo.db.Select(&res, query, args...)
 	if err != nil {
 		repo.logger.Error("ListTrening repo.db.Select", err)
+		return
+	}
+	return
+}
+
+func (repo *treningPostgresRepository) DetailTrening(ctx context.Context, userID string, uid string) (res Trening, err error) {
+	repo.logger.Info("detail trening for user ", userID)
+	query := `select * from trening where user_id = $1 and uid = $2`
+
+	res = Trening{}
+	repo.logger.Debug("DetailTrening repo.db.Select", query, userID, uid)
+	err = repo.db.GetContext(ctx, &res, query, userID, uid)
+	if err != nil {
+		repo.logger.Error("DetailTrening repo.db.Select", err)
 		return
 	}
 	return

@@ -141,7 +141,7 @@ message ListTreningResponse{
 }
 
 message DetailTreningRequest{
-    string id = 1;
+    string uid = 1;
 }
 message DetailTreningResponse{
     bool status = 1;
@@ -203,7 +203,7 @@ message ListExerciseResponse{
 }
 
 message DetailExerciseRequest{
-    string id = 1;
+    string uid = 1;
 }
 message DetailExerciseResponse{
     bool status = 1;
