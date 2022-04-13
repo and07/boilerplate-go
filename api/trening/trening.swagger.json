@@ -260,6 +260,38 @@
         ]
       }
     },
+    "/user/trening/exercises": {
+      "put": {
+        "operationId": "TreningService_UpdateTreningExercises",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/treningUpdateTreningExercisesResponse"
+            }
+          },
+          "default": {
+            "description": "Common error",
+            "schema": {
+              "$ref": "#/definitions/commonCommonError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/treningUpdateTreningExercisesRequest"
+            }
+          }
+        ],
+        "tags": [
+          "TreningService"
+        ]
+      }
+    },
     "/user/trening/status": {
       "put": {
         "operationId": "TreningService_UpdateTreningStatus",
@@ -657,6 +689,31 @@
           "format": "date-time"
         },
         "image": {
+          "type": "string"
+        }
+      }
+    },
+    "treningUpdateTreningExercisesRequest": {
+      "type": "object",
+      "properties": {
+        "exercises": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/treningExercise"
+          }
+        },
+        "uid": {
+          "type": "string"
+        }
+      }
+    },
+    "treningUpdateTreningExercisesResponse": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "boolean"
+        },
+        "message": {
           "type": "string"
         }
       }

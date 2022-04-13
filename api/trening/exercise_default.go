@@ -16,6 +16,13 @@ var exerciseDefault = []*Exercise{
 		NumberOfRepetitions: 15,
 		Type:                ExerciseType_other,
 		Image:               "https://fitseven.ru/wp-content/uploads/2020/07/uprazhneniya-na-press-velosiped.jpg",
+		Description:         "bla bla bla bla bla blabla bla bla bla bla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla bla",
+		Technique: `
+		Stand with your hands aside.
+		Pick up dumbbells.
+		Lift the dumbbells ahead
+		Lower the dumbbells`,
+		Mistake: "Don’t lift the dumbbells too high",
 	},
 	{
 		Name:                "Exercise2",
@@ -26,6 +33,13 @@ var exerciseDefault = []*Exercise{
 		NumberOfRepetitions: 15,
 		Type:                ExerciseType_arms,
 		Image:               "https://fitseven.ru/wp-content/uploads/2020/07/uprazhneniya-na-press-skruchivaniya.jpg",
+		Description:         "bla bla bla bla bla blabla bla bla bla bla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla bla",
+		Technique: `
+		Stand with your hands aside.
+		Pick up dumbbells.
+		Lift the dumbbells ahead
+		Lower the dumbbells`,
+		Mistake: "Don’t lift the dumbbells too high",
 	},
 	{
 		Name:                "Exercise3",
@@ -35,6 +49,14 @@ var exerciseDefault = []*Exercise{
 		NumberOfSets:        3,
 		NumberOfRepetitions: 15,
 		Type:                ExerciseType_other,
+		Description:         "bla bla bla bla bla blabla bla bla bla bla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla bla",
+		Technique: `
+		Stand with your hands aside.
+		Pick up dumbbells.
+		Lift the dumbbells ahead
+		Lower the dumbbells`,
+		Mistake: "Don’t lift the dumbbells too high",
+		Image:   "https://filzor.ru/wp-content/uploads/2021/07/685dcbc62da32d989482066ebc60de3f-768x401.jpg",
 	},
 	{
 		Name:                "Exercise4",
@@ -45,6 +67,13 @@ var exerciseDefault = []*Exercise{
 		NumberOfRepetitions: 15,
 		Type:                ExerciseType_legs,
 		Image:               "https://fitseven.ru/wp-content/uploads/2020/07/uprazhneniya-na-press-planka.jpg",
+		Description:         "bla bla bla bla bla blabla bla bla bla bla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla bla",
+		Technique: `
+		Stand with your hands aside.
+		Pick up dumbbells.
+		Lift the dumbbells ahead
+		Lower the dumbbells`,
+		Mistake: "Don’t lift the dumbbells too high",
 	},
 	{
 		Name:                "Exercise5",
@@ -55,6 +84,13 @@ var exerciseDefault = []*Exercise{
 		NumberOfRepetitions: 15,
 		Type:                ExerciseType_other,
 		Image:               "https://fitseven.ru/wp-content/uploads/2020/07/uprazhneniya-na-press-planka-na-rukah.jpg",
+		Description:         "bla bla bla bla bla blabla bla bla bla bla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla bla",
+		Technique: `
+		Stand with your hands aside.
+		Pick up dumbbells.
+		Lift the dumbbells ahead
+		Lower the dumbbells`,
+		Mistake: "Don’t lift the dumbbells too high",
 	},
 	{
 		Name:                "Exercise6",
@@ -64,6 +100,14 @@ var exerciseDefault = []*Exercise{
 		NumberOfSets:        3,
 		NumberOfRepetitions: 15,
 		Type:                ExerciseType_arms,
+		Description:         "bla bla bla bla bla blabla bla bla bla bla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla bla",
+		Technique: `
+		Stand with your hands aside.
+		Pick up dumbbells.
+		Lift the dumbbells ahead
+		Lower the dumbbells`,
+		Mistake: "Don’t lift the dumbbells too high",
+		Image:   "https://cdn-st1.rtr-vesti.ru/vh/pictures/xw/317/436/2.jpg",
 	},
 	{
 		Name:                "Exercise7",
@@ -74,5 +118,12 @@ var exerciseDefault = []*Exercise{
 		NumberOfRepetitions: 15,
 		Type:                ExerciseType_legs,
 		Image:               "https://fitseven.ru/wp-content/uploads/2020/07/uprazhneniya-na-press-podyem-nog.jpg",
+		Description:         "bla bla bla bla bla blabla bla bla bla bla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla bla",
+		Technique: `
+		Stand with your hands aside.
+		Pick up dumbbells.
+		Lift the dumbbells ahead
+		Lower the dumbbells`,
+		Mistake: "Don’t lift the dumbbells too high",
 	},
 }
