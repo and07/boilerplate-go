@@ -122,6 +122,9 @@ func (t *treningFacade) CreateTrening(ctx context.Context, request *CreateTrenin
 			Type:                models.ExerciseType(e.Type),
 			Image:               e.Image,
 			Video:               e.Video,
+			Description:         e.Description,
+			Technique:           e.Technique,
+			Mistake:             e.Mistake,
 		})
 	}
 
@@ -184,6 +187,9 @@ func (t *treningFacade) ListTrening(ctx context.Context, request *ListTreningReq
 				Type:                ExerciseType(e.Type),
 				Video:               e.Video,
 				Image:               e.Image,
+				Description:         e.Description,
+				Technique:           e.Technique,
+				Mistake:             e.Mistake,
 			})
 		}
 
@@ -237,6 +243,9 @@ func (t *treningFacade) DetailTrening(ctx context.Context, request *DetailTrenin
 			Type:                ExerciseType(e.Type),
 			Video:               e.Video,
 			Image:               e.Image,
+			Description:         e.Description,
+			Technique:           e.Technique,
+			Mistake:             e.Mistake,
 		})
 	}
 
