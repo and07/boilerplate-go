@@ -395,6 +395,10 @@ func (t *treningFacade) ListExerciseDefault(ctx context.Context, request *ListEx
 	return
 }
 
+func (t *treningFacade) UpdateTreningExercises(ctx context.Context, request *UpdateTreningExercisesRequest) (response *UpdateTreningExercisesResponse, err error) {
+	return
+}
+
 func (t *treningFacade) userID(ctx context.Context) (string, error) {
 	token, isExist := t.extractor.ExtractGRPC(ctx)
 	if !isExist {

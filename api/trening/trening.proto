@@ -162,6 +162,15 @@ message UpdateTreningStatusResponse{
     string message = 2;
 }
 
+message UpdateTreningExercisesRequest{
+    repeated Exercise exercises = 1; 
+    string uid = 2;
+}
+message UpdateTreningExercisesResponse{
+    bool status = 1;
+    string message = 2;
+}
+
 enum ExerciseType {
     arms = 0;
     legs = 1;
@@ -255,6 +264,13 @@ service TreningService {
     rpc UpdateTreningStatus(UpdateTreningStatusRequest) returns (UpdateTreningStatusResponse) {
         option (google.api.http) = {
             put: "/user/trening/status"
+            body: "*"
+        };
+    }
+
+    rpc UpdateTreningExercises(UpdateTreningExercisesRequest) returns (UpdateTreningExercisesResponse) {
+        option (google.api.http) = {
+            put: "/user/trening/exercises"
             body: "*"
         };
     }

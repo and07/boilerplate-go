@@ -7,11 +7,11 @@ import (
 	fmt "fmt"
 	math "math"
 	proto "github.com/golang/protobuf/proto"
+	_ "google.golang.org/genproto/googleapis/api/annotations"
+	_ "github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2/options"
 	_ "github.com/mwitkow/go-proto-validators"
 	_ "github.com/golang/protobuf/ptypes/duration"
 	_ "github.com/golang/protobuf/ptypes/timestamp"
-	_ "google.golang.org/genproto/googleapis/api/annotations"
-	_ "github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2/options"
 	regexp "regexp"
 	github_com_mwitkow_go_proto_validators "github.com/mwitkow/go-proto-validators"
 )
@@ -110,6 +110,19 @@ func (this *UpdateTreningStatusRequest) Validate() error {
 	return nil
 }
 func (this *UpdateTreningStatusResponse) Validate() error {
+	return nil
+}
+func (this *UpdateTreningExercisesRequest) Validate() error {
+	for _, item := range this.Exercises {
+		if item != nil {
+			if err := github_com_mwitkow_go_proto_validators.CallValidatorIfExists(item); err != nil {
+				return github_com_mwitkow_go_proto_validators.FieldError("Exercises", err)
+			}
+		}
+	}
+	return nil
+}
+func (this *UpdateTreningExercisesResponse) Validate() error {
 	return nil
 }
 
