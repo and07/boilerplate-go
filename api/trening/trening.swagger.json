@@ -525,6 +525,15 @@
         },
         "video": {
           "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "technique": {
+          "type": "string"
+        },
+        "mistake": {
+          "type": "string"
         }
       }
     },
@@ -642,6 +651,10 @@
         },
         "status": {
           "$ref": "#/definitions/treningStatusTrening"
+        },
+        "createdat": {
+          "type": "string",
+          "format": "date-time"
         }
       }
     },

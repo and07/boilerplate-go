@@ -7,6 +7,7 @@ import "google/api/annotations.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
 import "third_party/mwitkow/go-proto-validators/validator.proto";
 import "google/protobuf/duration.proto";
+import "google/protobuf/timestamp.proto";
 
 option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
   info: {
@@ -119,6 +120,7 @@ message Trening{
     repeated Exercise exercises = 3;
     string uid = 4;
     StatusTrening status = 5;
+    google.protobuf.Timestamp createdat = 6;
 }
 
 message CreateTreningRequest {
@@ -176,6 +178,9 @@ message Exercise {
     string uid = 8;
     string image = 9;
     string video = 10;
+    string description = 11;
+    string technique = 12;
+    string mistake = 13;
 }
 
 message CreateExerciseRequest {
