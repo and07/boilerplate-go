@@ -36,6 +36,9 @@ type Exercise struct {
 	Type                int32         `json:"type,omitempty" db:"type"`
 	Image               string        `json:"image,omitempty" db:"image"`
 	Video               string        `json:"video,omitempty" db:"video"`
+	Description         string        `json:"description,omitempty" db:"description"`
+	Technique           string        `json:"technique,omitempty" db:"technique"`
+	Mistake             string        `json:"mistake,omitempty" db:"mistake"`
 	CreatedAt           time.Time     `json:"createdat" db:"createdat"`
 	UpdatedAt           time.Time     `json:"updatedat" db:"updatedat"`
 }

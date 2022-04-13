@@ -107,6 +107,9 @@ func (s *service) CreateTrening(ctx context.Context, request *models.CreateTreni
 			Type:                int32(e.Type),
 			Image:               e.Image,
 			Video:               e.Video,
+			Description:         e.Description,
+			Technique:           e.Technique,
+			Mistake:             e.Mistake,
 			CreatedAt:           time.Now(),
 			UID:                 uuid.NewV4().String(),
 		})
@@ -157,6 +160,9 @@ func (s *service) ListTrening(ctx context.Context, request *models.ListTreningRe
 				Type:                models.ExerciseType(e.Type),
 				Image:               e.Image,
 				Video:               e.Video,
+				Description:         e.Description,
+				Technique:           e.Technique,
+				Mistake:             e.Mistake,
 				UID:                 e.UID,
 			})
 		}
@@ -227,6 +233,9 @@ func (s *service) DetailTrening(ctx context.Context, request *models.DetailTreni
 			Type:                models.ExerciseType(e.Type),
 			Image:               e.Image,
 			Video:               e.Video,
+			Description:         e.Description,
+			Technique:           e.Technique,
+			Mistake:             e.Mistake,
 			UID:                 e.UID,
 		})
 	}

@@ -58,6 +58,9 @@ type Exercise struct {
 	UID                 string        `json:"uid,omitempty"`
 	Image               string        `json:"image,omitempty"`
 	Video               string        `json:"video,omitempty"`
+	Description         string        `json:"description,omitempty"`
+	Technique           string        `json:"technique,omitempty"`
+	Mistake             string        `json:"mistake,omitempty"`
 }
 type CreateTreningRequest struct {
 	Name      string        `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
