@@ -99,7 +99,7 @@ func main() {
 	}
 
 	srv := serv.New(ctx,
-		serv.WithPublicPort(cfg.PortGrpcGateway),
+		serv.WithPublicPort(cfg.Port),
 		serv.WithDebugPort(cfg.PortDebug),
 		serv.WithGRPC(ctx, cfg, hw, bc, ts),
 		serv.WithSwaggerUI(true),
