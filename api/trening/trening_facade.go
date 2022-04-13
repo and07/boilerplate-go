@@ -192,6 +192,7 @@ func (t *treningFacade) ListTrening(ctx context.Context, request *ListTreningReq
 			Name:      t.Name,
 			Interval:  durationpb.New(t.Interval * time.Second),
 			Exercises: exercises,
+			Image:     t.Image,
 		})
 	}
 
@@ -246,6 +247,7 @@ func (t *treningFacade) DetailTrening(ctx context.Context, request *DetailTrenin
 			Name:      res.Data.Name,
 			Interval:  durationpb.New(res.Data.Interval * time.Second),
 			Exercises: exercises,
+			Image:     res.Data.Image,
 		},
 	}
 

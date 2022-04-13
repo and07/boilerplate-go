@@ -121,6 +121,7 @@ message Trening{
     string uid = 4;
     StatusTrening status = 5;
     google.protobuf.Timestamp createdat = 6;
+    string image = 7;
 }
 
 message CreateTreningRequest {

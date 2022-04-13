@@ -655,6 +655,9 @@
         "createdat": {
           "type": "string",
           "format": "date-time"
+        },
+        "image": {
+          "type": "string"
         }
       }
     },

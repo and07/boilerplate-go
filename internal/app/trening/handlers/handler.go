@@ -2,12 +2,17 @@ package handlers
 
 import (
 	"context"
+	"math/rand"
 	"time"
 
 	"github.com/and07/boilerplate-go/internal/app/trening/models"
 	"github.com/and07/boilerplate-go/pkg/data"
 	uuid "github.com/satori/go.uuid"
 )
+
+func init() {
+	rand.Seed(time.Now().UnixNano())
+}
 
 // TreningHandler ...
 type TreningHandler interface {
@@ -137,7 +142,11 @@ func (s *service) ListTrening(ctx context.Context, request *models.ListTreningRe
 	for _, t := range res {
 
 		var exercises []*models.Exercise
+		var imagesExercises []string
 		for _, e := range t.Exercises {
+			if e.Image != "" {
+				imagesExercises = append(imagesExercises, e.Image)
+			}
 			exercises = append(exercises, &models.Exercise{
 				Name:                e.Name,
 				Duration:            e.Duration,
@@ -152,12 +161,19 @@ func (s *service) ListTrening(ctx context.Context, request *models.ListTreningRe
 			})
 		}
 
+		var image string
+		if len(imagesExercises) > 0 {
+			index := random(0, len(imagesExercises))
+			image = imagesExercises[index]
+		}
+
 		trenings = append(trenings, &models.Trening{
 			UID:       t.UID,
 			Name:      t.Name,
 			Interval:  t.Interval,
 			Exercises: exercises,
 			CreatedAt: t.CreatedAt,
+			Image:     image,
 		})
 	}
 
@@ -194,7 +210,13 @@ func (s *service) DetailTrening(ctx context.Context, request *models.DetailTreni
 	}
 
 	var exercises []*models.Exercise
+	var imagesExercises []string
 	for _, e := range res.Exercises {
+
+		if e.Image != "" {
+			imagesExercises = append(imagesExercises, e.Image)
+		}
+
 		exercises = append(exercises, &models.Exercise{
 			Name:                e.Name,
 			Duration:            e.Duration,
@@ -209,6 +231,12 @@ func (s *service) DetailTrening(ctx context.Context, request *models.DetailTreni
 		})
 	}
 
+	var image string
+	if len(imagesExercises) > 0 {
+		index := random(0, len(imagesExercises))
+		image = imagesExercises[index]
+	}
+
 	response = &models.DetailTreningResponse{
 		Status: true,
 		Data: &models.Trening{
@@ -217,6 +245,7 @@ func (s *service) DetailTrening(ctx context.Context, request *models.DetailTreni
 			Interval:  res.Interval,
 			Exercises: exercises,
 			CreatedAt: res.CreatedAt,
+			Image:     image,
 		},
 	}
 
@@ -276,6 +305,11 @@ func (s *service) ListExercise(ctx context.Context, request *models.ListExercise
 
 func (s *service) DetailExercise(ctx context.Context, request *models.DetailExerciseRequest) (response *models.DetailExerciseResponse, err error) {
 	return
+}
+
+func random(min, max int) int {
+	rand.Seed(time.Now().UTC().UnixNano())
+	return rand.Intn(max-min) + min
 }
 
 // NewTreningHandler ...
