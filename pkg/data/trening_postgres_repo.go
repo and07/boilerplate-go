@@ -161,8 +161,11 @@ func (repo *treningPostgresRepository) DetailTrening(ctx context.Context, userID
 
 // UpdateTreningStatus updates the status of the given trening
 func (repo *treningPostgresRepository) UpdateTreningStatus(ctx context.Context, trening *Trening) error {
-	trening.UpdatedAt = time.Now()
+	if _, err := repo.db.ExecContext(ctx, "update trening set status = 6, updatedat = now() where uid in (select uid from trening where status = 2)"); err != nil {
+		return err
+	}
 
+	trening.UpdatedAt = time.Now()
 	query := "update trening set status = $1, updatedat = $2 where uid = $3"
 	if _, err := repo.db.ExecContext(ctx, query, trening.Status, trening.UpdatedAt, trening.UID); err != nil {
 		return err
