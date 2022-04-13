@@ -102,6 +102,7 @@ type Trening struct {
 	Name      string        `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
 	Interval  time.Duration `protobuf:"bytes,2,opt,name=interval,proto3" json:"interval,omitempty"`
 	Exercises []*Exercise   `protobuf:"bytes,3,rep,name=exercises,proto3" json:"exercises,omitempty"`
+	CreatedAt time.Time     `json:"createdat" db:"createdat"`
 }
 type ListTreningResponse struct {
 	Status  bool       `protobuf:"varint,1,opt,name=status,proto3" json:"status,omitempty"`
