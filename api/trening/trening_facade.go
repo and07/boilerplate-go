@@ -125,6 +125,7 @@ func (t *treningFacade) CreateTrening(ctx context.Context, request *CreateTrenin
 			Description:         e.Description,
 			Technique:           e.Technique,
 			Mistake:             e.Mistake,
+			Weight:              e.Weight,
 		})
 	}
 
@@ -190,6 +191,7 @@ func (t *treningFacade) ListTrening(ctx context.Context, request *ListTreningReq
 				Description:         e.Description,
 				Technique:           e.Technique,
 				Mistake:             e.Mistake,
+				Weight:              e.Weight,
 			})
 		}
 
@@ -246,6 +248,7 @@ func (t *treningFacade) DetailTrening(ctx context.Context, request *DetailTrenin
 			Description:         e.Description,
 			Technique:           e.Technique,
 			Mistake:             e.Mistake,
+			Weight:              e.Weight,
 		})
 	}
 
@@ -356,6 +359,7 @@ func (t *treningFacade) ListExercise(ctx context.Context, request *ListExerciseR
 			NumberOfSets:        e.NumberOfSets,
 			NumberOfRepetitions: e.NumberOfRepetitions,
 			Type:                ExerciseType(e.Type),
+			Weight:              e.Weight,
 		}
 	}
 
@@ -429,6 +433,7 @@ func (t *treningFacade) UpdateTreningExercises(ctx context.Context, request *Upd
 			Description:         e.Description,
 			Technique:           e.Technique,
 			Mistake:             e.Mistake,
+			Weight:              e.Weight,
 		})
 	}
 

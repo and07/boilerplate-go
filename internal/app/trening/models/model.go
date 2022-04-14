@@ -61,6 +61,7 @@ type Exercise struct {
 	Description         string        `json:"description,omitempty"`
 	Technique           string        `json:"technique,omitempty"`
 	Mistake             string        `json:"mistake,omitempty"`
+	Weight              int32         `json:"weight,omitempty"`
 }
 type CreateTreningRequest struct {
 	Name      string        `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`

@@ -111,6 +111,7 @@ func (s *service) CreateTrening(ctx context.Context, request *models.CreateTreni
 			Description:         e.Description,
 			Technique:           e.Technique,
 			Mistake:             e.Mistake,
+			Weight:              e.Weight,
 			CreatedAt:           time.Now(),
 			UID:                 uuid.NewV4().String(),
 		})
@@ -164,6 +165,7 @@ func (s *service) ListTrening(ctx context.Context, request *models.ListTreningRe
 				Description:         e.Description,
 				Technique:           e.Technique,
 				Mistake:             e.Mistake,
+				Weight:              e.Weight,
 				UID:                 e.UID,
 			})
 		}
@@ -226,6 +228,7 @@ func (s *service) UpdateTreningExercises(ctx context.Context, request *models.Up
 			Technique:           e.Technique,
 			Mistake:             e.Mistake,
 			UID:                 e.UID,
+			Weight:              e.Weight,
 		})
 	}
 
@@ -273,6 +276,7 @@ func (s *service) DetailTrening(ctx context.Context, request *models.DetailTreni
 			Technique:           e.Technique,
 			Mistake:             e.Mistake,
 			UID:                 e.UID,
+			Weight:              e.Weight,
 		})
 	}
 
