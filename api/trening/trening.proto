@@ -191,6 +191,7 @@ message Exercise {
     string description = 11;
     string technique = 12;
     string mistake = 13;
+    int32 weight = 14;
 }
 
 message CreateExerciseRequest {

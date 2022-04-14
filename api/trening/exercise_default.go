@@ -23,6 +23,7 @@ var exerciseDefault = []*Exercise{
 		Lift the dumbbells ahead
 		Lower the dumbbells`,
 		Mistake: "Don’t lift the dumbbells too high",
+		Weight:  5000,
 	},
 	{
 		Name:                "Exercise2",
@@ -40,6 +41,7 @@ var exerciseDefault = []*Exercise{
 		Lift the dumbbells ahead
 		Lower the dumbbells`,
 		Mistake: "Don’t lift the dumbbells too high",
+		Weight:  5000,
 	},
 	{
 		Name:                "Exercise3",
@@ -57,6 +59,7 @@ var exerciseDefault = []*Exercise{
 		Lower the dumbbells`,
 		Mistake: "Don’t lift the dumbbells too high",
 		Image:   "https://filzor.ru/wp-content/uploads/2021/07/685dcbc62da32d989482066ebc60de3f-768x401.jpg",
+		Weight:  0,
 	},
 	{
 		Name:                "Exercise4",
@@ -74,6 +77,7 @@ var exerciseDefault = []*Exercise{
 		Lift the dumbbells ahead
 		Lower the dumbbells`,
 		Mistake: "Don’t lift the dumbbells too high",
+		Weight:  5000,
 	},
 	{
 		Name:                "Exercise5",
@@ -91,6 +95,7 @@ var exerciseDefault = []*Exercise{
 		Lift the dumbbells ahead
 		Lower the dumbbells`,
 		Mistake: "Don’t lift the dumbbells too high",
+		Weight:  0,
 	},
 	{
 		Name:                "Exercise6",
@@ -108,6 +113,7 @@ var exerciseDefault = []*Exercise{
 		Lower the dumbbells`,
 		Mistake: "Don’t lift the dumbbells too high",
 		Image:   "https://cdn-st1.rtr-vesti.ru/vh/pictures/xw/317/436/2.jpg",
+		Weight:  5000,
 	},
 	{
 		Name:                "Exercise7",
@@ -125,5 +131,6 @@ var exerciseDefault = []*Exercise{
 		Lift the dumbbells ahead
 		Lower the dumbbells`,
 		Mistake: "Don’t lift the dumbbells too high",
+		Weight:  0,
 	},
 }

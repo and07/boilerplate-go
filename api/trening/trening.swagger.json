@@ -566,6 +566,10 @@
         },
         "mistake": {
           "type": "string"
+        },
+        "weight": {
+          "type": "integer",
+          "format": "int32"
         }
       }
     },
