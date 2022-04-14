@@ -405,6 +405,49 @@ func (t *treningFacade) ListExerciseDefault(ctx context.Context, request *ListEx
 }
 
 func (t *treningFacade) UpdateTreningExercises(ctx context.Context, request *UpdateTreningExercisesRequest) (response *UpdateTreningExercisesResponse, err error) {
+	userID, err := t.userID(ctx)
+	if err != nil {
+		response = &UpdateTreningExercisesResponse{
+			Status:  false,
+			Message: err.Error(),
+		}
+		return
+	}
+
+	var exercises []*models.Exercise
+	for _, e := range request.Exercises {
+		exercises = append(exercises, &models.Exercise{
+			Name:                e.Name,
+			Duration:            e.Duration.AsDuration(),
+			Relax:               e.Relax.AsDuration(),
+			Count:               e.Count,
+			NumberOfSets:        e.NumberOfSets,
+			NumberOfRepetitions: e.NumberOfRepetitions,
+			Type:                models.ExerciseType(e.Type),
+			Image:               e.Image,
+			Video:               e.Video,
+			Description:         e.Description,
+			Technique:           e.Technique,
+			Mistake:             e.Mistake,
+		})
+	}
+
+	res, err := t.treningHandler.UpdateTreningExercises(ctx, &models.UpdateTreningExercisesRequest{
+		UserID:    userID,
+		Exercises: exercises,
+		UID:       request.Uid,
+	})
+	if err != nil {
+		response = &UpdateTreningExercisesResponse{
+			Status:  false,
+			Message: err.Error(),
+		}
+		return
+	}
+
+	response = &UpdateTreningExercisesResponse{
+		Status: res.Status,
+	}
 	return
 }
 
