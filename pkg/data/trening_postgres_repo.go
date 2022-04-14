@@ -20,6 +20,7 @@ type TreningRepository interface {
 	ListTrening(ctx context.Context, userID string, status int) (res []Trening, err error)
 	UpdateTreningStatus(ctx context.Context, trening *Trening) error
 	DetailTrening(ctx context.Context, userID string, uid string) (res Trening, err error)
+	UpdateTreningExercises(ctx context.Context, trening *Trening) error
 }
 
 type treningPostgresRepository struct {
@@ -170,5 +171,15 @@ func (repo *treningPostgresRepository) UpdateTreningStatus(ctx context.Context, 
 	if _, err := repo.db.ExecContext(ctx, query, trening.Status, trening.UpdatedAt, trening.UID); err != nil {
 		return err
 	}
+	return nil
+}
+
+func (repo *treningPostgresRepository) UpdateTreningExercises(ctx context.Context, trening *Trening) error {
+	trening.UpdatedAt = time.Now()
+	query := "update trening set exercises = $1, updatedat = $2 where uid = $3"
+	if _, err := repo.db.ExecContext(ctx, query, trening.Exercises, trening.UpdatedAt, trening.UID); err != nil {
+		return err
+	}
+
 	return nil
 }

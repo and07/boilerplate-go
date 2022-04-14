@@ -23,6 +23,7 @@ type TreningHandler interface {
 	ListTrening(ctx context.Context, request *models.ListTreningRequest) (response *models.ListTreningResponse, err error)
 	DetailTrening(ctx context.Context, request *models.DetailTreningRequest) (response *models.DetailTreningResponse, err error)
 	UpdateTreningStatus(ctx context.Context, request *models.UpdateTreningStatusRequest) (response *models.UpdateTreningStatusResponse, err error)
+	UpdateTreningExercises(ctx context.Context, request *models.UpdateTreningExercisesRequest) (response *models.UpdateTreningExercisesResponse, err error)
 
 	CreateExercise(ctx context.Context, request *models.CreateExerciseRequest) (response *models.CreateExerciseResponse, err error)
 	ListExercise(ctx context.Context, request *models.ListExerciseRequest) (response *models.ListExerciseResponse, err error)
@@ -201,6 +202,41 @@ func (s *service) UpdateTreningStatus(ctx context.Context, request *models.Updat
 	s.logger.Debug("request", request)
 
 	response = &models.UpdateTreningStatusResponse{
+		Status: true,
+	}
+
+	return
+}
+
+func (s *service) UpdateTreningExercises(ctx context.Context, request *models.UpdateTreningExercisesRequest) (response *models.UpdateTreningExercisesResponse, err error) {
+
+	var exercises data.ExerciseSlice
+	for _, e := range request.Exercises {
+		exercises = append(exercises, data.Exercise{
+			Name:                e.Name,
+			Duration:            e.Duration,
+			Relax:               e.Relax,
+			Count:               e.Count,
+			NumberOfSets:        e.NumberOfSets,
+			NumberOfRepetitions: e.NumberOfRepetitions,
+			Type:                int32(e.Type),
+			Image:               e.Image,
+			Video:               e.Video,
+			Description:         e.Description,
+			Technique:           e.Technique,
+			Mistake:             e.Mistake,
+			UID:                 e.UID,
+		})
+	}
+
+	if err = s.repo.UpdateTreningExercises(ctx, &data.Trening{UID: request.UID, UserID: request.UserID, Exercises: exercises}); err != nil {
+		s.logger.Error("unable to update trening exercises to database", "error", err)
+		return nil, err
+	}
+
+	s.logger.Debug("request", request)
+
+	response = &models.UpdateTreningExercisesResponse{
 		Status: true,
 	}
 
