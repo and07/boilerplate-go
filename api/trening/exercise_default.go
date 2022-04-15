@@ -10,7 +10,7 @@ var exerciseDefault = []*Exercise{
 	{
 		Name:                "Exercise1",
 		Duration:            durationpb.New(time.Duration(20) * time.Second),
-		Relax:               durationpb.New(time.Duration(20) * time.Second),
+		Relax:               durationpb.New(time.Duration(2) * time.Second),
 		Count:               10,
 		NumberOfSets:        3,
 		NumberOfRepetitions: 15,
@@ -28,7 +28,7 @@ var exerciseDefault = []*Exercise{
 	{
 		Name:                "Exercise2",
 		Duration:            durationpb.New(time.Duration(20) * time.Second),
-		Relax:               durationpb.New(time.Duration(20) * time.Second),
+		Relax:               durationpb.New(time.Duration(2) * time.Second),
 		Count:               10,
 		NumberOfSets:        3,
 		NumberOfRepetitions: 15,
@@ -46,7 +46,7 @@ var exerciseDefault = []*Exercise{
 	{
 		Name:                "Exercise3",
 		Duration:            durationpb.New(time.Duration(20) * time.Second),
-		Relax:               durationpb.New(time.Duration(20) * time.Second),
+		Relax:               durationpb.New(time.Duration(2) * time.Second),
 		Count:               10,
 		NumberOfSets:        3,
 		NumberOfRepetitions: 15,
@@ -64,7 +64,7 @@ var exerciseDefault = []*Exercise{
 	{
 		Name:                "Exercise4",
 		Duration:            durationpb.New(time.Duration(20) * time.Second),
-		Relax:               durationpb.New(time.Duration(20) * time.Second),
+		Relax:               durationpb.New(time.Duration(2) * time.Second),
 		Count:               10,
 		NumberOfSets:        3,
 		NumberOfRepetitions: 15,
@@ -82,7 +82,7 @@ var exerciseDefault = []*Exercise{
 	{
 		Name:                "Exercise5",
 		Duration:            durationpb.New(time.Duration(20) * time.Second),
-		Relax:               durationpb.New(time.Duration(20) * time.Second),
+		Relax:               durationpb.New(time.Duration(2) * time.Second),
 		Count:               10,
 		NumberOfSets:        3,
 		NumberOfRepetitions: 15,
@@ -100,7 +100,7 @@ var exerciseDefault = []*Exercise{
 	{
 		Name:                "Exercise6",
 		Duration:            durationpb.New(time.Duration(20) * time.Second),
-		Relax:               durationpb.New(time.Duration(20) * time.Second),
+		Relax:               durationpb.New(time.Duration(2) * time.Second),
 		Count:               10,
 		NumberOfSets:        3,
 		NumberOfRepetitions: 15,
@@ -118,7 +118,7 @@ var exerciseDefault = []*Exercise{
 	{
 		Name:                "Exercise7",
 		Duration:            durationpb.New(time.Duration(20) * time.Second),
-		Relax:               durationpb.New(time.Duration(20) * time.Second),
+		Relax:               durationpb.New(time.Duration(2) * time.Second),
 		Count:               10,
 		NumberOfSets:        3,
 		NumberOfRepetitions: 15,
