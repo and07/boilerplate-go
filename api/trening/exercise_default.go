@@ -16,7 +16,7 @@ var exerciseDefault = []*Exercise{
 		NumberOfRepetitions: 15,
 		Type:                ExerciseType_other,
 		Image:               "https://fitseven.ru/wp-content/uploads/2020/07/uprazhneniya-na-press-velosiped.jpg",
-		Description:         "bla bla bla bla bla blabla bla bla bla bla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla bla",
+		Description:         "la blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla bla",
 		Technique: `
 		Stand with your hands aside.
 		Pick up dumbbells.
@@ -34,11 +34,9 @@ var exerciseDefault = []*Exercise{
 		NumberOfRepetitions: 15,
 		Type:                ExerciseType_arms,
 		Image:               "https://fitseven.ru/wp-content/uploads/2020/07/uprazhneniya-na-press-skruchivaniya.jpg",
-		Description:         "bla bla bla bla bla blabla bla bla bla bla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla bla",
+		Description:         "bla bla bla bla bla blabla bla bla bla bla babla bla",
 		Technique: `
 		Stand with your hands aside.
-		Pick up dumbbells.
-		Lift the dumbbells ahead
 		Lower the dumbbells`,
 		Mistake: "Don’t lift the dumbbells too high",
 		Weight:  5000,
@@ -57,9 +55,8 @@ var exerciseDefault = []*Exercise{
 		Pick up dumbbells.
 		Lift the dumbbells ahead
 		Lower the dumbbells`,
-		Mistake: "Don’t lift the dumbbells too high",
-		Image:   "https://filzor.ru/wp-content/uploads/2021/07/685dcbc62da32d989482066ebc60de3f-768x401.jpg",
-		Weight:  0,
+		Image:  "https://filzor.ru/wp-content/uploads/2021/07/685dcbc62da32d989482066ebc60de3f-768x401.jpg",
+		Weight: 0,
 	},
 	{
 		Name:                "Exercise4",
@@ -70,14 +67,9 @@ var exerciseDefault = []*Exercise{
 		NumberOfRepetitions: 15,
 		Type:                ExerciseType_legs,
 		Image:               "https://fitseven.ru/wp-content/uploads/2020/07/uprazhneniya-na-press-planka.jpg",
-		Description:         "bla bla bla bla bla blabla bla bla bla bla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla bla",
-		Technique: `
-		Stand with your hands aside.
-		Pick up dumbbells.
-		Lift the dumbbells ahead
-		Lower the dumbbells`,
-		Mistake: "Don’t lift the dumbbells too high",
-		Weight:  5000,
+		Description:         "b blabla blabla bla",
+		Mistake:             "Don’t lift the dumbbells too high",
+		Weight:              5000,
 	},
 	{
 		Name:                "Exercise5",
@@ -88,7 +80,7 @@ var exerciseDefault = []*Exercise{
 		NumberOfRepetitions: 15,
 		Type:                ExerciseType_other,
 		Image:               "https://fitseven.ru/wp-content/uploads/2020/07/uprazhneniya-na-press-planka-na-rukah.jpg",
-		Description:         "bla bla bla bla bla blabla bla bla bla bla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla bla",
+		Description:         "bla bla bla bla bla blabla abla blabla blabla bla",
 		Technique: `
 		Stand with your hands aside.
 		Pick up dumbbells.
@@ -108,7 +100,6 @@ var exerciseDefault = []*Exercise{
 		Description:         "bla bla bla bla bla blabla bla bla bla bla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla bla",
 		Technique: `
 		Stand with your hands aside.
-		Pick up dumbbells.
 		Lift the dumbbells ahead
 		Lower the dumbbells`,
 		Mistake: "Don’t lift the dumbbells too high",
@@ -124,11 +115,9 @@ var exerciseDefault = []*Exercise{
 		NumberOfRepetitions: 15,
 		Type:                ExerciseType_legs,
 		Image:               "https://fitseven.ru/wp-content/uploads/2020/07/uprazhneniya-na-press-podyem-nog.jpg",
-		Description:         "bla bla bla bla bla blabla bla bla bla bla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla bla",
+		Description:         "bla bla bla bla bla blabla blabla blabla blabla blabla blabla blabla blabla bla",
 		Technique: `
 		Stand with your hands aside.
-		Pick up dumbbells.
-		Lift the dumbbells ahead
 		Lower the dumbbells`,
 		Mistake: "Don’t lift the dumbbells too high",
 		Weight:  0,
