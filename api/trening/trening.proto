@@ -192,6 +192,8 @@ message Exercise {
     string technique = 12;
     string mistake = 13;
     int32 weight = 14;
+    string category = 15;
+    string subcategory = 16;
 }
 
 message CreateExerciseRequest {

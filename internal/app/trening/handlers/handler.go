@@ -216,8 +216,8 @@ func (s *service) UpdateTreningExercises(ctx context.Context, request *models.Up
 	for _, e := range request.Exercises {
 		exercises = append(exercises, data.Exercise{
 			Name:                e.Name,
-			Duration:            e.Duration,
-			Relax:               e.Relax,
+			Duration:            e.Duration / time.Second,
+			Relax:               e.Relax / time.Second,
 			Count:               e.Count,
 			NumberOfSets:        e.NumberOfSets,
 			NumberOfRepetitions: e.NumberOfRepetitions,

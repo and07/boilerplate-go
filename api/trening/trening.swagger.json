@@ -570,6 +570,12 @@
         "weight": {
           "type": "integer",
           "format": "int32"
+        },
+        "category": {
+          "type": "string"
+        },
+        "subcategory": {
+          "type": "string"
         }
       }
     },
