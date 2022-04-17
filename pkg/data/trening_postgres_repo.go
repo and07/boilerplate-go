@@ -64,6 +64,7 @@ func (repo *treningPostgresRepository) CreateUserParams(ctx context.Context, use
 	values 
 		($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13);
 	`
+	repo.logger.Info("CreateUserParams ", query, userParams.UID)
 	_, err := repo.db.ExecContext(ctx, query, userParams.UID, userParams.UserID, userParams.UserName, userParams.Weight, userParams.Height, userParams.Age, userParams.Gender, userParams.Activity, userParams.Diet, userParams.DesiredWeight, userParams.Eat, userParams.CreatedAt, userParams.UpdatedAt)
 	return err
 }
@@ -73,6 +74,7 @@ func (repo *treningPostgresRepository) GetUserParamsByID(ctx context.Context, us
 	repo.logger.Debug("querying for user params with user_id", userID)
 	query := "select * from trening_users_params where user_id = $1"
 	var userParams ParametersUser
+	repo.logger.Info("GetUserParamsByID ", query, userID)
 	if err := repo.db.GetContext(ctx, &userParams, query, userID); err != nil {
 		return nil, err
 	}
@@ -92,6 +94,7 @@ func (repo *treningPostgresRepository) CreateExercise(ctx context.Context, exerc
 	values 
 		($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11);
 	`
+	repo.logger.Info("CreateExercise ", query, exercise.UID)
 	_, err := repo.db.ExecContext(ctx, query, exercise.UID, exercise.UserID, exercise.Name, exercise.Duration, exercise.Relax, exercise.Count, exercise.NumberOfSets, exercise.NumberOfRepetitions, exercise.Type, exercise.CreatedAt, exercise.UpdatedAt)
 	return err
 }
@@ -100,6 +103,7 @@ func (repo *treningPostgresRepository) ListExercise(ctx context.Context, userID 
 	repo.logger.Info("list exercise for user ", userID)
 	query := `select * from trening_exercise where user_id = $1`
 	res = []Exercise{}
+	repo.logger.Info("ListExercise ", query, userID)
 	err = repo.db.Select(&res, query, userID)
 	if err != nil {
 		repo.logger.Error("ListExercise repo.db.Select", err)
@@ -162,12 +166,13 @@ func (repo *treningPostgresRepository) DetailTrening(ctx context.Context, userID
 
 // UpdateTreningStatus updates the status of the given trening
 func (repo *treningPostgresRepository) UpdateTreningStatus(ctx context.Context, trening *Trening) error {
-	if _, err := repo.db.ExecContext(ctx, "update trening set status = 6, updatedat = now() where uid in (select uid from trening where status = 2)"); err != nil {
+	if _, err := repo.db.ExecContext(ctx, "update trening set status = 6, updatedat = now() where uid in (select uid from trening where uid = $1 and status = 2)", trening.UID); err != nil {
 		return err
 	}
 
 	trening.UpdatedAt = time.Now()
 	query := "update trening set status = $1, updatedat = $2 where uid = $3"
+	repo.logger.Debug("UpdateTreningStatus repo.db.ExecContext", query, trening.UID)
 	if _, err := repo.db.ExecContext(ctx, query, trening.Status, trening.UpdatedAt, trening.UID); err != nil {
 		return err
 	}
@@ -177,6 +182,7 @@ func (repo *treningPostgresRepository) UpdateTreningStatus(ctx context.Context, 
 func (repo *treningPostgresRepository) UpdateTreningExercises(ctx context.Context, trening *Trening) error {
 	trening.UpdatedAt = time.Now()
 	query := "update trening set exercises = $1, updatedat = $2 where uid = $3"
+	repo.logger.Debug("UpdateTreningExercises repo.db.ExecContext", query, trening.UID)
 	if _, err := repo.db.ExecContext(ctx, query, trening.Exercises, trening.UpdatedAt, trening.UID); err != nil {
 		return err
 	}
