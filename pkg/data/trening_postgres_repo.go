@@ -14,6 +14,7 @@ type TreningRepository interface {
 	GetUserByID(ctx context.Context, userID string) (*User, error)
 	CreateUserParams(ctx context.Context, userParams *ParametersUser) error
 	GetUserParamsByID(ctx context.Context, userID string) (*ParametersUser, error)
+	UpdateUserParams(ctx context.Context, userParams *ParametersUser) error
 	CreateExercise(ctx context.Context, exercise *Exercise) error
 	ListExercise(ctx context.Context, userID string) (res []Exercise, err error)
 	CreateTrening(ctx context.Context, trening *Trening) error
@@ -66,6 +67,18 @@ func (repo *treningPostgresRepository) CreateUserParams(ctx context.Context, use
 	`
 	repo.logger.Info("CreateUserParams ", query, userParams.UID)
 	_, err := repo.db.ExecContext(ctx, query, userParams.UID, userParams.UserID, userParams.UserName, userParams.Weight, userParams.Height, userParams.Age, userParams.Gender, userParams.Activity, userParams.Diet, userParams.DesiredWeight, userParams.Eat, userParams.CreatedAt, userParams.UpdatedAt)
+	return err
+}
+
+// UpdateUserParams ...
+func (repo *treningPostgresRepository) UpdateUserParams(ctx context.Context, userParams *ParametersUser) error {
+	userParams.UpdatedAt = time.Now()
+
+	repo.logger.Info("creating user params", hclog.Fmt("%#v", userParams))
+	query := `update trening_users_params set  weight =$1, height = $2, age=$3, gender=$4, activity=$5, diet=$6, desired_weight=$7, eat=$8, updatedat=$9 where uid=$10 and user_id=$11;
+	`
+	repo.logger.Info("CreateUserParams ", query, userParams.UID)
+	_, err := repo.db.ExecContext(ctx, query, userParams.Weight, userParams.Height, userParams.Age, userParams.Gender, userParams.Activity, userParams.Diet, userParams.DesiredWeight, userParams.Eat, userParams.UpdatedAt, userParams.UID, userParams.UserID)
 	return err
 }
 

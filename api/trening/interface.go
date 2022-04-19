@@ -13,6 +13,7 @@ type extractor interface {
 type treningHandler interface {
 	CreateParametersUser(ctx context.Context, request *models.CreateParametersUserRequest) (response *models.CreateParametersUserResponse, err error)
 	DetailParametersUser(ctx context.Context, request *models.DetailParametersUserRequest) (response *models.DetailParametersUserResponse, err error)
+	UpdateUserParams(ctx context.Context, request *models.UpdateUserParamsRequest) (response *models.UpdateUserParamsResponse, err error)
 
 	CreateTrening(ctx context.Context, request *models.CreateTreningRequest) (response *models.CreateTreningResponse, err error)
 	ListTrening(ctx context.Context, request *models.ListTreningRequest) (response *models.ListTreningResponse, err error)

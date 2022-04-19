@@ -18,6 +18,7 @@ func init() {
 type TreningHandler interface {
 	CreateParametersUser(ctx context.Context, request *models.CreateParametersUserRequest) (response *models.CreateParametersUserResponse, err error)
 	DetailParametersUser(ctx context.Context, request *models.DetailParametersUserRequest) (response *models.DetailParametersUserResponse, err error)
+	UpdateUserParams(ctx context.Context, request *models.UpdateUserParamsRequest) (response *models.UpdateUserParamsResponse, err error)
 
 	CreateTrening(ctx context.Context, request *models.CreateTreningRequest) (response *models.CreateTreningResponse, err error)
 	ListTrening(ctx context.Context, request *models.ListTreningRequest) (response *models.ListTreningResponse, err error)
@@ -87,6 +88,31 @@ func (s *service) DetailParametersUser(ctx context.Context, request *models.Deta
 			Eat:           userParams.Eat,
 			Username:      userParams.UserName,
 		},
+	}
+
+	return
+}
+
+func (s *service) UpdateUserParams(ctx context.Context, request *models.UpdateUserParamsRequest) (response *models.UpdateUserParamsResponse, err error) {
+
+	if err = s.repo.UpdateUserParams(ctx, &data.ParametersUser{
+		Weight:        request.Weight,
+		Height:        request.Height,
+		Age:           request.Age,
+		Gender:        request.Gender,
+		Activity:      int32(request.Activity),
+		Diet:          int32(request.Diet),
+		DesiredWeight: request.DesiredWeight,
+		Eat:           request.Eat,
+		UserID:        request.UserID,
+		UID:           request.UID,
+	}); err != nil {
+		s.logger.Error("unable to update user params to database", "error", err)
+		return nil, err
+	}
+
+	response = &models.UpdateUserParamsResponse{
+		Status: true,
 	}
 
 	return
