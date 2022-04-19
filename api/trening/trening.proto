@@ -193,7 +193,13 @@ message UpdateTreningExercisesResponse{
 enum ExerciseType {
     arms = 0;
     legs = 1;
-    other = 2;
+    press = 2;
+    back = 3;
+    chest = 4;
+    shoulder = 5;
+    triceps = 6;
+    biceps = 7;
+    other = 8;
 }
 
 message Exercise {

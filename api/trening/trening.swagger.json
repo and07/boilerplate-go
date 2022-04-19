@@ -614,6 +614,12 @@
       "enum": [
         "arms",
         "legs",
+        "press",
+        "back",
+        "chest",
+        "shoulder",
+        "triceps",
+        "biceps",
         "other"
       ],
       "default": "arms"
