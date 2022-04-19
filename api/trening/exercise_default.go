@@ -96,7 +96,7 @@ var exerciseDefault = []*Exercise{
 		Count:               10,
 		NumberOfSets:        3,
 		NumberOfRepetitions: 15,
-		Type:                ExerciseType_arms,
+		Type:                ExerciseType_back,
 		Description:         "bla bla bla bla bla blabla bla bla bla bla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla bla",
 		Technique: `
 		Stand with your hands aside.
