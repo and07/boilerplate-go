@@ -7,11 +7,11 @@ import (
 	fmt "fmt"
 	math "math"
 	proto "github.com/golang/protobuf/proto"
+	_ "github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2/options"
+	_ "github.com/mwitkow/go-proto-validators"
 	_ "github.com/golang/protobuf/ptypes/duration"
 	_ "github.com/golang/protobuf/ptypes/timestamp"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
-	_ "github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2/options"
-	_ "github.com/mwitkow/go-proto-validators"
 	regexp "regexp"
 	github_com_mwitkow_go_proto_validators "github.com/mwitkow/go-proto-validators"
 )
@@ -28,6 +28,12 @@ func (this *CreateParametersUserRequest) Validate() error {
 	return nil
 }
 func (this *CreateParametersUserResponse) Validate() error {
+	return nil
+}
+func (this *UpdateUserParamsRequest) Validate() error {
+	return nil
+}
+func (this *UpdateUserParamsResponse) Validate() error {
 	return nil
 }
 func (this *DetailParametersUserRequest) Validate() error {

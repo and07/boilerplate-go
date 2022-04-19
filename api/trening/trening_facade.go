@@ -99,6 +99,44 @@ func (t *treningFacade) DetailParametersUser(ctx context.Context, request *Detai
 	return
 }
 
+func (t *treningFacade) UpdateUserParams(ctx context.Context, request *UpdateUserParamsRequest) (response *UpdateUserParamsResponse, err error) {
+	userID, err := t.userID(ctx)
+	if err != nil {
+		response = &UpdateUserParamsResponse{
+			Status:  false,
+			Message: err.Error(),
+		}
+		return
+	}
+
+	res, err := t.treningHandler.UpdateUserParams(ctx, &models.UpdateUserParamsRequest{
+		Weight:        request.Weight,
+		Height:        request.Height,
+		Age:           request.Age,
+		Activity:      models.UserActivity(request.Activity),
+		Diet:          models.UserDiet(request.Diet),
+		Eat:           request.Eat,
+		DesiredWeight: request.DesiredWeight,
+		Gender:        request.Gender,
+		UserID:        userID,
+		UID:           request.Uid,
+	})
+	if err != nil {
+		response = &UpdateUserParamsResponse{
+			Status:  false,
+			Message: "can't create user parameters",
+		}
+		return
+	}
+
+	response = &UpdateUserParamsResponse{
+		Status:  res.Status,
+		Message: res.Message,
+	}
+
+	return
+}
+
 func (t *treningFacade) CreateTrening(ctx context.Context, request *CreateTreningRequest) (response *CreateTreningResponse, err error) {
 	userID, err := t.userID(ctx)
 	if err != nil {

@@ -94,6 +94,25 @@ message CreateParametersUserResponse{
    string message = 2;
 }
 
+
+message UpdateUserParamsRequest {
+   int32 weight  = 1;
+   int32 height = 2;
+   int32 age = 3;
+   int32 gender = 4;
+   UserActivity activity = 5;
+   UserDiet diet = 6;
+   int32 desired_weight = 7;
+   int32 eat = 8; 
+   string uid = 9;
+}
+
+
+message UpdateUserParamsResponse{
+   bool status = 1;
+   string message = 2;
+}
+
 message DetailParametersUserRequest{
     string id = 1;
 }
@@ -245,6 +264,12 @@ service TreningService {
     rpc DetailParametersUser(DetailParametersUserRequest) returns (DetailParametersUserResponse) {
         option (google.api.http) = {
             get: "/user/parameters"
+        };
+    }
+    rpc UpdateUserParams(UpdateUserParamsRequest) returns (UpdateUserParamsResponse) {
+        option (google.api.http) = {
+            put: "/user/parameters"
+            body: "*"
         };
     }
 
