@@ -7,11 +7,11 @@ import (
 	fmt "fmt"
 	math "math"
 	proto "github.com/golang/protobuf/proto"
+	_ "github.com/golang/protobuf/ptypes/duration"
+	_ "github.com/golang/protobuf/ptypes/timestamp"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	_ "github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2/options"
 	_ "github.com/mwitkow/go-proto-validators"
-	_ "github.com/golang/protobuf/ptypes/duration"
-	_ "github.com/golang/protobuf/ptypes/timestamp"
 	regexp "regexp"
 	github_com_mwitkow_go_proto_validators "github.com/mwitkow/go-proto-validators"
 )
@@ -60,9 +60,9 @@ func (this *Trening) Validate() error {
 			}
 		}
 	}
-	if this.Createdat != nil {
-		if err := github_com_mwitkow_go_proto_validators.CallValidatorIfExists(this.Createdat); err != nil {
-			return github_com_mwitkow_go_proto_validators.FieldError("Createdat", err)
+	if this.Date != nil {
+		if err := github_com_mwitkow_go_proto_validators.CallValidatorIfExists(this.Date); err != nil {
+			return github_com_mwitkow_go_proto_validators.FieldError("Date", err)
 		}
 	}
 	return nil
@@ -81,6 +81,11 @@ func (this *CreateTreningRequest) Validate() error {
 			if err := github_com_mwitkow_go_proto_validators.CallValidatorIfExists(item); err != nil {
 				return github_com_mwitkow_go_proto_validators.FieldError("Exercises", err)
 			}
+		}
+	}
+	if this.Date != nil {
+		if err := github_com_mwitkow_go_proto_validators.CallValidatorIfExists(this.Date); err != nil {
+			return github_com_mwitkow_go_proto_validators.FieldError("Date", err)
 		}
 	}
 	return nil
@@ -191,5 +196,11 @@ func (this *DetailExerciseResponse) Validate() error {
 			return github_com_mwitkow_go_proto_validators.FieldError("Data", err)
 		}
 	}
+	return nil
+}
+func (this *UploadImageUserRequest) Validate() error {
+	return nil
+}
+func (this *UploadImageUserResponse) Validate() error {
 	return nil
 }

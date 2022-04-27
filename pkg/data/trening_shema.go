@@ -14,6 +14,7 @@ const treningUserParamsSchema = `
 			diet           integer,
 			desired_weight integer,
 			eat            integer,
+			image          Varchar(225),
 			createdat      Timestamp not null,
 			updatedat      Timestamp not null,
 			Primary Key (uid)
@@ -45,6 +46,7 @@ const trening = `
 		interval 				Varchar(36) not null,
 		type 				    integer default 0,
 		status 				    integer default 0,
+		date      		     	Timestamp not null,
 		createdat      			Timestamp not null,
 		updatedat     			Timestamp not null,
 		Primary Key (uid)

@@ -16,6 +16,7 @@ const (
 // Extractor ...
 type Extractor interface {
 	ExtractGRPC(ctx context.Context) (header string, existStatus bool)
+	ExtractHTTP(r *http.Request) (header string, existStatus bool)
 }
 
 type token struct{}

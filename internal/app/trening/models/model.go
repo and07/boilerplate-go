@@ -35,12 +35,24 @@ type UpdateUserParamsRequest struct {
 	UserID        string
 	UID           string
 }
-
 type UpdateUserParamsResponse struct {
 	Status  bool   `protobuf:"varint,1,opt,name=status,proto3" json:"status,omitempty"`
 	Message string `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`
 }
 
+type UpdateUserImageRequest struct {
+	FileName string
+	Image    string
+	UserID   string
+	Body     []byte
+}
+
+type UpdateUserImageResponse struct {
+	Status  bool   `protobuf:"varint,1,opt,name=status,proto3" json:"status,omitempty"`
+	Message string `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`
+	Data    string `protobuf:"bytes,2,opt,name=data,proto3" json:"data,omitempty"`
+	Code    int    `protobuf:"bytes,2,opt,name=code,proto3" json:"code,omitempty"`
+}
 type DetailParametersUserRequest struct {
 	ID     string
 	UserID string
@@ -55,6 +67,8 @@ type ParametersUser struct {
 	DesiredWeight int32        `protobuf:"varint,7,opt,name=desired_weight,json=desiredWeight,proto3" json:"desired_weight,omitempty"`
 	Eat           int32        `protobuf:"varint,8,opt,name=eat,proto3" json:"eat,omitempty"`
 	Username      string       `protobuf:"varint,8,opt,name=username,proto3" json:"username,omitempty"`
+	UID           string
+	Image         string
 }
 
 type DetailParametersUserResponse struct {
@@ -86,6 +100,7 @@ type CreateTreningRequest struct {
 	Interval  time.Duration `protobuf:"bytes,2,opt,name=interval,proto3" json:"interval,omitempty"`
 	Exercises []*Exercise   `protobuf:"bytes,3,rep,name=exercises,proto3" json:"exercises,omitempty"`
 	UserID    string
+	Date      time.Time
 }
 
 type CreateTreningResponse struct {
@@ -134,7 +149,7 @@ type Trening struct {
 	Name      string        `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
 	Interval  time.Duration `protobuf:"bytes,2,opt,name=interval,proto3" json:"interval,omitempty"`
 	Exercises []*Exercise   `protobuf:"bytes,3,rep,name=exercises,proto3" json:"exercises,omitempty"`
-	CreatedAt time.Time     `json:"createdat" db:"createdat"`
+	Date      time.Time     `json:"date" db:"date"`
 	Image     string        `json:"image"`
 }
 type ListTreningResponse struct {

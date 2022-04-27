@@ -60,9 +60,9 @@ func WithPublicPort(portPublicHTTP string) Option {
 }
 
 // WithGRPC ...
-func WithGRPC(ctx context.Context, cfg *configs.Configs, fns ...func(*grpc.Server)) Option {
+func WithGRPC(ctx context.Context, cfg *configs.Configs, handler handler, fns ...func(*grpc.Server)) Option {
 	return func(s *Serv) {
-		s.grpcSrv = g.NewServer(ctx, cfg)
+		s.grpcSrv = g.NewServer(ctx, cfg, handler)
 		go s.grpcSrv.RunGRPC(ctx, fns...)
 	}
 }

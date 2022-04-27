@@ -15,6 +15,7 @@ type TreningRepository interface {
 	CreateUserParams(ctx context.Context, userParams *ParametersUser) error
 	GetUserParamsByID(ctx context.Context, userID string) (*ParametersUser, error)
 	UpdateUserParams(ctx context.Context, userParams *ParametersUser) error
+	UpdateUserImage(ctx context.Context, userParams *ParametersUser) error
 	CreateExercise(ctx context.Context, exercise *Exercise) error
 	ListExercise(ctx context.Context, userID string) (res []Exercise, err error)
 	CreateTrening(ctx context.Context, trening *Trening) error
@@ -74,11 +75,22 @@ func (repo *treningPostgresRepository) CreateUserParams(ctx context.Context, use
 func (repo *treningPostgresRepository) UpdateUserParams(ctx context.Context, userParams *ParametersUser) error {
 	userParams.UpdatedAt = time.Now()
 
-	repo.logger.Info("creating user params", hclog.Fmt("%#v", userParams))
+	repo.logger.Info("update user params", hclog.Fmt("%#v", userParams))
 	query := `update trening_users_params set  weight =$1, height = $2, age=$3, gender=$4, activity=$5, diet=$6, desired_weight=$7, eat=$8, updatedat=$9 where uid=$10 and user_id=$11;
 	`
 	repo.logger.Info("CreateUserParams ", query, userParams.UID)
 	_, err := repo.db.ExecContext(ctx, query, userParams.Weight, userParams.Height, userParams.Age, userParams.Gender, userParams.Activity, userParams.Diet, userParams.DesiredWeight, userParams.Eat, userParams.UpdatedAt, userParams.UID, userParams.UserID)
+	return err
+}
+
+func (repo *treningPostgresRepository) UpdateUserImage(ctx context.Context, userParams *ParametersUser) error {
+	userParams.UpdatedAt = time.Now()
+
+	repo.logger.Info("creating user params image", hclog.Fmt("%#v", userParams))
+	query := `update trening_users_params set image=$1, updatedat=$2 where user_id=$3;
+	`
+	repo.logger.Info("CreateUserParams ", query, userParams.UserID)
+	_, err := repo.db.ExecContext(ctx, query, userParams.Image, userParams.UpdatedAt, userParams.UserID)
 	return err
 }
 
@@ -134,11 +146,11 @@ func (repo *treningPostgresRepository) CreateTrening(ctx context.Context, trenin
 
 	repo.logger.Info("creating trening", hclog.Fmt("%#v", trening))
 	query := `insert into trening 
-		(uid, user_id, name, interval, exercises, createdat, updatedat) 
+		(uid, user_id, name, interval, exercises, status, date, createdat, updatedat) 
 	values 
-		($1, $2, $3, $4, $5, $6, $7);
+		($1, $2, $3, $4, $5, $6, $7, $8, $9);
 	`
-	_, err := repo.db.ExecContext(ctx, query, trening.UID, trening.UserID, trening.Name, trening.Interval, trening.Exercises, trening.CreatedAt, trening.UpdatedAt)
+	_, err := repo.db.ExecContext(ctx, query, trening.UID, trening.UserID, trening.Name, trening.Interval, trening.Exercises, trening.Status, trening.Date, trening.CreatedAt, trening.UpdatedAt)
 	return err
 }
 
@@ -179,14 +191,15 @@ func (repo *treningPostgresRepository) DetailTrening(ctx context.Context, userID
 
 // UpdateTreningStatus updates the status of the given trening
 func (repo *treningPostgresRepository) UpdateTreningStatus(ctx context.Context, trening *Trening) error {
-	if _, err := repo.db.ExecContext(ctx, "update trening set status = 6, updatedat = now() where uid in (select uid from trening where uid = $1 and status = 2)", trening.UID); err != nil {
+	if _, err := repo.db.ExecContext(ctx, "update trening set status = 6, updatedat = now() where uid in (select uid from trening where user_id = $1 and status = 2)", trening.UserID); err != nil {
 		return err
 	}
 
 	trening.UpdatedAt = time.Now()
-	query := "update trening set status = $1, updatedat = $2 where uid = $3"
+	trening.Date = time.Now()
+	query := "update trening set status = $1, updatedat = $2, date = $3 where uid = $4 and user_id = $5"
 	repo.logger.Debug("UpdateTreningStatus repo.db.ExecContext", query, trening.UID)
-	if _, err := repo.db.ExecContext(ctx, query, trening.Status, trening.UpdatedAt, trening.UID); err != nil {
+	if _, err := repo.db.ExecContext(ctx, query, trening.Status, trening.UpdatedAt, trening.Date, trening.UID, trening.UserID); err != nil {
 		return err
 	}
 	return nil

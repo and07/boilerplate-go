@@ -1,6 +1,7 @@
 package data
 
 import (
+	"database/sql"
 	"database/sql/driver"
 	"encoding/json"
 	"errors"
@@ -9,19 +10,20 @@ import (
 
 // ParametersUser ...
 type ParametersUser struct {
-	UID           string    `json:"uid" db:"uid"`
-	UserID        string    `json:"user_id,omitempty" db:"user_id"`
-	UserName      string    `json:"username,omitempty" db:"username"`
-	Weight        int32     `json:"weight,omitempty" db:"weight"`
-	Height        int32     `json:"height,omitempty" db:"height"`
-	Age           int32     `json:"age,omitempty" db:"age"`
-	Gender        int32     `json:"gender,omitempty" db:"gender"`
-	Activity      int32     `json:"activity,omitempty" db:"activity"`
-	Diet          int32     `json:"diet,omitempty" db:"diet"`
-	DesiredWeight int32     `json:"desired_weight,omitempty" db:"desired_weight"`
-	Eat           int32     `json:"eat,omitempty" db:"eat"`
-	CreatedAt     time.Time `json:"createdat" db:"createdat"`
-	UpdatedAt     time.Time `json:"updatedat" db:"updatedat"`
+	UID           string         `json:"uid" db:"uid"`
+	UserID        string         `json:"user_id,omitempty" db:"user_id"`
+	UserName      string         `json:"username,omitempty" db:"username"`
+	Weight        int32          `json:"weight,omitempty" db:"weight"`
+	Height        int32          `json:"height,omitempty" db:"height"`
+	Age           int32          `json:"age,omitempty" db:"age"`
+	Gender        int32          `json:"gender,omitempty" db:"gender"`
+	Activity      int32          `json:"activity,omitempty" db:"activity"`
+	Diet          int32          `json:"diet,omitempty" db:"diet"`
+	DesiredWeight int32          `json:"desired_weight,omitempty" db:"desired_weight"`
+	Eat           int32          `json:"eat,omitempty" db:"eat"`
+	Image         sql.NullString `json:"image,omitempty" db:"image"`
+	CreatedAt     time.Time      `json:"createdat" db:"createdat"`
+	UpdatedAt     time.Time      `json:"updatedat" db:"updatedat"`
 }
 
 type Exercise struct {
@@ -72,6 +74,7 @@ type Trening struct {
 	Interval  time.Duration `json:"interval,omitempty"  db:"interval"`
 	Type      int           `json:"type,omitempty" db:"type"`
 	Status    int           `json:"status,omitempty" db:"status"`
+	Date      time.Time     `json:"date" db:"date"`
 	CreatedAt time.Time     `json:"createdat" db:"createdat"`
 	UpdatedAt time.Time     `json:"updatedat" db:"updatedat"`
 }

@@ -40,10 +40,11 @@ type GRPC struct {
 	grpcSrv *grpc.Server
 	address string
 	cfg     *configs.Configs
+	handler handler
 }
 
 // NewServer ...
-func NewServer(ctx context.Context, cfg *configs.Configs) *GRPC {
+func NewServer(ctx context.Context, cfg *configs.Configs, handler handler) *GRPC {
 	simpleLogger, err := zap.NewDevelopment()
 	if err != nil {
 		os.Exit(1)
@@ -71,6 +72,7 @@ func NewServer(ctx context.Context, cfg *configs.Configs) *GRPC {
 		grpcSrv: server,
 		address: address,
 		cfg:     cfg,
+		handler: handler,
 	}
 }
 
@@ -99,6 +101,10 @@ func (g *GRPC) RegisterEndpoints(ctx context.Context, logger hclog.Logger, Regis
 			UnmarshalOptions: protojson.UnmarshalOptions{},
 		}),
 	)
+
+	// Attachment upload from http/s handled manually
+	mux.HandlePath("POST", "/v1/files", g.handler.BinaryFileUpload)
+
 	opts := []grpc.DialOption{
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 		grpc.WithDefaultCallOptions(grpc.MaxCallRecvMsgSize(50000000)),

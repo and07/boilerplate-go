@@ -7,7 +7,8 @@ go 1.17
 
 require (
 	github.com/ClickHouse/clickhouse-go v1.5.4
-	github.com/caarlos0/env v3.5.0+incompatible
+	github.com/aws/aws-sdk-go v1.44.0
+	github.com/caarlos0/env/v6 v6.9.1
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/go-playground/validator v9.31.0+incompatible
 	github.com/go-redis/redis v6.15.9+incompatible
@@ -67,6 +68,7 @@ require (
 	github.com/golang/glog v1.0.0 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/jcchavezs/porto v0.1.0 // indirect
+	github.com/jmespath/go-jmespath v0.4.0 // indirect
 	github.com/joeshaw/multierror v0.0.0-20140124173710-69b34d4ec901 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect

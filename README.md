@@ -107,6 +107,14 @@ curl -X GET "http://localhost:8843/user/exercises" -H "accept: application/json"
 
 curl -X GET "http://localhost:8843/helloworld" -H "accept: application/json"
 curl -X GET "http://localhost:8843/address/Mxb9a117e772a965a3fddddf83398fd8d71bf57ff6?height=1" -H "accept: application/json"
+
+
+
+curl -X POST -F "attachment=@/Users/ттт/1.png" "http://localhost:8080/v1/files"
+curl -X POST -F "attachment=~/1.png" "http://localhost:8080/user/image"
+
+curl -X POST --data-binary "@/Users/ттт/1.png" "http://localhost:8080/user/image" -H "Content-Type: application/octet-stream"
+
 ```
 
 
@@ -115,4 +123,3 @@ curl -X GET "http://localhost:8843/address/Mxb9a117e772a965a3fddddf83398fd8d71bf
 ```sh
 http://localhost:8888/swaggerui/
 ```
-postgres://chfzqrkywzizio:58ef1839461b82d06330a466a18cb427750efa6d8cf906b0aab32941a40f80ac@ec2-54-228-32-29.eu-west-1.compute.amazonaws.com:5432/d7o4ahj2g0ql8n

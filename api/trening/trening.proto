@@ -8,6 +8,7 @@ import "protoc-gen-openapiv2/options/annotations.proto";
 import "third_party/mwitkow/go-proto-validators/validator.proto";
 import "google/protobuf/duration.proto";
 import "google/protobuf/timestamp.proto";
+//import "google/api/httpbody.proto";
 
 option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
   info: {
@@ -64,6 +65,12 @@ enum UserDiet {
     Low_protein = 3;
 }
 
+enum UserType {
+    USER_TYPE_UNKNOWN = 0;
+    USER_TYPE_ADMIN = 1;
+    USER_TYPE_USER = 2;
+}
+
 message ParametersUser {
   
    int32 weight  = 1;
@@ -75,6 +82,9 @@ message ParametersUser {
    int32 desired_weight = 7;
    int32 eat = 8;
    string username = 9;
+   string uid = 10;
+   string image = 11;
+   UserType type = 12;
 }
 
 message CreateParametersUserRequest {
@@ -139,14 +149,15 @@ message Trening{
     repeated Exercise exercises = 3;
     string uid = 4;
     StatusTrening status = 5;
-    google.protobuf.Timestamp createdat = 6;
+    google.protobuf.Timestamp date = 6;
     string image = 7;
 }
 
 message CreateTreningRequest {
     string name = 1 [(validator.field) = {string_not_empty: true}];
     google.protobuf.Duration interval = 2;
-    repeated Exercise exercises = 3; 
+    repeated Exercise exercises = 3;
+    google.protobuf.Timestamp date = 4;
 }
 message CreateTreningResponse{
     bool status = 1;
@@ -255,6 +266,14 @@ message DetailExerciseResponse{
 }
 
 
+message UploadImageUserRequest {
+  bytes data = 1;
+}
+
+message UploadImageUserResponse {
+    bool status = 1;
+    string message = 2;
+}
 
 service TreningService {
 
@@ -275,6 +294,14 @@ service TreningService {
     rpc UpdateUserParams(UpdateUserParamsRequest) returns (UpdateUserParamsResponse) {
         option (google.api.http) = {
             put: "/user/parameters"
+            body: "*"
+        };
+    }
+
+
+    rpc UploadImageUser(stream UploadImageUserRequest) returns (UploadImageUserResponse) {
+        option (google.api.http) = {
+            post: "/user/image"
             body: "*"
         };
     }

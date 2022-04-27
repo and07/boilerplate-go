@@ -2,7 +2,12 @@ package grpcserver
 
 import (
 	"context"
+	"encoding/json"
+	"errors"
+	fmt "fmt"
+	"io/ioutil"
 	"log"
+	"net/http"
 	"time"
 
 	"github.com/and07/boilerplate-go/internal/app/trening/models"
@@ -10,6 +15,7 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/durationpb"
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 type treningFacade struct {
@@ -75,6 +81,11 @@ func (t *treningFacade) DetailParametersUser(ctx context.Context, request *Detai
 			Status:  false,
 			Message: err.Error(),
 		}
+
+		if err.Error() == "sql: no rows in result set" {
+			return nil, status.Error(codes.NotFound, "NotFound")
+		}
+
 		return
 	}
 	data := ParametersUser{
@@ -87,6 +98,8 @@ func (t *treningFacade) DetailParametersUser(ctx context.Context, request *Detai
 		DesiredWeight: res.Data.DesiredWeight,
 		Eat:           res.Data.Eat,
 		Username:      res.Data.Username,
+		Uid:           res.Data.UID,
+		Image:         res.Data.Image,
 	}
 
 	response = &DetailParametersUserResponse{
@@ -137,6 +150,12 @@ func (t *treningFacade) UpdateUserParams(ctx context.Context, request *UpdateUse
 	return
 }
 
+func (t *treningFacade) UploadImageUser(u TreningService_UploadImageUserServer) error {
+	//TODO
+
+	return errors.New("not implemented")
+}
+
 func (t *treningFacade) CreateTrening(ctx context.Context, request *CreateTreningRequest) (response *CreateTreningResponse, err error) {
 	userID, err := t.userID(ctx)
 	if err != nil {
@@ -173,6 +192,7 @@ func (t *treningFacade) CreateTrening(ctx context.Context, request *CreateTrenin
 		Name:      request.Name,
 		Interval:  request.Interval.AsDuration(),
 		Exercises: exercises,
+		Date:      request.Date.AsTime(),
 	})
 	if err != nil {
 		response = &CreateTreningResponse{
@@ -239,6 +259,7 @@ func (t *treningFacade) ListTrening(ctx context.Context, request *ListTreningReq
 			Interval:  durationpb.New(t.Interval * time.Second),
 			Exercises: exercises,
 			Image:     t.Image,
+			Date:      timestamppb.New(t.Date),
 		})
 	}
 
@@ -298,6 +319,7 @@ func (t *treningFacade) DetailTrening(ctx context.Context, request *DetailTrenin
 			Interval:  durationpb.New(res.Data.Interval * time.Second),
 			Exercises: exercises,
 			Image:     res.Data.Image,
+			Date:      timestamppb.New(res.Data.Date),
 		},
 	}
 
@@ -492,6 +514,66 @@ func (t *treningFacade) UpdateTreningExercises(ctx context.Context, request *Upd
 		Status: res.Status,
 	}
 	return
+}
+
+func (t *treningFacade) BinaryFileUpload(w http.ResponseWriter, r *http.Request, params map[string]string) {
+
+	token, exist := t.extractor.ExtractHTTP(r)
+	if !exist {
+		t.logger.Debug("token not exist")
+		http.Error(w, "token not exist", http.StatusUnauthorized)
+		return
+	}
+
+	userID, err := t.authService.ValidateAccessToken(token)
+	if err != nil {
+		http.Error(w, "Authentication failed. Invalid token", http.StatusUnauthorized)
+		return
+	}
+
+	err = r.ParseForm()
+	if err != nil {
+		http.Error(w, fmt.Sprintf("failed to parse form: %s", err.Error()), http.StatusBadRequest)
+		return
+	}
+
+	f, header, err := r.FormFile("attachment")
+	if err != nil {
+		http.Error(w, fmt.Sprintf("failed to get file 'attachment': %s", err.Error()), http.StatusBadRequest)
+		return
+	}
+	defer f.Close()
+	filename := header.Filename
+
+	// TODO
+	// Now do something with the io.Reader in `f`, i.e. read it into a buffer or stream it to a gRPC client side stream.
+	// Also `header` will contain the filename, size etc of the original file.
+	//
+
+	b, err := ioutil.ReadAll(f)
+	if err != nil {
+		//TODO
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+
+	t.logger.Debug("filename %s   header %#v ", filename, header.Header)
+	res, err := t.treningHandler.UpdateUserImage(context.Background(), &models.UpdateUserImageRequest{
+		UserID:   userID,
+		Body:     b,
+		FileName: filename,
+	})
+	if err != nil {
+		//TODO
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	jsonResp, err := json.Marshal(res)
+	if err != nil {
+		log.Fatalf("Error happened in JSON marshal. Err: %s", err)
+	}
+	w.Write(jsonResp)
+
 }
 
 func (t *treningFacade) userID(ctx context.Context) (string, error) {

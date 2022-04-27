@@ -2,18 +2,20 @@ package grpcserver
 
 import (
 	"context"
+	"net/http"
 
 	"github.com/and07/boilerplate-go/internal/app/trening/models"
 )
 
 type extractor interface {
 	ExtractGRPC(ctx context.Context) (header string, existStatus bool)
+	ExtractHTTP(r *http.Request) (header string, existStatus bool)
 }
-
 type treningHandler interface {
 	CreateParametersUser(ctx context.Context, request *models.CreateParametersUserRequest) (response *models.CreateParametersUserResponse, err error)
 	DetailParametersUser(ctx context.Context, request *models.DetailParametersUserRequest) (response *models.DetailParametersUserResponse, err error)
 	UpdateUserParams(ctx context.Context, request *models.UpdateUserParamsRequest) (response *models.UpdateUserParamsResponse, err error)
+	UpdateUserImage(ctx context.Context, request *models.UpdateUserImageRequest) (response *models.UpdateUserImageResponse, err error)
 
 	CreateTrening(ctx context.Context, request *models.CreateTreningRequest) (response *models.CreateTreningResponse, err error)
 	ListTrening(ctx context.Context, request *models.ListTreningRequest) (response *models.ListTreningResponse, err error)

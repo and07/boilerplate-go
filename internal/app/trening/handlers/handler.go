@@ -2,10 +2,12 @@ package handlers
 
 import (
 	"context"
+	"database/sql"
 	"math/rand"
 	"time"
 
 	"github.com/and07/boilerplate-go/internal/app/trening/models"
+	"github.com/and07/boilerplate-go/internal/pkg/storage/s3"
 	"github.com/and07/boilerplate-go/pkg/data"
 	uuid "github.com/satori/go.uuid"
 )
@@ -19,6 +21,7 @@ type TreningHandler interface {
 	CreateParametersUser(ctx context.Context, request *models.CreateParametersUserRequest) (response *models.CreateParametersUserResponse, err error)
 	DetailParametersUser(ctx context.Context, request *models.DetailParametersUserRequest) (response *models.DetailParametersUserResponse, err error)
 	UpdateUserParams(ctx context.Context, request *models.UpdateUserParamsRequest) (response *models.UpdateUserParamsResponse, err error)
+	UpdateUserImage(ctx context.Context, request *models.UpdateUserImageRequest) (response *models.UpdateUserImageResponse, err error)
 
 	CreateTrening(ctx context.Context, request *models.CreateTreningRequest) (response *models.CreateTreningResponse, err error)
 	ListTrening(ctx context.Context, request *models.ListTreningRequest) (response *models.ListTreningResponse, err error)
@@ -32,8 +35,9 @@ type TreningHandler interface {
 }
 
 type service struct {
-	repo   data.TreningRepository
-	logger logger
+	repo     data.TreningRepository
+	uploader uploader
+	logger   logger
 }
 
 func (s *service) CreateParametersUser(ctx context.Context, request *models.CreateParametersUserRequest) (response *models.CreateParametersUserResponse, err error) {
@@ -87,6 +91,8 @@ func (s *service) DetailParametersUser(ctx context.Context, request *models.Deta
 			DesiredWeight: userParams.DesiredWeight,
 			Eat:           userParams.Eat,
 			Username:      userParams.UserName,
+			UID:           userParams.UID,
+			Image:         userParams.Image.String,
 		},
 	}
 
@@ -113,6 +119,30 @@ func (s *service) UpdateUserParams(ctx context.Context, request *models.UpdateUs
 
 	response = &models.UpdateUserParamsResponse{
 		Status: true,
+	}
+
+	return
+}
+
+func (s *service) UpdateUserImage(ctx context.Context, request *models.UpdateUserImageRequest) (response *models.UpdateUserImageResponse, err error) {
+
+	res, err := s.uploader.FileUpload(ctx, s3.FileUploadRequest{
+		Bucket:      "gogreat",
+		Key:         "images/profile/" + request.UserID + "_" + request.FileName,
+		Body:        request.Body,
+		ContentType: "image/png",
+	})
+	if err != nil {
+		return
+	}
+
+	if err = s.repo.UpdateUserImage(context.Background(), &data.ParametersUser{UserID: request.UserID, Image: sql.NullString{String: res.URL, Valid: true}}); err != nil {
+		s.logger.Error("unable to update user params image to database", "error", err)
+		return nil, err
+	}
+	response = &models.UpdateUserImageResponse{
+		Status: true,
+		Data:   res.URL,
 	}
 
 	return
@@ -149,6 +179,7 @@ func (s *service) CreateTrening(ctx context.Context, request *models.CreateTreni
 		Interval:  request.Interval / time.Second,
 		Exercises: exercises,
 		Status:    1, // create
+		Date:      request.Date,
 	})
 	if err != nil {
 		return nil, err
@@ -207,7 +238,7 @@ func (s *service) ListTrening(ctx context.Context, request *models.ListTreningRe
 			Name:      t.Name,
 			Interval:  t.Interval,
 			Exercises: exercises,
-			CreatedAt: t.CreatedAt,
+			Date:      t.Date,
 			Image:     image,
 		})
 	}
@@ -222,7 +253,7 @@ func (s *service) ListTrening(ctx context.Context, request *models.ListTreningRe
 
 func (s *service) UpdateTreningStatus(ctx context.Context, request *models.UpdateTreningStatusRequest) (response *models.UpdateTreningStatusResponse, err error) {
 
-	if err = s.repo.UpdateTreningStatus(ctx, &data.Trening{UID: request.UID, UserID: request.UserID, Status: request.Status}); err != nil {
+	if err = s.repo.UpdateTreningStatus(ctx, &data.Trening{UID: request.UID, UserID: request.UserID, Status: request.Status, Date: time.Now()}); err != nil {
 		s.logger.Error("unable to update trening status to database", "error", err)
 		return nil, err
 	}
@@ -319,7 +350,7 @@ func (s *service) DetailTrening(ctx context.Context, request *models.DetailTreni
 			Name:      res.Name,
 			Interval:  res.Interval,
 			Exercises: exercises,
-			CreatedAt: res.CreatedAt,
+			Date:      res.Date,
 			Image:     image,
 		},
 	}
@@ -388,9 +419,10 @@ func random(min, max int) int {
 }
 
 // NewTreningHandler ...
-func NewTreningHandler(repo data.TreningRepository, logger logger) TreningHandler {
+func NewTreningHandler(repo data.TreningRepository, uploader uploader, logger logger) TreningHandler {
 	return &service{
-		repo:   repo,
-		logger: logger,
+		repo:     repo,
+		logger:   logger,
+		uploader: uploader,
 	}
 }

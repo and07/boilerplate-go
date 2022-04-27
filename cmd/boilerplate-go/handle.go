@@ -13,7 +13,7 @@ import (
 	"github.com/and07/boilerplate-go/pkg/service"
 	"github.com/and07/boilerplate-go/pkg/service/mail"
 	"github.com/and07/boilerplate-go/pkg/utils"
-	"github.com/caarlos0/env"
+	"github.com/caarlos0/env/v6"
 	"github.com/gorilla/mux"
 	"github.com/hashicorp/go-hclog"
 	//"google.golang.org/api/idtoken"

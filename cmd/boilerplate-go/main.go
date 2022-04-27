@@ -11,13 +11,14 @@ import (
 	"github.com/and07/boilerplate-go/internal/app/serv"
 	trening "github.com/and07/boilerplate-go/internal/app/trening/handlers"
 	log "github.com/and07/boilerplate-go/internal/pkg/logger"
+	"github.com/and07/boilerplate-go/internal/pkg/storage/s3"
 	"github.com/and07/boilerplate-go/internal/pkg/template"
 	"github.com/and07/boilerplate-go/internal/pkg/tracing"
 	"github.com/and07/boilerplate-go/pkg/data"
 	"github.com/and07/boilerplate-go/pkg/service"
 	"github.com/and07/boilerplate-go/pkg/token"
 	"github.com/and07/boilerplate-go/pkg/utils"
-	"github.com/caarlos0/env"
+	"github.com/caarlos0/env/v6"
 	"github.com/jmoiron/sqlx"
 	"github.com/opentracing/opentracing-go"
 	"github.com/prometheus/client_golang/prometheus"
@@ -54,6 +55,13 @@ func main() {
 	cfg := &configs.Configs{}
 	if err := env.Parse(cfg); err != nil {
 		log.Error(err)
+		return
+	}
+
+	cfgS3 := &configs.S3Configs{}
+	if err := env.Parse(cfgS3); err != nil {
+		log.Error(err)
+		return
 	}
 
 	tpl := template.NewTemplate("tpl/layouts/", "tpl/", `{{define "main" }} {{ template "base" . }} {{ end }}`)
@@ -79,8 +87,9 @@ func main() {
 
 	// repository contains all the methods that interact with DB to perform CURD operations for user.
 	repositoryAuth := data.NewAuthPostgresRepository(db, logger)
-
 	//repositoryAuth := data.NewAuthMemoryRepository(logger)
+
+	treningRepository := data.NewTreningPostgresRepository(db, logger)
 
 	hw := func(grpcSrv *grpc.Server) {
 		impl := boilerplate.New(ctx)
@@ -93,15 +102,23 @@ func main() {
 		api.RegisterBlockchainServiceServer(grpcSrv, boilerplate.NewBlockchainServer(eventBus))
 	}
 
+	uploader := s3.NewFileUploader(s3.UploaderCfg{
+		Region:    cfgS3.Region,
+		Endpoint:  cfgS3.Host,
+		AccessKey: cfgS3.AccessKey,
+		SecretKey: cfgS3.SecretKey,
+	})
+
+	treningHandler := trening.NewTreningHandler(treningRepository, uploader, logger)
+	facadeTrening := apiTrening.NewTeningFacade(token.NewExtractor(), authService, treningHandler, logger)
 	ts := func(grpcSrv *grpc.Server) {
-		treningHandler := trening.NewTreningHandler(data.NewTreningPostgresRepository(db, logger), logger)
-		apiTrening.RegisterTreningServiceServer(grpcSrv, apiTrening.NewTeningFacade(token.NewExtractor(), authService, treningHandler, logger))
+		apiTrening.RegisterTreningServiceServer(grpcSrv, facadeTrening)
 	}
 
 	srv := serv.New(ctx,
 		serv.WithPublicPort(cfg.Port),
 		serv.WithDebugPort(cfg.PortDebug),
-		serv.WithGRPC(ctx, cfg, hw, bc, ts),
+		serv.WithGRPC(ctx, cfg, facadeTrening, hw, bc, ts),
 		serv.WithSwaggerUI(true),
 	)
 

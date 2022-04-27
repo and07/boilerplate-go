@@ -140,6 +140,39 @@
         ]
       }
     },
+    "/user/image": {
+      "post": {
+        "operationId": "TreningService_UploadImageUser",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/treningUploadImageUserResponse"
+            }
+          },
+          "default": {
+            "description": "Common error",
+            "schema": {
+              "$ref": "#/definitions/commonCommonError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": " (streaming inputs)",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/treningUploadImageUserRequest"
+            }
+          }
+        ],
+        "tags": [
+          "TreningService"
+        ]
+      }
+    },
     "/user/parameters": {
       "get": {
         "operationId": "TreningService_DetailParametersUser",
@@ -496,6 +529,10 @@
           "items": {
             "$ref": "#/definitions/treningExercise"
           }
+        },
+        "date": {
+          "type": "string",
+          "format": "date-time"
         }
       }
     },
@@ -693,6 +730,15 @@
         },
         "username": {
           "type": "string"
+        },
+        "uid": {
+          "type": "string"
+        },
+        "image": {
+          "type": "string"
+        },
+        "type": {
+          "$ref": "#/definitions/treningUserType"
         }
       }
     },
@@ -730,7 +776,7 @@
         "status": {
           "$ref": "#/definitions/treningStatusTrening"
         },
-        "createdat": {
+        "date": {
           "type": "string",
           "format": "date-time"
         },
@@ -835,6 +881,26 @@
         }
       }
     },
+    "treningUploadImageUserRequest": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "treningUploadImageUserResponse": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "boolean"
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    },
     "treningUserActivity": {
       "type": "string",
       "enum": [
@@ -855,6 +921,15 @@
         "Low_protein"
       ],
       "default": "Balanced"
+    },
+    "treningUserType": {
+      "type": "string",
+      "enum": [
+        "USER_TYPE_UNKNOWN",
+        "USER_TYPE_ADMIN",
+        "USER_TYPE_USER"
+      ],
+      "default": "USER_TYPE_UNKNOWN"
     }
   },
   "securityDefinitions": {
