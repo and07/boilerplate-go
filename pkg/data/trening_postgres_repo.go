@@ -157,10 +157,10 @@ func (repo *treningPostgresRepository) CreateTrening(ctx context.Context, trenin
 // ListTrening inserts the given exercise into the database
 func (repo *treningPostgresRepository) ListTrening(ctx context.Context, userID string, status int) (res []Trening, err error) {
 	repo.logger.Info("list trening for user ", userID)
-	query := `select * from trening where user_id = $1`
+	query := `select * from trening where user_id = $1 order by createdat desc`
 	args := []interface{}{userID}
 	if status > 0 {
-		query = `select * from trening where user_id = $1 and status = $2`
+		query = `select * from trening where user_id = $1 and status = $2 order by updatedat desc`
 		args = append(args, status)
 	}
 

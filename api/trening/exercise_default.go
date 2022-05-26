@@ -14,7 +14,7 @@ var exerciseDefault = []*Exercise{
 		Count:               10,
 		NumberOfSets:        3,
 		NumberOfRepetitions: 15,
-		Type:                ExerciseType_other,
+		Type:                ExerciseType_back,
 		Image:               "https://fitseven.ru/wp-content/uploads/2020/07/uprazhneniya-na-press-velosiped.jpg",
 		Description:         "la blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla bla",
 		Technique: `
@@ -48,7 +48,7 @@ var exerciseDefault = []*Exercise{
 		Count:               10,
 		NumberOfSets:        3,
 		NumberOfRepetitions: 15,
-		Type:                ExerciseType_other,
+		Type:                ExerciseType_chest,
 		Description:         "bla bla bla bla bla blabla bla bla bla bla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla bla",
 		Technique: `
 		Stand with your hands aside.
@@ -78,7 +78,7 @@ var exerciseDefault = []*Exercise{
 		Count:               10,
 		NumberOfSets:        3,
 		NumberOfRepetitions: 15,
-		Type:                ExerciseType_other,
+		Type:                ExerciseType_press,
 		Image:               "https://fitseven.ru/wp-content/uploads/2020/07/uprazhneniya-na-press-planka-na-rukah.jpg",
 		Description:         "bla bla bla bla bla blabla abla blabla blabla bla",
 		Technique: `

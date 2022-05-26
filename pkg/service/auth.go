@@ -27,16 +27,16 @@ type Authentication interface {
 
 // RefreshTokenCustomClaims specifies the claims for refresh token
 type RefreshTokenCustomClaims struct {
-	UserID    string
-	CustomKey string
-	KeyType   string
+	UserID    string `json:"user_id,omitempty"`
+	CustomKey string `json:"custom_key,omitempty"`
+	KeyType   string `json:"key_type,omitempty"`
 	jwt.StandardClaims
 }
 
 // AccessTokenCustomClaims specifies the claims for access token
 type AccessTokenCustomClaims struct {
-	UserID  string
-	KeyType string
+	UserID  string `json:"user_id,omitempty"`
+	KeyType string `json:"key_type,omitempty"`
 	jwt.StandardClaims
 }
 
