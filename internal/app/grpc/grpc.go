@@ -21,6 +21,9 @@ import (
 	//"github.com/and07/boilerplate-go/service"
 	"github.com/and07/boilerplate-go/configs"
 	log "github.com/and07/boilerplate-go/internal/pkg/logger"
+	"github.com/and07/boilerplate-go/pkg/interceptors/grpc/auth"
+	"github.com/and07/boilerplate-go/pkg/token"
+	"github.com/and07/boilerplate-go/pkg/utils"
 	_ "github.com/jnewmano/grpc-json-proxy/codec" // GRPC Proxy
 	"go.elastic.co/apm/module/apmgrpc"
 	"go.uber.org/zap"
@@ -57,6 +60,10 @@ func NewServer(ctx context.Context, cfg *configs.Configs, handler handler) *GRPC
 	}
 
 	grpc_prometheus.EnableClientHandlingTimeHistogram()
+	logger := utils.NewLogger()
+	configs := utils.NewConfigurations(logger)
+	jwtManager := token.NewJWTManager(logger, configs)
+	interceptor := auth.NewAuthInterceptor(token.NewExtractor(), jwtManager, accessibleRoles())
 	server := grpc.NewServer(
 		grpc.StreamInterceptor(grpc_prometheus.StreamServerInterceptor),
 		grpc_middleware.WithUnaryServerChain(
@@ -65,6 +72,7 @@ func NewServer(ctx context.Context, cfg *configs.Configs, handler handler) *GRPC
 			grpc_ctxtags.UnaryServerInterceptor(grpc_ctxtags.WithFieldExtractor(grpc_ctxtags.CodeGenRequestFieldExtractor)),
 			grpc_zap.UnaryServerInterceptor(simpleLogger),
 			grpc_validator.UnaryServerInterceptor(),
+			interceptor.Unary(),
 		),
 	)
 
@@ -189,4 +197,14 @@ func extractTokenHTTP(r *http.Request) (header string, existStatus bool) {
 		return
 	}
 	return authHeaderContent[1], true
+}
+
+func accessibleRoles() map[string][]string {
+	const treningServicePath = "/trening.TreningService/"
+
+	return map[string][]string{
+		treningServicePath + "ListTrening":         {"*"},
+		treningServicePath + "ListExerciseDefault": {"*"},
+		//laptopServicePath + "RateLaptop":  {"admin", "user"},
+	}
 }

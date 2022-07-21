@@ -108,9 +108,9 @@ func main() {
 		AccessKey: cfgS3.AccessKey,
 		SecretKey: cfgS3.SecretKey,
 	})
-
+	jwtManager := token.NewJWTManager(logger, configs)
 	treningHandler := trening.NewTreningHandler(treningRepository, uploader, logger)
-	facadeTrening := apiTrening.NewTeningFacade(token.NewExtractor(), authService, treningHandler, logger)
+	facadeTrening := apiTrening.NewTeningFacade(token.NewExtractor(), jwtManager, treningHandler, logger)
 	ts := func(grpcSrv *grpc.Server) {
 		apiTrening.RegisterTreningServiceServer(grpcSrv, facadeTrening)
 	}

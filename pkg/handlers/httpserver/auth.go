@@ -4,6 +4,7 @@ import (
 	"github.com/and07/boilerplate-go/pkg/data"
 	"github.com/and07/boilerplate-go/pkg/service"
 	"github.com/and07/boilerplate-go/pkg/service/mail"
+	"github.com/and07/boilerplate-go/pkg/token"
 	"github.com/and07/boilerplate-go/pkg/utils"
 	"github.com/hashicorp/go-hclog"
 	"golang.org/x/oauth2"
@@ -25,6 +26,7 @@ type AuthHandler struct {
 	validator   *data.Validation
 	repo        data.AuthRepository
 	authService service.Authentication
+	jwtManager  *token.JWTManager
 	mailService mail.Service
 	oauthConfGl *oauth2.Config
 }
@@ -40,7 +42,7 @@ func WithGoogleAuth(clientKey string, secret string, callbackURL string, scopes 
 }
 
 // NewAuthHandler returns a new UserHandler instance
-func NewAuthHandler(l hclog.Logger, c *utils.Configurations, v *data.Validation, r data.AuthRepository, auth service.Authentication, mail mail.Service, opts ...Option) *AuthHandler {
+func NewAuthHandler(l hclog.Logger, c *utils.Configurations, v *data.Validation, r data.AuthRepository, auth service.Authentication, jwtManager *token.JWTManager, mail mail.Service, opts ...Option) *AuthHandler {
 	a := &AuthHandler{
 		logger:      l,
 		configs:     c,
@@ -48,6 +50,7 @@ func NewAuthHandler(l hclog.Logger, c *utils.Configurations, v *data.Validation,
 		repo:        r,
 		authService: auth,
 		mailService: mail,
+		jwtManager:  jwtManager,
 	}
 	for _, opt := range opts {
 		// Call the option giving the instantiated

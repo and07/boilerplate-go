@@ -65,7 +65,7 @@ func (ah *AuthHandler) MiddlewareValidateAccessToken(next http.Handler) http.Han
 		}
 		ah.logger.Debug("token present in header", token)
 
-		userID, err := ah.authService.ValidateAccessToken(token)
+		claims, err := ah.jwtManager.ValidateAccessToken(token)
 		if err != nil {
 			ah.logger.Error("token validation failed", "error", err)
 			w.WriteHeader(http.StatusBadRequest)
@@ -75,7 +75,7 @@ func (ah *AuthHandler) MiddlewareValidateAccessToken(next http.Handler) http.Han
 		}
 		ah.logger.Debug("access token validated")
 
-		ctx := context.WithValue(r.Context(), UserIDKey{}, userID)
+		ctx := context.WithValue(r.Context(), UserIDKey{}, claims.UserID)
 		r = r.WithContext(ctx)
 
 		next.ServeHTTP(w, r)
@@ -100,13 +100,16 @@ func (ah *AuthHandler) MiddlewareValidateRefreshToken(next http.Handler) http.Ha
 		}
 		ah.logger.Debug("token present in header", token)
 
-		userID, customKey, err := ah.authService.ValidateRefreshToken(token)
+		claims, err := ah.jwtManager.ValidateRefreshToken(token)
 		if err != nil {
 			ah.logger.Error("token validation failed", "error", err)
 			w.WriteHeader(http.StatusBadRequest)
 			data.ToJSON(&GenericResponse{Status: false, Message: "Authentication failed. Invalid token"}, w)
 			return
 		}
+
+		userID, customKey := claims.UserID, claims.CustomKey
+
 		ah.logger.Debug("refresh token validated")
 
 		user, err := ah.repo.GetUserByID(context.Background(), userID)
@@ -118,7 +121,7 @@ func (ah *AuthHandler) MiddlewareValidateRefreshToken(next http.Handler) http.Ha
 			return
 		}
 
-		actualCustomKey := ah.authService.GenerateCustomKey(user.ID, user.TokenHash)
+		actualCustomKey := ah.jwtManager.GenerateCustomKey(user.ID, user.TokenHash)
 		if customKey != actualCustomKey {
 			ah.logger.Debug("wrong token: authetincation failed")
 			w.WriteHeader(http.StatusBadRequest)

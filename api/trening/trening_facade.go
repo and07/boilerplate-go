@@ -11,7 +11,7 @@ import (
 	"time"
 
 	"github.com/and07/boilerplate-go/internal/app/trening/models"
-	"github.com/and07/boilerplate-go/pkg/service"
+	"github.com/and07/boilerplate-go/pkg/token"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/durationpb"
@@ -20,7 +20,7 @@ import (
 
 type treningFacade struct {
 	extractor      extractor
-	authService    service.Authentication
+	jwtManager     *token.JWTManager
 	treningHandler treningHandler
 	logger         logger
 }
@@ -518,14 +518,14 @@ func (t *treningFacade) UpdateTreningExercises(ctx context.Context, request *Upd
 
 func (t *treningFacade) BinaryFileUpload(w http.ResponseWriter, r *http.Request, params map[string]string) {
 
-	token, exist := t.extractor.ExtractHTTP(r)
-	if !exist {
-		t.logger.Debug("token not exist")
+	token, err := t.extractor.ExtractHTTP(r)
+	if err != nil {
+		t.logger.Debug("token not exist %#v", err)
 		http.Error(w, "token not exist", http.StatusUnauthorized)
 		return
 	}
 
-	userID, err := t.authService.ValidateAccessToken(token)
+	claims, err := t.jwtManager.ValidateAccessToken(token)
 	if err != nil {
 		http.Error(w, "Authentication failed. Invalid token", http.StatusUnauthorized)
 		return
@@ -558,7 +558,7 @@ func (t *treningFacade) BinaryFileUpload(w http.ResponseWriter, r *http.Request,
 
 	t.logger.Debug("filename %s   header %#v ", filename, header.Header)
 	res, err := t.treningHandler.UpdateUserImage(context.Background(), &models.UpdateUserImageRequest{
-		UserID:   userID,
+		UserID:   claims.UserID,
 		Body:     b,
 		FileName: filename,
 	})
@@ -577,23 +577,18 @@ func (t *treningFacade) BinaryFileUpload(w http.ResponseWriter, r *http.Request,
 }
 
 func (t *treningFacade) userID(ctx context.Context) (string, error) {
-	token, isExist := t.extractor.ExtractGRPC(ctx)
-	if !isExist {
-		return "", status.Error(codes.Unauthenticated, "token is not exist")
-	}
-
-	userID, err := t.authService.ValidateAccessToken(token)
-	if err != nil {
+	claims, ok := ctx.Value("claim").(*token.AccessTokenCustomClaims)
+	if !ok {
 		return "", status.Error(codes.Unauthenticated, "Authentication failed. Invalid token")
 	}
-	return userID, nil
+	return claims.UserID, nil
 }
 
 // NewTeningFacade ...
-func NewTeningFacade(extractor extractor, authService service.Authentication, treningHandler treningHandler, logger logger) *treningFacade {
+func NewTeningFacade(extractor extractor, jwtManager *token.JWTManager, treningHandler treningHandler, logger logger) *treningFacade {
 	return &treningFacade{
 		extractor:      extractor,
-		authService:    authService,
+		jwtManager:     jwtManager,
 		treningHandler: treningHandler,
 		logger:         logger,
 	}

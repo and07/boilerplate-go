@@ -20,7 +20,7 @@ func (ah *AuthHandler) RefreshToken(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	user := r.Context().Value(UserKey{}).(data.User)
-	accessToken, err := ah.authService.GenerateAccessToken(&user)
+	accessToken, err := ah.jwtManager.GenerateAccessToken(&user)
 	if err != nil {
 		ah.logger.Error("unable to generate access token", "error", err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -253,7 +253,7 @@ func (ah *AuthHandler) GoogleLogin(w http.ResponseWriter, r *http.Request) {
 		reqUser.TokenHash = user.TokenHash
 	}
 
-	accessToken, err := ah.authService.GenerateAccessToken(&reqUser)
+	accessToken, err := ah.jwtManager.GenerateAccessToken(&reqUser)
 	if err != nil {
 		ah.logger.Error("unable to generate access token", "error", err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -261,7 +261,7 @@ func (ah *AuthHandler) GoogleLogin(w http.ResponseWriter, r *http.Request) {
 		data.ToJSON(&GenericResponse{Status: false, Message: "Unable to login the user. Please try again later"}, w)
 		return
 	}
-	refreshToken, err := ah.authService.GenerateRefreshToken(&reqUser)
+	refreshToken, err := ah.jwtManager.GenerateRefreshToken(&reqUser)
 	if err != nil {
 		ah.logger.Error("unable to generate refresh token", "error", err)
 		w.WriteHeader(http.StatusInternalServerError)

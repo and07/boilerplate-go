@@ -12,6 +12,7 @@ import (
 	handlers "github.com/and07/boilerplate-go/pkg/handlers/httpserver"
 	"github.com/and07/boilerplate-go/pkg/service"
 	"github.com/and07/boilerplate-go/pkg/service/mail"
+	"github.com/and07/boilerplate-go/pkg/token"
 	"github.com/and07/boilerplate-go/pkg/utils"
 	"github.com/caarlos0/env/v6"
 	"github.com/gorilla/mux"
@@ -99,8 +100,10 @@ func publicHandle(ctx context.Context, tpl *template.Template, repository data.A
 		log.Error(err)
 	}
 
+	jwtManager := token.NewJWTManager(logger, cfg)
+
 	// UserHandler encapsulates all the services related to user
-	uh := handlers.NewAuthHandler(logger, cfg, validator, repository, authService, mailService, handlers.WithGoogleAuth(cfgGoogleAuth.GoogleKey, cfgGoogleAuth.GoogleSecret, cfgGoogleAuth.GoogleAuthCallback))
+	uh := handlers.NewAuthHandler(logger, cfg, validator, repository, authService, jwtManager, mailService, handlers.WithGoogleAuth(cfgGoogleAuth.GoogleKey, cfgGoogleAuth.GoogleSecret, cfgGoogleAuth.GoogleAuthCallback))
 
 	// create a serve mux
 	sm := mux.NewRouter()

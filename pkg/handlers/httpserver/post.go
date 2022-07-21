@@ -145,7 +145,7 @@ func (ah *AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	accessToken, err := ah.authService.GenerateAccessToken(user)
+	accessToken, err := ah.jwtManager.GenerateAccessToken(user)
 	if err != nil {
 		ah.logger.Error("unable to generate access token", "error", err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -153,7 +153,7 @@ func (ah *AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
 		data.ToJSON(&GenericResponse{Status: false, Message: "Unable to login the user. Please try again later"}, w)
 		return
 	}
-	refreshToken, err := ah.authService.GenerateRefreshToken(user)
+	refreshToken, err := ah.jwtManager.GenerateRefreshToken(user)
 	if err != nil {
 		ah.logger.Error("unable to generate refresh token", "error", err)
 		w.WriteHeader(http.StatusInternalServerError)

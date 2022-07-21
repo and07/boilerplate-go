@@ -8,8 +8,8 @@ import (
 )
 
 type extractor interface {
-	ExtractGRPC(ctx context.Context) (header string, existStatus bool)
-	ExtractHTTP(r *http.Request) (header string, existStatus bool)
+	ExtractGRPC(ctx context.Context) (token string, err error)
+	ExtractHTTP(r *http.Request) (token string, err error)
 }
 type treningHandler interface {
 	CreateParametersUser(ctx context.Context, request *models.CreateParametersUserRequest) (response *models.CreateParametersUserResponse, err error)
