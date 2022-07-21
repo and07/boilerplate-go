@@ -10,7 +10,7 @@ import (
 
 	"github.com/and07/boilerplate-go/pkg/data"
 	"github.com/and07/boilerplate-go/pkg/utils"
-	"github.com/dgrijalva/jwt-go"
+	"github.com/golang-jwt/jwt"
 	"github.com/hashicorp/go-hclog"
 )
 

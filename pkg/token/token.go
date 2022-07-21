@@ -1,6 +1,6 @@
 package token
 
-import "github.com/dgrijalva/jwt-go"
+import "github.com/golang-jwt/jwt"
 
 // RefreshTokenCustomClaims specifies the claims for refresh token
 type RefreshTokenCustomClaims struct {

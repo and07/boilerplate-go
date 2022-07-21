@@ -9,9 +9,9 @@ require (
 	github.com/ClickHouse/clickhouse-go v1.5.4
 	github.com/aws/aws-sdk-go v1.44.0
 	github.com/caarlos0/env/v6 v6.9.1
-	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/go-playground/validator v9.31.0+incompatible
 	github.com/go-redis/redis v6.15.9+incompatible
+	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/golang/protobuf v1.5.2
 	github.com/gorilla/mux v1.8.0
 	github.com/grpc-ecosystem/go-grpc-middleware v1.3.0
