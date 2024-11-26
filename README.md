@@ -123,3 +123,7 @@ curl -X POST --data-binary "@/Users/ттт/1.png" "http://localhost:8080/user/im
 ```sh
 http://localhost:8888/swaggerui/
 ```
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fand07%2Fboilerplate-go.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fand07%2Fboilerplate-go?ref=badge_large)
